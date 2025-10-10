@@ -1,0 +1,12 @@
+configure router policy-options
+begin
+no prefix-list "{{Service_VRF_Name}}_IPV6_IN
+exit
+commit
+exit all
+
+configure router policy-options
+begin
+no policy-statement "{{Service_VRF_Name}}_IPV6_IMPORT"
+commit
+exit all

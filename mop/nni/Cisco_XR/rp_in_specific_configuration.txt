@@ -1,0 +1,13 @@
+prefix-set pxl_{{Service_VRF_Name}}_ipV4_in
+{{Inbound_Prefixes_IPv4}}
+end-set
+!
+
+route-policy rpl_{{Service_VRF_Name}}_in
+  if destination in pxl_{{Service_VRF_Name}}_ipV4_in then
+    pass
+  else
+    drop
+  endif
+end-policy
+!

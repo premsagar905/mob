@@ -1,0 +1,158 @@
+default interface {{logical_interface}}
+!
+interface {{logical_interface}}
+ description {{description_logical}}
+ mtu {{mtu_value}}
+ dampening 
+ no ip address
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ carrier-delay up {{carrier_delay_up_value}}
+ carrier-delay down msec {{carrier_delay_down_value}}
+ hold-queue {{hold_queue_value}} in
+ service-policy input {{wan_in}}
+ service-policy output {{wan_out}}
+ mpls ldp igp sync delay {{igp_sync_delay}}
+ !
+ service instance {{service_instance_value}} ethernet
+  encapsulation dot1q {{vlan}}
+  rewrite ingress tag pop {{ingress_pop_value}} symmetric
+  bridge-domain {{bridge_domain}}
+ !
+!
+key chain {{key_chain_value}}
+ key 1
+   key-string {{key_string_password}}
+!
+interface {{bundle_interface_name}}
+ description {description}
+ bandwidth {{bandwidth}}
+ ip mtu {{mtu_value}}
+ ip address {{IPV4_address}} {{subnet}}
+ ip router isis 
+ ip pim sparse-mode
+ mpls ip
+ mpls mtu {{mpls_mtu_value}}
+ mpls traffic-eng tunnels
+ mpls label protocol ldp
+ isis circuit-type {{isis_circuit-type}}
+ isis network {{isis_network_type}} 
+ isis metric {{isis_metric_value}} level-2
+ isis authentication mode {{isis_auth_mode}}
+ isis authentication key-chain {{key_chain_value}}
+ no isis hello padding always
+ isis hello-multiplier {{isis_hello_multiplier}}
+ isis hello-interval {{isis_hello_interval}}
+ isis lsp-interval {{isis_lsp_interval}}
+ no bfd echo
+ isis bfd disable
+ load-interval {{load_interval}}
+ mpls ldp igp sync delay {{mpls_ldp_sync_delay_value}}
+ ip rsvp bandwidth percent {rsvp bandwidth_percentage_value}
+ ip rsvp signalling hello bfd
+ no shutdown
+!
+interface {{loopback}}
+ description {{loopback_description}}
+ ip address {{IPV4_address}} {{subnet}}
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+route-map {{route_map_value}} permit {{route_permit_value}}
+ match ip address prefix-list {{prefix_list_loopback}}
+ set tag {{set_tag_value}}
+!
+route-map {{route_map_name}} {{route_map_permit_or_deny}} {route_map_permit_or_deny_value}
+ match tag 1001
+route-map {{route_map_name}} permit {route_map_permit_value}
+!
+router isis {{router_isis_name}}
+ net {{net_value}}
+ is-type {{isis_type}}
+ metric-style {{metric_style}}
+ max-lsp-lifetime {{max_lsp_lifetime_value}}
+ lsp-refresh-interval {{lsp_refresh_interval}}
+ spf-interval {{spf_interval_value1}} {{spf_interval_value2}} {{spf_interval_value3}}
+ prc-interval {{prc_interval_value1}} {{prc_interval_value2}} {{prc_interval_value3}}
+ lsp-gen-interval {{lsp_gen_interval_value1}} {{lsp_gen_interval_value2}} {{lsp_gen_interval_value3}}
+ no hello padding
+ log-adjacency-changes all
+ nsf cisco
+ nsf interface wait {{nsf_interface_wait_value}}
+ nsf sync wait {{nsf_sync_wait_value}}
+ fast-reroute {{fast_reroute_prefix_level}} all
+ passive-interface {{loopback}}
+ mpls ldp sync
+ fast-reroute remote-lfa level-2 mpls-ldp
+ redistribute connected route-map {{route_map_name_redistribute}}
+ distribute-list route-map {{route_map_name}} in
+!
+!
+ip community-list standard TO-RINGS permit {{permit_value1}}
+ip community-list standard TO-RINGS permit {{permit_value2}}
+ip community-list standard TO-RINGS permit {{permit_value3}}
+ip community-list standard TO-RR permit {{permit_value4}}
+!
+route-map EXPORT-{{export_loopback}} permit {{permit_value_1}} 
+ match ip address prefix-list {{export_loopback}}
+ set community 55410:7202
+ set mpls-label
+route-map EXPORT-{{export_loopback}} permit {{permit_value_2}}
+ match community TO-RR
+ set mpls-label
+!
+mpls ldp neighbor {mpls_ldp_neighbor_ipaddress} password {{mpls_ldp_password}}
+!
+ip prefix-list {{ip_prefix_list_1}} seq {{ip_prefix_seq_value_1}} permit {{ip_prefix_ipaddress1}}{{ip_prefix_subnet1}}
+ip prefix-list {{ip_prefix_list_2}} seq {{ip_prefix_seq_value_2}} permit {{ip_prefix_ipaddress12}}{{ip_prefix_subnet2}}
+!
+route-map {{route_map_name}} permit {route_map_permit_value}
+ match ip address prefix-list {{match_ip_address_prefix_list_name}
+ set community {{set_community_value}}
+ set mpls-label
+!
+route-map {{route_map_name}} permit {{permit_value_2}}
+ match community TO-RINGS
+ set mpls-label
+!
+router bgp {{router_bgp_value}}
+ neighbor {{neighbor_access_bgp_ring_name}} peer-group
+ neighbor {{neighbor_access_bgp_ring_name}} remote-as {{remote_as_no}}
+ neighbor {{neighbor_access_bgp_ring_name}} password {{password}}
+ neighbor {{neighbor_access_bgp_ring_name}} update-source {{loopback}}
+ neighbor {{neighbor_ipaddress}} peer-group {{neighbor_access_bgp_ring_name}}
+ !
+ address-family vpnv4
+  neighbor {{neighbor_access_bgp_ring_name}} send-community both
+  neighbor {{neighbor_access_bgp_ring_name}} route-reflector-client
+  neighbor {{neighbor_ipaddress}} activate
+ exit-address-family
+ !
+ address-family ipv4
+  neighbor {{neighbor_access_bgp_ring_name}} send-community both
+  neighbor {{neighbor_access_bgp_ring_name}} allow-policy
+  neighbor {{neighbor_access_bgp_ring_name}} route-reflector-client
+  neighbor {{neighbor_access_bgp_ring_name}} next-hop-self all
+  neighbor {{neighbor_access_bgp_ring_name}} route-map {{route_map_name}} out
+  neighbor {{neighbor_access_bgp_ring_name}} send-label
+  neighbor {{neighbor_ipaddress}} activate
+ exit-address-family
+ !
+ address-family vpnv6
+  neighbor {{neighbor_access_bgp_ring_name}} send-community both
+  neighbor {{neighbor_access_bgp_ring_name}} route-reflector-client
+  neighbor {{neighbor_ipaddress}} activate
+ exit-address-family
+ !
+ address-family rtfilter unicast
+  neighbor {{neighbor_access_bgp_ring_name}} send-community both
+  neighbor {{neighbor_access_bgp_ring_name}} route-reflector-client
+  neighbor {{neighbor_ipaddress}} activate
+  neighbor {{neighbor_ipaddress}} default-originate
+ exit-address-family
+ !
+!
+do wr
+!

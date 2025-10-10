@@ -1,0 +1,2 @@
+no interface {{PE_Interface}}
+no interface Bundle-Ether{{Bundle_ID}}

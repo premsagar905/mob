@@ -1,0 +1,8 @@
+bgp 55410
+peer {{loopback_ip_b}} ignore
+!
+interface {{a_end_logical_interface}}.{{a_end_vlan_details}}  
+shutdown
+
+interface {{a_end_logical_interface}}
+shutdown

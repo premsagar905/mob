@@ -1,0 +1,11 @@
+/configure router policy-options begin
+/configure router policy-options
+            no community "target:{{RT-Import}}" members "target:{{RT-Import}}"
+            no  community "target:{{RT-Export}}" members "target:{{RT-Export}}"
+            no policy-statement "{{Service_VRF_Name}}_IMPORT"
+            no policy-statement "{{Service_VRF_Name}}_EXPORT"
+/configure router policy-options commit
+
+/configure service vprn {{VPRN_ID}} shutdown
+/configure service no vprn {{VPRN_ID}}
+/configure service no customer {{VPRN_ID}}

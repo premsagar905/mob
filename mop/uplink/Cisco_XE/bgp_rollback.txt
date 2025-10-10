@@ -1,0 +1,2 @@
+router bgp 55410
+ no neighbor {{nw_layer}}_iBGP_RING_{{ring_number}} peer-group

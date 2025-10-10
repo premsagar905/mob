@@ -1,0 +1,17 @@
+configure router
+ interface {{lag_Interface}}
+ address {{IP_Address}}
+ description {{Description}}
+ ldp-sync-timer {{Ldp_Timer}}
+ port {{Port}}
+ icmp
+ no mask-reply
+ no redirects
+ no ttl-expired
+ unreachables {{Unreachables}}
+ exit
+ qos {{Qos_Number}}
+ bfd {{Bfd_value}}
+ no shutdown
+#
+return

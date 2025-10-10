@@ -1,0 +1,3 @@
+delete interfaces {{Planned_Router_Port}} unit {{VLAN}}
+delete routing-instances {{vrfName}} interface {{Planned_Router_Port}}.{{VLAN}}
+delete routing-instances {{vrfName}} forwarding-options dhcp-relay group {{group_name}} interface {{Planned_Router_Port}}.{{VLAN}}

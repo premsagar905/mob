@@ -1,0 +1,58 @@
+/configure router policy-options begin
+/configure router policy-options
+            ~community "target:{{import_rt}}" members "target:{{import_rt}}"
+            ~community "target:{{export_rt}}" members "target:{{export_rt}}"
+/configure router policy-options commit
+
+/configure router policy-options begin
+/configure router policy-options
+            policy-statement "{{vrf_name}}_Import"
+                @entry {{import_entry_number}}
+                    @from
+                        @protocol bgp-vpn
+                       @community "target:{{import_rt}}"
+                    @exit
+                    @action accept
+                    exit
+             exit all
+/configure router policy-options commit
+
+/configure router policy-options begin
+/configure router policy-options
+           policy-statement "{{vrf_name}}_Export"
+                entry {{import_entry_number}}
+                    from
+                        protocol direct
+                    exit
+                    to
+                        protocol bgp-vpn
+                    exit
+                    action accept
+                         %community add {{export_rt}}
+                    exit
+                exit all
+/configure router policy-options commit
+
+configure service
+        customer {{vprn_number}} name "{{vprn_number}}" create
+        exit all
+configure service
+        vprn {{vprn_number}} name "{{vrf_name}}" customer {{vprn_number}} create
+            description "{{vrf_name}}"
+            autonomous-system 55410
+            enable-bgp-vpn-backup ipv4 ipv6
+            sgt-qos
+                application arp dot1p 6
+            exit
+            bgp-ipvpn
+                mpls
+                    auto-bind-tunnel
+                        resolution any
+                    exit
+            vrf-import "{{vrf_name}}_Import"
+            vrf-export "{{vrf_name}}_Export"
+            route-distinguisher {{rd_value}}:{{export_number}}
+                    no shutdown
+                exit
+            exit
+            no shutdown

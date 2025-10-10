@@ -1,0 +1,17 @@
+interface {{Planned_Router_Port}}.{{VLAN}}
+ vlan-type dot1q {{VLAN}}
+ mtu 9000
+ description {{description}}
+ ip binding vpn-instance {{vrfName}}
+ ip address {{IPV4_Details}}
+ ipv6 enable
+ ipv6 address {{IPV6_Details}}
+ statistic enable
+ trust upstream VIL-HUAWEI
+ dhcp select relay
+ ip relay address {{dhcp_ipv4}}
+ ipv6 relay address {{dhcp_ipv6}}
+ trust 8021p outbound
+ arp rate-limit 50
+ qos phb dscp disable
+#

@@ -1,0 +1,352 @@
+HostName
+hostname {{self_device_a}}
+commit
+
+Banner 
+banner motd "This system is for the use of authorized Access only. This system is the property of vodafoneIdea Mobile. Disconnect IMMEDIATLY if you are not an authorized user. All Connection attempts are logged and monitored. All Unauthorized Connection attempts will be investigated and handed over to the proper authorities."
+commit
+
+SSH
+feature ssh
+commit
+
+Telnet
+no feature telnet
+no feature telnet vrf management
+commit
+
+Date/Time
+clock timezone Kolkata
+commit
+
+NTP
+feature ntp
+ntp enable
+ntp server {{t1_loopback_ip}} prefer
+ntp server {{t2_loopback_ip}}
+commit
+
+Global ISIS/BGP/LDP RTR ID
+interface loopback1
+description ISIS/BGP/MPLS LDP RTR ID
+  ip address {{self_loopback_ip_a}}/32
+commit
+
+
+Source interface
+ip source-interface loopback1 snmp
+ip source-interface loopback1 tacacs+
+ip source-interface loopback1 radius
+ip source-interface loopback1 ntp
+ip source-interface loopback1 syslog
+commit
+!
+User
+username admin role network-admin password Changeme_123
+username emergency role network-admin password Vf1pmpl$
+commit
+
+
+Tacacs+
+tacacs-server login host 182.19.97.81  seq-num 1 key 0 vfipmpls
+tacacs-server login host 182.19.97.131  seq-num 2 key 0 vfipmpls
+commit
+
+AAA
+!
+aaa group server tacacs+ T1 
+    server 182.19.97.81
+    server 182.19.97.131
+!
+aaa authentication login default group T1 local
+aaa accounting default  group T1 local
+aaa authorization default  group T1 local
+aaa authentication login default fallback error local non-existent-user
+commit
+
+Logging/Alarm
+logging level all 4
+logging logfile srvlog 4
+feature rsyslog 
+logging remote server 182.19.118.226
+logging remote server 182.19.118.227
+commit
+
+
+SNMP
+snmp-server enable traps link linkDown
+snmp-server enable traps link linkUp
+snmp-server enable traps link include-interface-name
+snmp-server enable traps pwdelete
+snmp-server enable traps pw
+snmp-server enable traps mpls
+snmp-server enable traps mplsl3vpn
+snmp-server enable traps snmp authentication
+snmp-server enable traps ospf
+snmp-server enable traps bgp
+snmp-server enable traps isis
+snmp-server enable traps ospf6
+snmp-server enable traps pim
+snmp-server enable snmp 
+snmp-server view all .1 included 
+snmp-server location {{nss_id}}
+snmp-server user vfcenipmpls network-admin auth md5 vfipmpls priv des vfipmpls
+snmp-server host 122.15.240.43 traps version 3 priv vfcenipmpls udp-port 162
+snmp-server enable snmp 
+snmp-server engineID 100691440102
+commit
+Port Channel Creation 
+int {{east_a_end_logical_interface}}
+description {{east_a_end_logical_description}}
+mtu 9212
+bfd interval 50 minrx 50 multiplier 3
+load-interval 30
+!
+interface {{east_a_end_logical_interface}}.{{east_a_end_vlan_details}}
+description {{east_a_end_logical_subinterface_description}}
+encapsulation dot1q {{east_a_end_vlan_details}}
+ip address {{east_ip_address_a}}/31
+mtu 9212
+bfd interval 50 minrx 50 multiplier 3
+mpls ldp-igp sync-delay 60
+!
+
+
+
+
+
+!
+interface {{west_b_end_logical_interface}}.{{west_b_end_vlan_details}}
+description {{west_b_end_logical_subinterface_description}}
+encapsulation dot1q {{west_b_end_vlan_details}}
+ip address 100.119.9.252/31
+mtu 9192
+bfd interval 50 minrx 50 multiplier 3
+mpls ldp-igp sync-delay 60
+!
+commit
+
+
+Member Addition in Port Channel 
+interface {{east_interface_a}}
+description {{east_a_end_interface_description}}
+channel-group {{east_bundle_id_a}} mode active
+link-debounce-time 5000 250
+no shutdown
+!
+interface {{west_interface_b}}
+description {{west_b_end_interface_description}}
+mtu 9212
+load-interval 30
+link-debounce-time 5000 250
+no shutdown
+!
+commit
+
+
+Load-Balacning 
+load-balance enable
+load-balance ipv4 src-dest-ipv4
+load-balance mpls labels
+commit
+
+Twamp 
+hardware-profile filter twamp-ipv4 enable
+!
+twamp-light reflector
+reflector-admin-state enable
+reflector-name {{self_device_a}} reflector-ip ipv4 100.111.144.2 
+commit
+
+
+Key Chain for ISIS
+
+key chain VIL-ISIS
+key-id 1
+  key-string {{isis_password}}
+commit
+
+Access-List
+hardware-profile filter ingress-ipv4 enable
+ip access-list loopback1
+10 permit any host {{self_loopback_ip_a}} any
+commit
+Route-Map
+route-map Access-Global-OUT permit 10
+  match ip address loopback1
+  set community {{community}}
+!
+commit
+
+ISIS
+router isis {{isis_instance_id}}
+ is-type level-2-only
+ spf-interval-exp level-2 50 2000
+ metric-style wide
+ mpls traffic-eng router-id {{self_loopback_ip_a}}
+ mpls traffic-eng level-2
+ capability cspf
+ dynamic-hostname
+ fast-reroute per-prefix remote-lfa level-2 proto ipv4 tunnel mpls-ldp
+ no bfd all-interfaces
+net {{net_id}}
+!
+interface {{east_a_end_logical_interface}}.{{east_a_end_vlan_details}}
+isis circuit-type level-2-only
+mpls ldp-igp sync isis level-2 holddown-timer 60
+isis network point-to-point 
+isis authentication mode md5 level-2
+isis authentication key-chain VIL-ISIS level-2
+isis circuit-type level-2-only
+ip router isis {{isis_instance_id}}
+isis hello-interval 20 level-2
+isis hello-multiplier 5 level-2
+isis wide-metric {{east_metric_value}} level-2
+!
+interface {{west_b_end_logical_interface}}.{{west_b_end_vlan_details}}
+isis circuit-type level-2-only
+mpls ldp-igp sync isis level-2 holddown-timer 60
+isis network point-to-point 
+isis authentication mode md5 level-2
+isis authentication key-chain VIL-ISIS level-2
+isis circuit-type level-2-only
+ip router isis {{isis_instance_id}}
+isis hello-interval 20 level-2
+isis hello-multiplier 5 level-2
+isis wide-metric {{west_metric_value}} level-2
+!
+interface loopback1
+ip router isis {{isis_instance_id}}
+isis circuit-type level-2-only
+commit
+
+MPLS LDP
+router ldp
+router-id {{self_loopback_ip_a}}
+ fast-reroute
+ auto-targeted-session
+ session-protection duration infinite
+ rlfa-ilm-optimization
+transport-address ipv4 {{self_loopback_ip_a}}
+neighbor 100.69.144.100 auth md5 password encrypt {{LDP_Password}}
+neighbor 10.220.99.42 auth md5 password encrypt {{LDP_Password}}
+!
+interface {{east_a_end_logical_interface}}.{{east_a_end_vlan_details}}
+label-switching
+enable-ldp ipv4
+
+!
+interface {{west_b_end_logical_interface}}.{{west_b_end_vlan_details}}
+label-switching
+enable-ldp ipv4
+
+!
+interface loopback1
+ enable-ldp ipv4
+commit
+!
+mpls ftn-ecmp ldp
+commit
+BGP 
+
+router bgp 55410
+bgp router-id {{self_loopback_ip_a}}
+bgp graceful-restart
+bgp graceful-restart stalepath-time 360
+"bgp graceful-restart restart-time 120
+"
+no bgp inbound-route-filter
+bgp scan-time 60
+allocate-label all
+neighbor {{nw_layer}}_RING_{{ring_number}} peer-group
+neighbor {{nw_layer}}_RING_{{ring_number}} remote-as 55410
+neighbor {{nw_layer}}_RING_{{ring_number}} update-source loopback1
+neighbor {{nw_layer}}_RING_{{ring_number}} authentication-key 0 {{BGP_Password}}
+neighbor {{nw_layer}}_RING_{{ring_number}} timers 30 120
+@neighbor {{neighbour_ip}} peer-group {{nw_layer}}_RING_{{ring_number}}
+!
+address-family ipv4 unicast
+network {{self_loopback_ip_a}}/32 
+exit-address-family
+!
+address-family ipv4 labeled-unicast
+neighbor {{nw_layer}}_RING_{{ring_number}} activate
+neighbor {{nw_layer}}_RING_{{ring_number}} next-hop-self
+neighbor {{nw_layer}}_RING_{{ring_number}} route-map Access-Global-OUT out
+exit-address-family
+!
+address-family vpnv4 unicast
+neighbor {{nw_layer}}_RING_{{ring_number}} activate
+exit-address-family
+!
+address-family vpnv6 unicast
+neighbor {{nw_layer}}_RING_{{ring_number}} activate
+exit-address-family
+!
+address-family ipv6 labeled-unicast
+exit-address-family
+
+!
+address-family rtfilter unicast
+neighbor {{nw_layer}}_RING_{{ring_number}} activate
+exit-address-family
+!
+address-family ipv4 vrf mob_Abis_SP
+redistribute connected
+redistribute static
+exit-address-family
+
+address-family ipv4 vrf mob_oam
+redistribute connected
+redistribute static
+exit-address-family
+!
+address-family ipv4 vrf eNB_MMES1_eNBX2_CP
+redistribute connected
+redistribute static
+exit-address-family
+!
+address-family ipv4 vrf eNB_SGWS1_eNBX2_UP
+redistribute connected
+redistribute static
+exit-address-family
+
+address-family ipv4 vrf VRF_ERICSON_UBR_MGMT
+redistribute connected
+redistribute static
+exit-address-family
+!
+address-family ipv4 vrf eNB_X2
+redistribute connected
+redistribute static
+exit-address-family
+!
+address-family ipv6 vrf eNB_MMES1_eNBX2_CP
+redistribute connected
+redistribute static
+exit-address-family
+!
+address-family ipv6 vrf S1-U
+redistribute connected
+redistribute static
+exit-address-family
+!
+address-family ipv6 vrf eNB_X2
+redistribute connected
+redistribute static
+exit-address-family
+!
+address-family ipv6 vrf mob_oam
+redistribute connected
+redistribute static
+exit-address-family
+!
+address-family ipv6 vrf VRF_HFCL_UBR_SBXXXX_SP
+redistribute connected
+redistribute static
+exit-address-family
+
+exit
+commit
+
+

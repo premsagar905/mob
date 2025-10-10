@@ -1,0 +1,26 @@
+/configure router policy-options begin
+/configure router policy-options
+            ~community "target:{{import_rt}}" members "target:{{import_rt}}"
+            ~community "target:{{export_rt}}" members "target:{{export_rt}}"
+/configure router policy-options commit
+
+/configure router policy-options begin
+/configure router policy-options
+            policy-statement "{{import_vrf_name}}"
+                @entry {{import_entry_number}}
+                    @from
+                        @protocol bgp-vpn
+                       @community "target:{{import_rt}}"
+                    @exit
+                    @exit
+                    action accept
+                    exit
+                exit
+              exit
+/configure router policy-options commit
+
+/configure router policy-options begin
+/configure router policy-options
+            policy-statement "{{export_vrf_name}}"
+                {{entry_communites}}
+/configure router policy-options commit

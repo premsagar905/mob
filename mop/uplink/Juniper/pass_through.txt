@@ -1,0 +1,35 @@
+set policy-options prefix-list INFRASTRUCTURE_PREFIX {{ip_address_a}}/31
+
+set interfaces ae{{bundle_id_a}} description {{a_end_logical_description}} 
+set interfaces ae{{bundle_id_a}} mtu 9192
+set interfaces ae{{bundle_id_a}} flexible-vlan-tagging
+set interfaces ae{{bundle_id_a}} encapsulation flexible-ethernet-services
+set interfaces ae{{bundle_id_a}} unit {{a_end_vlan_details}} description {{a_end_interface_description}} 
+set interfaces ae{{bundle_id_a}} unit {{a_end_vlan_details}} vlan-id {{a_end_vlan_details}}
+set interfaces ae{{bundle_id_a}} unit {{a_end_vlan_details}} family inet address {{ip_address_a}}/{{subnet_a}}
+set interfaces ae{{bundle_id_a}} unit {{a_end_vlan_details}} family iso address {{ring_closer_net_id}}
+set interfaces ae{{bundle_id_a}} unit {{a_end_vlan_details}} family inet6
+set interfaces ae{{bundle_id_a}} unit {{a_end_vlan_details}} family inet6 maximum-labels 5
+
+set class-of-service interfaces ae{{bundle_id_a}} unit {{a_end_vlan_details}} classifiers exp ES_WAN_IN_EXP_CLASSFIERS
+set class-of-service interfaces ae{{bundle_id_a}} unit {{a_end_vlan_details}} rewrite-rules exp ES_WAN_OUT_EXP_REWRITE
+set class-of-service interfaces ae{{bundle_id_a}} unit {{a_end_vlan_details}} rewrite-rules ieee-802.1 ES_WAN_OUT_P-bit_REWRITE
+
+set routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} interface ae{{bundle_id_a}}.{{a_end_vlan_details}}
+set routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} level 1 disable
+set routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} level 2 metric {{metric_value}}
+set routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} level 2 hello-authentication-key {{ISIS_password}}
+set routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} level 2 hello-authentication-type md5
+set routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} level 2 hello-interval 20
+set routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} level 2 hold-time {{metric_value}}
+set routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} point-to-point
+
+set groups ISIS_DEFAULTS_{{uc_location_a_nw_layer}}_RING_{{ring_number}} routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} ldp-synchronization
+set groups ISIS_DEFAULTS_{{uc_location_a_nw_layer}}_RING_{{ring_number}} routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} point-to-point
+set groups ISIS_DEFAULTS_{{uc_location_a_nw_layer}}_RING_{{ring_number}} routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} node-link-protection
+
+%set groups ISIS_DEFAULTS_{{uc_location_a_nw_layer}}_RING_{{ring_number}} routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} bfd-liveness-detection minimum-interval 50
+%set groups ISIS_DEFAULTS_{{uc_location_a_nw_layer}}_RING_{{ring_number}} routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} bfd-liveness-detection multiplier 3
+%set groups ISIS_DEFAULTS_{{uc_location_a_nw_layer}}_RING_{{ring_number}} routing-instances {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} protocols isis interface ae{{bundle_id_a}}.{{a_end_vlan_details}} bfd-liveness-detection no-adaptation
+
+set protocols ldp interface ae{{bundle_id_a}}.{{a_end_vlan_details}}

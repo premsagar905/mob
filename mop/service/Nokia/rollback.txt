@@ -1,0 +1,6 @@
+configure service vprn {{vrfName}}
+interface "LAG-{{Planned_Router_Port}}:{{VLAN}}" shutdown
+interface "LAG-{{Planned_Router_Port}}:{{VLAN}}" sap lag-{{Planned_Router_Port}}:{{VLAN}} shutdown
+interface "LAG-{{Planned_Router_Port}}:{{VLAN}}" no sap lag-{{Planned_Router_Port}}:{{VLAN}}
+no interface "LAG-{{Planned_Router_Port}}:{{VLAN}}"
+exit

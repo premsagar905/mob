@@ -1,0 +1,9 @@
+delete chassis slot xsa data-card amxe-4 port {{interface_a}} 
+delete interfaces {{interface_a}}
+delete interfaces {{interface_a}} unit {{a_end_vlan_details}}
+delete interfaces bundle TO-{{bundle_interface_a}}
+delete protocols bfd interface {{interface_a}}.{{a_end_vlan_details}}
+delete protocols isis protocol-instance {{isis_instance_id}}
+delete protocols isis protocol-instance {{isis_instance_id}} interface {{interface_a}}.{{a_end_vlan_details}}
+delete protocols ldp interface {{interface_a}}.{{a_end_vlan_details}}
+delete protocols ldp peer-security peer-address {{loopback_ip_b}}

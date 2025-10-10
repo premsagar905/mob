@@ -1,0 +1,77 @@
+@/configure router policy-options begin
+@/configure router policy-options
+           @prefix-list "SYSTEM_LOOPBACK_IP" 
+                @prefix {{router_interface_ip}} exact
+@/configure router policy-options commit
+
+@/configure router policy-options begin
+@/configure router policy-options
+@community "CORE-AGG" members "{{core_agg}}"
+@community "BSC-PREAGG" members "{{bsc_pre_agg}}"
+@community "NON-BSC-PREAGG" members "{{non_bsc_pre_agg}}" 
+@/configure router policy-options commit
+
+/configure router policy-options begin
+/configure router policy-options
+            policy-statement "BGP_LU_TO_{{uc_location_a_nw_layer}}_{{city_code}}_End_State"
+                entry 10
+                    from
+                        protocol direct
+                        prefix-list "SYSTEM_LOOPBACK_IP"
+                    exit
+                    to
+                        protocol bgp-label
+                    exit
+                    action accept
+                        community add "{{nokia_uplink_community}}"
+                        next-hop-self
+                    exit
+                exit
+                entry 20
+                    from
+                        protocol bgp-label
+                        community "CORE-AGG"
+                    exit
+                    action accept
+                        next-hop-self
+                    exit
+                exit
+                entry 30
+                    from
+                        protocol bgp-label
+                        community "BSC-PREAGG"
+                    exit
+                    action accept
+                        next-hop-self
+                    exit
+                exit
+                entry 40
+                    from
+                        family vpn-ipv4
+                    exit
+                    action accept
+                    exit
+                exit
+                entry 50
+                    from
+                        family vpn-ipv6
+                    exit
+                    action accept
+                    exit
+                exit
+                entry 60
+                    from
+                        family ipv6
+                    exit
+                    action accept
+                    exit
+                exit
+                entry 70
+                    from
+                        family route-target
+                    exit
+                    action accept
+                    exit
+                exit
+                default-action drop
+                exit

@@ -1,0 +1,76 @@
+set chassis slot xsb data-card amxe-4 port {{interface_a}} enable
+set chassis slot xsb data-card amxe-4 port {{interface_a}} ethernet-options phy-type 10GBase-R
+set chassis slot xsb data-card amxe-4 port {{interface_a}} hold-time-down {{carrier_delay_down_value}}
+set chassis slot xsb data-card amxe-4 port {{interface_a}} hold-time-up 60000
+set chassis slot xsb data-card amxe-4 port {{interface_a}} statistics-enable
+set chassis slot xsb data-card amxe-4 port {{interface_a}} transceiver-options exp-transceiver-type otp10 exp-application-code lr
+set interfaces {{interface_a}} type vlan-tagged
+commit
+set interfaces {{interface_a}} description {{a_end_interface_description}}
+set interfaces {{interface_a}} diffserv-block cos 0 cir 40Mbps
+set interfaces {{interface_a}} diffserv-block cos 0 eir NRL
+set interfaces {{interface_a}} diffserv-block cos 1 cir 80Mbps
+set interfaces {{interface_a}} diffserv-block cos 1 eir NRL
+set interfaces {{interface_a}} diffserv-block cos 2 cir 80Mbps
+set interfaces {{interface_a}} diffserv-block cos 2 eir NRL
+set interfaces {{interface_a}} diffserv-block cos 3 cir 600Mbps
+set interfaces {{interface_a}} diffserv-block cos 3 eir NRL
+set interfaces {{interface_a}} diffserv-block cos 4 cir 3200Mbps
+set interfaces {{interface_a}} diffserv-block cos 4 eir NRL
+set interfaces {{interface_a}} diffserv-block cos 5 cir 3000Mbps
+set interfaces {{interface_a}} diffserv-block cos 5 eir 6000Mbps
+set interfaces {{interface_a}} diffserv-block cos 6 cir 2000Mbps
+set interfaces {{interface_a}} diffserv-block cos 6 eir 6000Mbps
+set interfaces {{interface_a}} diffserv-block cos 7 cir 1000Mbps
+set interfaces {{interface_a}} diffserv-block cos 7 eir 6000Mbps
+set interfaces {{interface_a}} statistics-enable
+set interfaces {{interface_a}}
+set interfaces {{interface_a}} unit {{a_end_vlan_details}} vlan-id-list {{a_end_vlan_details}}
+set interfaces {{interface_a}} unit {{a_end_vlan_details}} family inet address {{ip_address_a}}/{{subnet_a}}
+set interfaces {{interface_a}} unit {{a_end_vlan_details}} family mpls
+set interfaces {{interface_a}} unit {{a_end_vlan_details}} family iso
+set interfaces {{interface_a}} unit {{a_end_vlan_details}} egress-qos-profile WAN_OUT
+set interfaces {{interface_a}} unit {{a_end_vlan_details}} ingress-qos-profile WAN_IN
+set interfaces {{interface_a}} unit {{a_end_vlan_details}} l3-mtu 9028
+set interfaces {{interface_a}} l2-mtu 9118
+
+set interfaces bundle TO-{{device_b}} admin-actor-key {{actor_key}} 
+set interfaces bundle TO-{{device_b}} links {{interface_a}} distribution-disable
+set interfaces bundle TO-{{device_b}} links {{interface_a}} lacp-options mode active
+set interfaces bundle TO-{{device_b}} links {{interface_a}} lacp-options time-out short
+set interfaces bundle TO-{{device_b}} links {{interface_a}} master
+set interfaces bundle TO-{{device_b}} links {{interface_a}} priority 128
+set interfaces bundle TO-{{device_b}} max-active-links 1
+set interfaces bundle TO-{{device_b}} min-active-links 1
+set interfaces bundle TO-{{device_b}} description {{a_end_interface_description}}
+
+set protocols bfd interface {{interface_a}}.{{a_end_vlan_details}} destination {{ip_address_b}} minimum-receive-interval 50
+set protocols bfd interface {{interface_a}}.{{a_end_vlan_details}} destination {{ip_address_b}} minimum-transmit-interval 50
+set protocols bfd interface {{interface_a}}.{{a_end_vlan_details}} destination {{ip_address_b}} multiplier 3
+
+set protocols isis protocol-instance {{isis_instance_id}} enable
+set protocols isis protocol-instance {{isis_instance_id}} system-id-host-name {{device_a}} 
+set protocols isis protocol-instance {{isis_instance_id}} graceful-restart enable
+set protocols isis protocol-instance {{isis_instance_id}} level 2 wide-metrics-only enable
+set protocols isis protocol-instance {{isis_instance_id}} level 2 overload timeout 600
+set protocols isis protocol-instance {{isis_instance_id}} interface lo0.0 passive
+set protocols isis protocol-instance {{isis_instance_id}} interface lo0.0 level-type L2
+set protocols isis protocol-instance {{isis_instance_id}} interface lo0.0 level 2
+set protocols isis protocol-instance {{isis_instance_id}} iso-addressing area-address 49.0002
+set protocols isis protocol-instance {{isis_instance_id}} iso-addressing system-id {{system_id}}
+set protocols isis protocol-instance {{isis_instance_id}} fast-reroute-options enable
+set protocols isis protocol-instance {{isis_instance_id}} fast-reroute-options remote-lfa
+set protocols isis protocol-instance {{isis_instance_id}} level-type L2
+set protocols isis protocol-instance {{isis_instance_id}} interface {{interface_a}}.{{a_end_vlan_details}} emulate-ptp 
+set protocols isis protocol-instance {{isis_instance_id}} interface {{interface_a}}.{{a_end_vlan_details}} hello-padding-disable
+set protocols isis protocol-instance {{isis_instance_id}} interface {{interface_a}}.{{a_end_vlan_details}} level-type L2
+set protocols isis protocol-instance {{isis_instance_id}} interface {{interface_a}}.{{a_end_vlan_details}} bfd
+set protocols isis protocol-instance {{isis_instance_id}} interface {{interface_a}}.{{a_end_vlan_details}} level 2 hello-interval 20
+set protocols isis protocol-instance {{isis_instance_id}} interface {{interface_a}}.{{a_end_vlan_details}} level 2 hello-multiplier 5
+set protocols isis protocol-instance{{isis_instance_id}} interface {{interface_a}}.{{a_end_vlan_details}} level 2 hello-authentication-key {{ISIS_password}}
+set protocols isis protocol-instance {{isis_instance_id}} interface {{interface_a}}.{{a_end_vlan_details}} level 2 hello-authentication-type md5
+set protocols isis protocol-instance {{isis_instance_id}} interface {{interface_a}}.{{a_end_vlan_details}} level 2 metric {{metric_value}}
+
+set protocols ldp interface {{interface_a}}.{{a_end_vlan_details}} hello-hold-time 0
+set protocols ldp interface {{interface_a}}.{{a_end_vlan_details}} keepalive-hold-time 40
+set protocols ldp peer-security peer-address {{loopback_ip_b}} authentication password {{LDP_Password}}

@@ -1,0 +1,10 @@
+!<if-intf>
+interface {{Planned_Router_Port}}
+  description {{description}}
+no shutdown
+$
+!<qos>
+bind-ds-port {{Planned_Router_Port}} ACCESS_IN trust-priority 2
+qos-statistics switch on {{Planned_Router_Port}} output
+service-policy {{Planned_Router_Port}} output ACCESS_OUT_10G overwrite
+!</qos>

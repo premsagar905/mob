@@ -1,0 +1,3 @@
+deactivate protocols isis-instance {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} interface ae{{bundle_id_a}}.{{a_end_vlan_details}}
+
+deactivate protocols isis-instance {{city_code}}_{{uc_location_a_nw_layer}}_RING_{{ring_number}} interface ae{{bundle_id_a}}.{{a_end_vlan_details}}

@@ -1,0 +1,24 @@
+!<if-intf>
+interface {{Planned_Router_Port}}.{{VLAN}}
+  description "{{description}}"
+  ip vrf forwarding {{vrfName}}
+  ip address {{IPV4_Details}}
+  ipv6 enable
+  ipv6 address {{IPV6_Details}}
+no shutdown
+$
+!</if-intf>
+!<vlan>
+vlan-configuration
+  interface {{Planned_Router_Port}}.{{VLAN}}
+    encapsulation-dot1q {{VLAN}}
+  $
+$
+!</vlan>
+!<arp>
+arp
+  interface {{Planned_Router_Port}}.{{VLAN}}
+    timeout 290
+  $
+$
+!</arp>

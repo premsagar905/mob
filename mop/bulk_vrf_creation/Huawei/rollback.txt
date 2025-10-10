@@ -1,0 +1,12 @@
+ip vpn-instance {{vrf_name}}
+ traffic-statistics enable
+ ipv4-family
+  apply-label per-instance
+  ~undo vpn-target {{import_rt}} import-extcommunity
+  ~undo vpn-target {{export_rt}} export-extcommunity
+#
+ ipv6-family
+  apply-label per-instance
+  ~undo vpn-target {{import_rt}} import-extcommunity
+  ~undo vpn-target {{export_rt}} export-extcommunity
+#

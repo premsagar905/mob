@@ -1,0 +1,10 @@
+set interfaces ae{{Bundle_ID}} unit {{VLAN_ID}} description {{Bundle_ID_VLAN_ID_Description}}
+set interfaces ae{{Bundle_ID}} unit {{VLAN_ID}} vlan-id {{VLAN_ID}}
+set interfaces ae{{Bundle_ID}} unit {{VLAN_ID}} family inet address {{IPV4_PE_Interface_IP/31}}/31
+set interfaces ae{{Bundle_ID}} unit {{VLAN_ID}} family inet6 address {{IPV6_PE_Interface_IP/127}}/127
+set routing-instances {{Service_VRF_Name}} interface ae{{Bundle_ID}}.{{VLAN_ID}}
+set class-of-service interfaces ae{{Bundle_ID}} unit {{VLAN_ID}} classifiers dscp ES_ACCESS_IN_CLASSIFIER
+set class-of-service interfaces ae{{Bundle_ID}} unit {{VLAN_ID}} classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6
+
+set policy-options prefix-list PE_CE_BGP_PEERS {{IPV4_CPE_Interface_IP/31}}/32
+set policy-options prefix-list INFRASTRUCTURE_PREFIX {{IPV4_CPE_Interface_IP/31}}/32

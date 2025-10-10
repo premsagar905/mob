@@ -1,0 +1,3 @@
+interface {{Planned_Router_Port}}
+no service instance {{VLAN}} ethernet
+no interface BDI{{VLAN}}

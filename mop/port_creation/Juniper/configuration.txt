@@ -1,0 +1,6 @@
+set interfaces {{Planned_Router_Port}} description {{description}}
+set interfaces {{Planned_Router_Port}} flexible-vlan-tagging
+set interfaces {{Planned_Router_Port}} mtu 9212
+set interfaces {{Planned_Router_Port}} encapsulation flexible-ethernet-services
+set class-of-service interfaces {{Planned_Router_Port}} apply-groups ES_ACCESS_PORT_BASED
+set class-of-service interfaces {{Planned_Router_Port}} shaping-rate 1g

@@ -1,0 +1,44 @@
+interface Bundle-Ether{{bundle_id_a}}.{{a_end_vlan_details}}
+ description {{a_end_logical_subinterface_description}}
+ ipv4 address {{ip_address_a}} {{subnet_a}}
+ encapsulation dot1q {{a_end_vlan_details}}
+ ipv4 unreachables disable
+ load-interval 30
+ ipv4 mtu 9000
+ mpls
+  mtu 9000
+ no shutdown
+!
+
+router isis ISIS_{{uc_location_a_nw_layer}}_{{ring_number}}
+ is-type level-2-only
+ net {{net_id}}
+ nsf cisco
+ log adjacency changes
+ lsp-gen-interval maximum-wait 50 initial-wait 5 secondary-wait 1
+ lsp-refresh-interval 65000
+ max-lsp-lifetime 65535
+ address-family ipv4 unicast
+  metric-style wide
+  spf-interval maximum-wait 50 initial-wait 5 secondary-wait 1 level 2
+ !
+  interface Bundle-Ether{{bundle_id_a}}.{{a_end_vlan_details}}
+  circuit-type level-2-only
+  point-to-point
+  hello-padding disable
+  hello-interval 20
+  hello-password keychain VIL-ISIS
+  hello-multiplier 5
+  address-family ipv4 unicast
+   fast-reroute per-prefix level 2
+   fast-reroute per-prefix remote-lfa tunnel mpls-ldp level 2
+   metric {{metric_value}} level 2
+   mpls ldp sync
+ !
+!
+mpls ldp
+ !
+ interface Bundle-Ether{{bundle_id_a}}.{{a_end_vlan_details}}
+  igp sync delay on-session-up 25
+ !
+!

@@ -1,0 +1,27 @@
+config t
+ip vrf {{vrf_name}}
+  rd {{rd_value}}:{{export_number}}
+  mpls label mode per-vrf
+  address-family ipv4
+   ~ route-target import {{import_rt}}
+    ~route-target export {{export_rt}}
+  $
+  address-family ipv6
+    ~route-target import {{import_rt}}
+    ~route-target export {{export_rt}}
+  $
+$
+router bgp 55410
+   address-family ipv4 vrf {{vrf_name}}
+    bgp frr
+    bgp frr wtr 5
+    redistribute connected
+    redistribute static
+  $
+   address-family ipv6 vrf {{vrf_name}}
+    bgp frr
+    bgp frr wtr 5
+    redistribute connected
+    redistribute static
+  $
+$

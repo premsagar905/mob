@@ -1,0 +1,26 @@
+%policy-map ACCESS_OUT_10G
+ %class class-default
+  %shape average 10000000000   
+  %service-policy ACCESS_OUT
+%!
+%end
+%commit
+%
+interface {{Planned_Router_Port}}
+description {{description}}
+mtu 9014
+ip arp inspection limit none
+no ip address
+no ip redirects
+no ip unreachables
+no ip proxy-arp
+load-interval 30
+storm-control broadcast level 0.50
+storm-control action shutdown
+storm-control action trap
+spanning-tree bpdufilter enable
+service-policy input ACCESS_IN
+service-policy output ACCESS_OUT_10G
+no shutdown
+!
+end

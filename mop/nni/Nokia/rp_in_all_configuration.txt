@@ -1,0 +1,7 @@
+configure router policy-options
+begin
+policy-statement "RP_PASS_ALL"
+entry 10
+action accept
+exit
+exit

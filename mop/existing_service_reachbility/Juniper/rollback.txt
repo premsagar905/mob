@@ -1,0 +1,2 @@
+delete policy-options policy-statement {{policy_statment}} term a from route-filter {{new_ip}} orlonger
+delete policy-options prefix-list {{prefix_name}} {{new_ip}}

@@ -1,0 +1,4 @@
+no vrf {{Service_VRF_Name}}
+router bgp 55410
+no vrf {{Service_VRF_Name}}
+exit

@@ -1,0 +1,12 @@
+interface {{PE_Interface}}
+description {{PE_Interface_description}}
+ bundle id {{Bundle_ID}} mode active
+no shut
+!
+
+interface Bundle-Ether{{Bundle_ID}}
+interface Bundle-Ether{{Bundle_ID}} description {{Bundle_ID_Description}}
+interface Bundle-Ether{{Bundle_ID}} mtu 9194
+interface Bundle-Ether{{Bundle_ID}} load-interval 30
+interface Bundle-Ether{{Bundle_ID}} bundle minimum-active links 1
+interface Bundle-Ether{{Bundle_ID}} no shut

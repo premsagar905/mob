@@ -1,0 +1,6 @@
+configure service vprn {{VPRN_ID}}
+bgp
+group "{{Service_VRF_Name}}_IPV4"
+neighbor {{IPV4_CPE_Interface_IP/31}}
+shutdown
+exit all

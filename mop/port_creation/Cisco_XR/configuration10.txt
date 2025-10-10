@@ -1,0 +1,17 @@
+%policy-map ACCESS_OUT_{{Interface_Capacity}}
+ %class class-default
+  %service-policy ACCESS_OUT
+  %shape average 10 gbps 
+ %! 
+ %end-policy-map
+%! 
+%commit
+%
+interface {{Planned_Router_Port}}
+description  {{description}}
+mtu 9014
+service-policy input ACCESS_IN
+service-policy output ACCESS_OUT_{{Interface_Capacity}}
+load-interval 30
+no shutdown
+!

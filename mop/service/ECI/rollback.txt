@@ -1,0 +1,2 @@
+delete interfaces {{Planned_Router_Port}} unit {{VLAN}}
+delete routing-instances vrf {{vrfName}} interface {{Planned_Router_Port}}.{{VLAN}}

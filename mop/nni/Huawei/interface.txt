@@ -1,0 +1,11 @@
+interface Eth-Trunk{{Bundle_ID}}
+ mtu 9600
+ description {{Bundle_ID_Description}}
+ mode lacp-static
+
+interface {{PE_Interface}}
+ carrier down-hold-time 300
+ carrier up-hold-time 300
+ description {{PE_Interface_Description}}
+ undo shutdown
+ eth-trunk {{Bundle_ID}}

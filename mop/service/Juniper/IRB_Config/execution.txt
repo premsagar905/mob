@@ -1,0 +1,13 @@
+set interfaces {{Planned_Router_Port}} unit {{VLAN}} apply-groups-except arp-policer
+set interfaces {{Planned_Router_Port}} unit {{VLAN}} description {{description}}
+set interfaces {{Planned_Router_Port}} unit {{VLAN}} encapsulation vlan-bridge
+set interfaces {{Planned_Router_Port}} unit {{VLAN}} vlan-id {{VLAN}}
+set interfaces {{Planned_Router_Port}} unit {{VLAN}} family bridge filter input L2_BCAST_MCAST_LIMIT_BRIDGE
+set interfaces irb unit {{VLAN}} family inet address {{IPV4_Details}}
+set interfaces irb unit {{VLAN}} family inet6 address {{IPV6_Details}}
+set routing-instances {{vrfName}} forwarding-options dhcp-relay group {{group_name}} interface irb.{{VLAN}}
+set routing-instances {{vrfName}} interface irb.{{VLAN}}
+set bridge-domains {{vrfName}}_{{VLAN}} domain-type bridge
+set bridge-domains {{vrfName}}_{{VLAN}} vlan-id {{VLAN}}
+set bridge-domains {{vrfName}}_{{VLAN}} interface {{Planned_Router_Port}}.{{VLAN}}
+set bridge-domains {{vrfName}}_{{VLAN}} routing-interface irb.{{VLAN}}

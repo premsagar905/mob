@@ -1,0 +1,148 @@
+    /configure port {{interface_a}} 
+        description {{a_end_interface_description}}
+        ethernet
+            mode network 
+            encap-type dot1q
+            mtu 9018
+            crc-monitor
+                sd-threshold 2 multiplier 2
+                window-size 5
+            exit
+            network
+                queue-policy "ES_WAN_NQ"
+                qos 11
+            exit
+             hold-time up 60
+        exit
+        no shutdown
+
+
+
+
+
+
+
+   /configure lag {{bundle_id_a}}
+        description {{a_end_logical_description}}
+        encap-type dot1q
+        port {{interface_a}}
+        no shutdown
+
+    configure port {{interface_a}} 
+        no shutdown
+
+/configure router
+        interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}}"
+             address {{ip_address_a}}/{{subnet_a}}
+            description {{a_end_interface_description}}
+            ldp-sync-timer 25
+            port lag-{{bundle_id_a}}:{{a_end_vlan_details}}
+            icmp
+                no mask-reply
+                no redirects
+            exit
+            qos 10
+            bfd 50 receive 50 multiplier 3 type cpm-np
+            no shutdown
+#--------------------------------------------------
+       /configure router isis {{ring_number}}
+            area-id {{net_id}}
+            ignore-lsp-errors
+            lsp-lifetime 65535
+            lsp-refresh-interval 58981 half-lifetime disable
+            overload-on-boot timeout 90
+            traffic-engineering
+            ldp-over-rsvp
+            loopfree-alternates
+            exit
+            ipv6-routing mt
+            no ipv6-multicast-routing
+            multi-topology
+                ipv6-unicast
+            exit
+            timers
+                spf-wait 5000 spf-initial-wait 10 spf-second-wait 50
+            exit
+            level 2
+                wide-metrics-only
+            exit
+            interface "system"
+                level-capability level-2
+                passive
+                no shutdown
+            exit
+        interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}}"
+                level-capability level-2
+                interface-type point-to-point
+                bfd-enable ipv4
+                level 2
+                    hello-authentication-key {{ISIS_password}}
+                    hello-authentication-type message-digest
+                    hello-interval 20
+                    hello-multiplier 5
+                    metric {{metric_value}}
+                exit
+                no shutdown
+#--------------------------------------------------
+       /configure router mpls
+        interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}}"
+                no shutdown
+#--------------------------------------------------
+       /configure router rsvp
+        interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}}"
+                hello-interval 5000
+                bfd-enable
+                no shutdown
+#--------------------------------------------------
+/configure router ldp
+session-parameters
+peer {{loopback_ip_b}}
+exit
+exit
+tcp-session-parameters
+peer-transport {{loopback_ip_b}}
+authentication-key {{LDP_Password}}
+exit
+exit
+interface-parameters
+interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}}"
+bfd-enable
+ipv4
+no shutdown
+exit
+no shutdown
+exit
+exit
+targeted-session
+peer {{loopback_ip_b}}
+tunneling
+exit
+no shutdown
+exit
+exit
+#--------------------------------------------------
+/configure router bgp group
+            group "{{location_a_nw_layer}}_iBGP_RING_{{ring_number}}"
+                description "{{location_a_nw_layer}}_CLIENTS-FOR_{{ring_number}}"
+                family ipv6 vpn-ipv4 vpn-ipv6 l2-vpn mdt-safi route-target mcast-vpn-ipv4 label-ipv4
+                authentication-key {{BGP_Password}}
+                cluster {{loopback_ip_a}}
+                export "BGP_LU_TO_{{location_a_nw_layer}}_City_End_State"
+                peer-as 55410
+                local-address {{loopback_ip_a}}
+                advertise-inactive
+                default-route-target
+                ~neighbor {{neighbour_ip}}
+                    ~description "To_{{device_b}}"
+                exit
+                exit
+            exit
+
+/configure filter
+match-list
+             ip-prefix-list "SYSTEM&WAN-IP-POOL"
+                prefix {{octate_ip_address_a}}/24
+            ip-prefix-list "WAN-IP-POOL"
+                prefix {{octate_ip_address_a}}/24
+exit
+commit

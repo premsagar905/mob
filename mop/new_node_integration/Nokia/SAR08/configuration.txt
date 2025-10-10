@@ -1,0 +1,1416 @@
+#--------------------------------------------------
+echo "System Configuration"
+#--------------------------------------------------
+    system
+        name "{{self_device_a}}"
+        location "{{nss_id}}""
+        dns
+        exit
+        load-balancing
+            lsr-load-balancing lbl-ip bottom-of-stack profile-1
+        exit
+        rollback
+            rollback-location "cf3:/rollback"
+        exit
+        snmp
+            packet-size 9216
+        exit
+        time
+            ntp
+                no authentication-check
+                server 100.127.46.5 prefer
+                server 100.127.46.6
+                no shutdown
+            exit
+            sntp
+                shutdown
+            exit
+            zone IST 05:30
+        exit
+        thresholds
+            rmon
+            exit
+            cflash-cap-alarm cf3-A: rising-threshold 3200000 interval 3600
+            cflash-cap-alarm cf3-B: rising-threshold 3200000 interval 3600
+            kb-memory-use-alarm rising-threshold 12800000 interval 3600
+        exit
+        lldp
+            shutdown
+        exit
+    exit
+#--------------------------------------------------
+echo "System Security Configuration"
+#--------------------------------------------------
+    system
+        security
+            profile "tac"
+                default-action permit-all
+                entry 10
+                    match "configure system security"
+                    action permit
+                exit
+                entry 20
+                    match "show system security"
+                    action permit
+                exit
+            exit
+            profile "prov"
+                default-action permit-all
+                entry 10
+                    match "debug"
+                    action deny
+                exit
+                entry 15
+                    match "configure system security"
+                    action permit
+                exit
+                entry 20
+                    match "show system security"
+                    action permit
+                exit
+                entry 30
+                    match "tools perform security"
+                    action permit
+                exit
+                entry 100
+                    match "configure li"
+                    action deny
+                exit
+                entry 110
+                    match "show li"
+                    action deny
+                exit
+                entry 111
+                    match "clear li"
+                    action deny
+                exit
+            exit
+            profile "SAM-User"
+                default-action deny-all
+                entry 10
+                    match "admin display-config"
+                    action permit
+                exit
+                entry 20
+                    match "show"
+                    action permit
+                exit
+                entry 30
+                    match "ping"
+                    action permit
+                exit
+                entry 40
+                    match "configure"
+                    action permit
+                exit
+            exit
+            profile "read-only"
+                default-action deny-all
+                entry 10
+                    match "show "
+                    action permit
+                exit
+                entry 20
+                    match "admin display-config"
+                    action permit
+                exit
+                entry 30
+                    match "ping"
+                    action permit
+                exit
+                entry 40
+                    match "traceroute"
+                    action permit
+                exit
+                entry 50
+                    match "monitor"
+                    action permit
+                exit
+                entry 60
+                    match "oam"
+                    action permit
+                exit
+                entry 70
+                    match "environment"
+                    action permit
+                exit
+            exit
+            password
+                authentication-order radius local exit-on-reject
+                health-check interval 1500
+            exit
+            radius
+                authorization
+                accounting
+                server 1 address 182.19.97.131 secret "idYurkInR2Txufd54T8NYQQmewzPCzPp" hash2
+            exit
+            no user "admin"
+            user "COR1038552"
+                password "$2y$10$qDn8emY./2NsWGy04XH8k.C.3VC7ihvvU0vUbhpZQlcCV7o.YbImy"
+                access console ftp
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+            exit
+            user "COR1102432"
+                password "$2y$10$qXDZbljWS2QPIp812l97w.wlszVeZsWMgvoNMCy.phUl6BVY3Vgmi"
+                access console
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+            exit
+            user "OSSV3"
+                password "$2y$10$aFNo/QEekk7ubBiw/J5yw.6ixSt3inbFJo46R84F/53EG6Y.vSVdG"
+                access ftp snmp
+                snmp
+                    authentication hash md5 be5890beb696b35b27bdb8c54bcc63a6 privacy des-key be5890beb696b35b27bdb8c54bcc63a6
+                    group "SNMPv3"
+                exit
+            exit
+            user "SAM"
+                password "$2y$10$IjLlSpVqRPf1zvx3p4IJg.MdOhxXonqQ6cgH8hjeRLLlP1mNy4Li6"
+                access ftp snmp
+                console
+                    cannot-change-password
+                    no member "default"
+                    member "administrative"
+                    member "SAM-User"
+                exit
+            exit
+            user "SAMNFM"
+                password "$2y$10$EQUhPBOL1B8BgQSIWvrao.lTw/KBW9mBeuGBznWgFmQGsxYMGh5BC"
+                access console ftp snmp
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+                snmp
+                    authentication none
+                    group "nmsNoAuth"
+                exit
+            exit
+            user "SNMPv3-USER"
+                password "$2y$10$IYPohBLNuYP/9.k1Y9r/c.s2YnquCu7FFrytqt3iXFsf1vEN2vcJm"
+                access ftp snmp
+                snmp
+                    authentication hash md5 51118c2a1f03ca1d9fa878988569e8c1 privacy des-key 51118c2a1f03ca1d9fa878988569e8c1
+                    group "SNMPv3"
+                exit
+            exit
+            user "adminnokia"
+                password "$2y$10$FrjBsZWpiXHpQMnYVaaLw.21WkkMN/GkKLPXKIo7cD7opjaHs/By6"
+                access console ftp snmp
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+                snmp
+                    authentication none
+                exit
+            exit
+            user "alusam"
+                password "$2y$10$iLKuF6x2s6XQhNlRCeEGk.pH2R9aW0qfc49nFMUJojVU915ArVpv2"
+                access console ftp snmp
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+                snmp
+                    authentication none
+                    group "nmsNoAuth"
+                exit
+            exit
+            user "emergency"
+                password "$2y$10$EvPrLJHtpksM0yzK4fcyg.TAv/X60oCm0bmoCfXQhI4FMYBJPQjyS"
+                access console ftp
+                console
+                    member "default"
+                    member "administrative"
+                exit
+            exit
+            user "nspuser"
+                password "$2y$10$TPly0EiigRYkiT7V/mYLA.jBUExv5g6gH3OLH4dgqvUbxo9se1nAq"
+                access console ftp
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+            exit
+            user "tctsnoc"
+                password "$2y$10$ON7FpdEPIqhHoT4PZZQIQ.zK9/WKhpouyb91hoH9nXbs4oNUxyReO"
+                access console
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+            exit
+            snmp
+                access group "SNMPv3" security-model usm security-level privacy read "iso" write "iso" notify "iso"
+                access group "SNMPv3" security-model usm security-level privacy context "vprn" prefix read "vprn-view" write "vprn-view" notify "iso"
+                access group "nmsNoAuth" security-model usm security-level no-auth-no-privacy read "iso" write "iso" notify "iso"
+                community "cV3ISTw2V5pbEWmVEA9jXgB/1EERXQA=" hash2 rw version both
+                community "M7bUu5G9lE0ulAC92ePes7Ex6v8DJ3hxKFXU" hash2 rw version both
+            exit
+            ssh
+                client-cipher-list protocol-version 2
+                    no cipher 10
+                    no cipher 20
+                    no cipher 30
+                    no cipher 40
+                    no cipher 50
+                    no cipher 60
+                    no cipher 70
+                    no cipher 80
+                    cipher 2 name aes256-ctr
+                    cipher 4 name aes192-ctr
+                    cipher 6 name aes128-ctr
+                exit
+                server-cipher-list protocol-version 2
+                    no cipher 10
+                    no cipher 20
+                    no cipher 30
+                    no cipher 40
+                    no cipher 50
+                    no cipher 60
+                    no cipher 70
+                    no cipher 80
+                    cipher 2 name aes256-ctr
+                    cipher 4 name aes192-ctr
+                    cipher 6 name aes128-ctr
+                exit
+                client-mac-list
+                    no mac 220
+                    no mac 225
+                    no mac 240
+                    mac 200 name hmac-sha2-512
+                    mac 210 name hmac-sha2-256
+                    mac 215 name hmac-sha1
+                    mac 230 name hmac-ripemd160
+                    mac 235 name hmac-ripemd160-openssh-com
+                exit
+                server-mac-list
+                    no mac 220
+                    no mac 225
+                    no mac 240
+                    mac 200 name hmac-sha2-512
+                    mac 210 name hmac-sha2-256
+                    mac 215 name hmac-sha1
+                    mac 230 name hmac-ripemd160
+                    mac 235 name hmac-ripemd160-openssh-com
+                exit
+                preserve-key
+            exit
+            vprn-network-exceptions
+        exit
+    exit
+#--------------------------------------------------
+echo "System Login Control Configuration"
+#--------------------------------------------------
+    system
+        login-control
+            ssh
+                inbound-max-sessions 15
+                outbound-max-sessions 15
+            exit
+            idle-timeout 5
+            pre-login-message "\n********************************************************\n\nAuthorized access only\n\nThis system is the property of Vodafone Mobile. \n\nDisconnect IMMEDIATELY if you are not an authorized user!\n\nAll connection attempts are logged and monitored. All unauthorized\n\nconnection attempts will be  investigated and handed over to the\n\nproper authorities.\n\n********************************************************\n"
+            exponential-backoff
+        exit
+    exit
+#--------------------------------------------------
+echo "Log Configuration"
+#--------------------------------------------------
+    log
+        file-id 75
+            location cf3:
+            rollover 3600 retention 24
+        exit
+        filter 20
+            default-action forward
+        exit
+        event-control "chassis" 2058 generate
+        event-control "chassis" 2059 generate
+        event-control "chassis" 2063 generate
+        event-control "chassis" 2069 generate critical
+        event-control "chassis" 2076 generate
+        event-control "chassis" 2098 generate
+        event-control "chassis" 2099 generate
+        event-control "chassis" 2101 generate
+        event-control "chassis" 2102 generate
+        event-control "chassis" 2103 generate
+        event-control "chassis" 2104 generate
+        event-control "chassis" 2105 generate
+        event-control "chassis" 2303 generate critical
+        event-control "chassis" 2321 generate critical
+        event-control "igmp" 2005 suppress
+        event-control "isis" 2029 generate critical
+        event-control "isis" 2036 generate critical
+        event-control "vrtr" 2023 generate major throttle
+        syslog 1
+            address 182.19.118.226
+        exit
+        syslog 2
+            address 182.19.118.227
+        exit
+        snmp-trap-group 10
+            description "INKO297003"
+        exit
+        snmp-trap-group 98
+            description "5620sam"
+            trap-target "3CA82A0E8230:main1" address 10.220.30.99 snmpv3 notify-community "SNMPv3-USER" security-level privacy
+            trap-target "3CA82A0E8230:main2" address 10.220.22.99 snmpv3 notify-community "SNMPv3-USER" security-level privacy
+            trap-target "9457A55AE63C:main1" address 122.15.240.100 snmpv3 notify-community "SNMPv3-USER" security-level privacy
+            trap-target "9457A55AE63C:main2" address 122.15.240.97 snmpv3 notify-community "SNMPv3-USER" security-level privacy
+        exit
+        log-id 95
+            description "event logs towards syslog 2"
+            from main security change
+            to syslog 2
+            no shutdown
+        exit
+        log-id 96
+            description "event logs towards syslog 1"
+            from main security change
+            to syslog 1
+            no shutdown
+        exit
+        log-id 97
+            description "event logs towards local CF3"
+            from main security change
+            to file 75
+            no shutdown
+        exit
+        log-id 98
+            from main security
+            to snmp 1024
+            no shutdown
+        exit
+    exit
+#--------------------------------------------------
+echo "System Security Cpm Hw Filters and PKI Configuration"
+#--------------------------------------------------
+    system
+        security
+            cpm-filter
+                default-action drop
+                ip-filter
+                    entry 1 create
+                        action accept
+                        description "Accept RSVP from network"
+                        match protocol rsvp
+                            src-ip 100.127.46.0/24
+                        exit
+                    exit
+                    entry 2 create
+                        action accept
+                        description "Accept RSVP from network"
+                        match protocol rsvp
+                            src-ip 10.164.21.0/24
+                        exit
+                    exit
+                    entry 3 create
+                        action accept
+                        description "Accept RSVP from network"
+                        match protocol rsvp
+                            src-ip 10.164.22.0/24
+                        exit
+                    exit
+                    entry 4 create
+                        action accept
+                        description "Accept LDP sessions from network"
+                        match protocol *
+                            dst-port 646 65535
+                        exit
+                    exit
+                    entry 5 create
+                        action accept
+                        description "Accept LDP sessions from network"
+                        match protocol *
+                            src-port 646 65535
+                        exit
+                    exit
+                    entry 6 create
+                        action accept
+                        description "Accept SSH Inbound"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip 100.127.46.0/24
+                        exit
+                    exit
+                    entry 7 create
+                        action accept
+                        description "Accept IBGP src-port from network"
+                        match protocol tcp
+                            dst-port 179 65535
+                            src-ip 100.127.46.0/24
+                        exit
+                    exit
+                    entry 8 create
+                        action accept
+                        description "Accept eBGP src-port from Customers"
+                        match protocol tcp
+                            dst-port 179 65535
+                        exit
+                    exit
+                    entry 9 create
+                        action accept
+                        description "accept PIM from network"
+                        match protocol pim
+                        exit
+                    exit
+                    entry 10 create
+                        action accept
+                        description "accept PIM from network"
+                        match protocol pim
+                            src-ip 10.164.21.0/24
+                        exit
+                    exit
+                    entry 11 create
+                        action accept
+                        description "accept PIM from network"
+                        match protocol pim
+                            src-ip 10.164.22.0/24
+                        exit
+                    exit
+                    entry 12 create
+                        action accept
+                        description "Allow S-PMSI Port"
+                        match protocol udp
+                            dst-port 520 65535
+                        exit
+                    exit
+                    entry 13 create
+                        action accept
+                        description "Allow S-PMSI Port"
+                        match protocol udp
+                            dst-port 3232 65535
+                        exit
+                    exit
+                    entry 15 create
+                        action accept
+                        description "Accept TACACS+ Servers"
+                        match
+                            src-ip 182.19.118.224/32
+                        exit
+                    exit
+                    entry 16 create
+                        action accept
+                        description "Accept Syslog Server"
+                        match
+                            src-ip 182.19.118.226/32
+                        exit
+                    exit
+                    entry 17 create
+                        action accept
+                        description "Accept Syslog Server"
+                        match
+                            src-ip 182.19.118.227/32
+                        exit
+                    exit
+                    entry 18 create
+                        action drop
+                        description "Accept FTP-data & control inbound"
+                        match protocol tcp
+                            src-port 20 65534
+                        exit
+                    exit
+                    entry 19 create
+                        action drop
+                        description "Accept FTP-data & control outbound"
+                        match protocol tcp
+                            dst-port 20 65534
+                        exit
+                    exit
+                    entry 21 create
+                        action accept
+                        description "NTP Server to UPE Switches"
+                        match protocol udp
+                            src-port 123 65535
+                        exit
+                    exit
+                    entry 22 create
+                        action accept
+                        description "Accept SSH"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip 10.164.21.0/24
+                        exit
+                    exit
+                    entry 23 create
+                        action accept
+                        description "Accept SSH"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip 10.164.22.0/24
+                        exit
+                    exit
+                    entry 24 create
+                        action accept
+                        description "Accept SSH Outbound"
+                        match protocol tcp
+                            dst-ip 100.127.46.0/24
+                            src-port 22 65535
+                        exit
+                    exit
+                    entry 25 create
+                        action accept
+                        description "Accept SSH"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip 123.63.156.85/32
+                        exit
+                    exit
+                    entry 26 create
+                        action accept
+                        description "Accept SSH"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip 182.19.118.116/32
+                        exit
+                    exit
+                    entry 27 create
+                        action accept
+                        description "Accept SSH"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip 182.19.118.225/32
+                        exit
+                    exit
+                    entry 28 create
+                        action accept
+                        description "Accept SSH"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip 182.19.118.227/32
+                        exit
+                    exit
+                    entry 29 create
+                        action accept
+                        description "Accept SSH"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip 182.19.92.129/32
+                        exit
+                    exit
+                    entry 30 create
+                        action accept
+                        description "Accept SSH"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip 182.19.92.130/32
+                        exit
+                    exit
+                    entry 31 create
+                        action accept
+                        description "Accept SSH"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip 182.19.118.254/32
+                        exit
+                    exit
+                    entry 33 create
+                        action accept
+                        description "Allow 5620 SAM access - Primary & Secondary"
+                        match
+                            src-ip 122.15.240.96/29
+                        exit
+                    exit
+                    entry 34 create
+                        action accept
+                        description "Allow 5620 SAM access - Primary & Secondary"
+                        match
+                            dst-ip 122.15.240.96/29
+                        exit
+                    exit
+                    entry 36 create
+                        action accept
+                        description "accept SNMP/SNMP-TRAP trusted traffic"
+                        match protocol *
+                            dst-port 160 65532
+                            src-ip 122.15.240.128/26
+                        exit
+                    exit
+                    entry 37 create
+                        action accept
+                        description "accept SNMP/SNMP-TRAP trusted traffic"
+                        match protocol *
+                            dst-port 160 65532
+                            src-ip 182.19.118.116/32
+                        exit
+                    exit
+                    entry 38 create
+                        action accept
+                        description "accept SNMP/SNMP-TRAP trusted traffic"
+                        match protocol *
+                            dst-port 160 65532
+                            src-ip 182.19.118.225/32
+                        exit
+                    exit
+                    entry 39 create
+                        action accept
+                        description "accept SNMP/SNMP-TRAP trusted traffic"
+                        match protocol *
+                            dst-port 160 65532
+                            src-ip 182.19.118.227/32
+                        exit
+                    exit
+                    entry 40 create
+                        action accept
+                        description "accept SNMP/SNMP-TRAP trusted traffic"
+                        match protocol *
+                            dst-port 160 65532
+                            src-ip 182.19.118.236/32
+                        exit
+                    exit
+                    entry 41 create
+                        action accept
+                        description "accept SNMP/SNMP-TRAP trusted traffic"
+                        match protocol *
+                            dst-port 160 65532
+                            src-ip 182.19.118.237/32
+                        exit
+                    exit
+                    entry 42 create
+                        action accept
+                        description "accept SNMP/SNMP-TRAP trusted traffic"
+                        match protocol *
+                            dst-port 160 65532
+                            src-ip 182.19.118.240/32
+                        exit
+                    exit
+                    entry 43 create
+                        action accept
+                        description "accept SNMP/SNMP-TRAP trusted traffic"
+                        match protocol *
+                            dst-port 160 65532
+                            src-ip 182.19.118.241/32
+                        exit
+                    exit
+                    entry 44 create
+                        action accept
+                        description "accept SNMP/SNMP-TRAP trusted traffic"
+                        match protocol *
+                            dst-port 160 65532
+                            src-ip 182.19.118.254/32
+                        exit
+                    exit
+                    entry 45 create
+                        action accept
+                        description "accept SNMP/SNMP-TRAP trusted traffic"
+                        match protocol *
+                            dst-port 160 65532
+                            src-ip 172.16.0.157/32
+                        exit
+                    exit
+                    entry 46 create
+                        action accept
+                        description "Accept link BFD (RFC5881) from network : itf@"
+                        match protocol *
+                            dst-port 3784 65535
+                        exit
+                    exit
+                    entry 47 create
+                        action accept
+                        description "Accept MH BFD (RFC5883) from network : system@"
+                        match protocol *
+                            dst-port 3784 65535
+                            src-port 3784 65535
+                        exit
+                    exit
+                    entry 48 create
+                        action accept
+                        description "Accept MH BFD (RFC5883) from network : system@"
+                        match protocol *
+                            dst-port 4784 65535
+                            src-ip 100.127.46.0/24
+                            src-port 4784 65535
+                        exit
+                    exit
+                    entry 49 create
+                        action accept
+                        description "Accept RADIUS Servers"
+                        match
+                            src-ip 182.19.118.44/32
+                        exit
+                    exit
+                    entry 50 create
+                        action accept
+                        description "Accept RADIUS Servers"
+                        match
+                            src-ip 182.19.118.45/32
+                        exit
+                    exit
+                    entry 51 create
+                        action accept
+                        description "SSH-PUTTY"
+                        match
+                            src-ip 182.19.118.121/32
+                        exit
+                    exit
+                    entry 52 create
+                        action accept
+                        description "SSH-PUTTY"
+                        match
+                            src-ip 182.19.118.122/32
+                        exit
+                    exit
+                    entry 53 create
+                        action accept
+                        description "Accept SSH Outbound Temp"
+                        match protocol tcp
+                            src-port 22 65535
+                        exit
+                    exit
+                    entry 54 create
+                        action accept
+                        description "DHCPv4_Relay"
+                        match protocol udp
+                            dst-port 67 68
+                            src-port 67 68
+                        exit
+                    exit
+                    entry 55 create
+                        action accept
+                        description "SSH-IPSA"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip 122.15.240.128/26
+                        exit
+                    exit
+                    entry 56 create
+                        action accept
+                        description "Accept SSH InfiWorx Servers"
+                        match
+                            src-ip 182.19.99.192/28
+                        exit
+                    exit
+                    entry 57 create
+                        action accept
+                        description "Twamp Protocol"
+                        match protocol *
+                            src-ip 123.63.159.0/24
+                            src-port 862 65535
+                        exit
+                    exit
+                    entry 58 create
+                        action accept
+                        description "Twamp Protocol_01"
+                        match protocol *
+                            dst-port 862 65535
+                            src-ip 123.63.159.0/24
+                        exit
+                    exit
+                    entry 59 create
+                        action accept
+                        description "Accept TACACS+ Servers"
+                        match
+                            src-ip 182.19.97.131/32
+                        exit
+                    exit
+                    entry 60 create
+                        action accept
+                        description "Accept TACACS+ Servers"
+                        match
+                            src-ip 182.19.97.81/32
+                        exit
+                    exit
+                    entry 61 create
+                        action accept
+                        match protocol icmp
+                            icmp-type echo-request
+                        exit
+                    exit
+                    entry 62 create
+                        action accept
+                        match protocol icmp
+                            icmp-type echo-reply
+                        exit
+                    exit
+                    entry 63 create
+                        action drop
+                        description "Drop all"
+                        log 101
+                        match
+                            src-ip 0.0.0.0/1
+                        exit
+                    exit
+                    entry 64 create
+                        action drop
+                        description "Drop all"
+                        log 101
+                        match
+                            src-ip 128.0.0.0/1
+                        exit
+                    exit
+                    no shutdown
+                exit
+            exit
+        exit
+    exit
+#--------------------------------------------------
+echo "VLAN-Filter Configuration"
+#--------------------------------------------------
+    filter
+    exit
+#--------------------------------------------------
+echo "QoS Policy Configuration"
+#--------------------------------------------------
+    qos
+        slope-policy "CEN_WAN" create
+            description "CEN_WAN_LINKS"
+            high-slope
+                no shutdown
+            exit
+            low-slope
+                no shutdown
+            exit
+        exit
+        slope-policy "CEN_ACCESS" create
+            description "CEN_Access_Ports"
+            high-slope
+                no shutdown
+            exit
+            low-slope
+                no shutdown
+            exit
+        exit
+        network-queue "20" create
+            queue 1 create
+                high-prio-only 10
+            exit
+            queue 9 multipoint create
+                high-prio-only 10
+            exit
+        exit
+        network-queue "test123" create
+            queue 1 create
+                high-prio-only 10
+            exit
+            queue 9 multipoint create
+                high-prio-only 10
+            exit
+        exit
+        network-queue "CEN_WAN_LINKS" create
+            description "CEN_WAN_LINKS_New_Policy"
+            queue 1 create
+                rate 100 cir 1
+                high-prio-only 10
+                slope-policy "CEN_WAN"
+            exit
+            queue 2 create
+                rate 100 cir 2
+                slope-policy "CEN_WAN"
+            exit
+            queue 3 create
+                rate 100 cir 2
+                slope-policy "CEN_WAN"
+            exit
+            queue 4 create
+                rate 100 cir 5
+                slope-policy "CEN_WAN"
+            exit
+            queue 5 create
+                rate 100 cir 30
+                slope-policy "CEN_WAN"
+            exit
+            queue 6 create
+                rate 60 cir 30
+                slope-policy "CEN_WAN"
+            exit
+            queue 7 create
+                rate 60 cir 20
+                slope-policy "CEN_WAN"
+            exit
+            queue 8 create
+                rate 60 cir 10
+                slope-policy "CEN_WAN"
+            exit
+            queue 9 multipoint create
+                mbs 50
+                high-prio-only 10
+            exit
+            fc af create
+                multicast-queue 9
+                queue 3
+            exit
+            fc be create
+                multicast-queue 9
+                queue 1
+            exit
+            fc ef create
+                multicast-queue 9
+                queue 6
+            exit
+            fc h1 create
+                multicast-queue 9
+                queue 7
+            exit
+            fc h2 create
+                multicast-queue 9
+                queue 5
+            exit
+            fc l1 create
+                multicast-queue 9
+                queue 4
+            exit
+            fc nc create
+                multicast-queue 9
+                queue 8
+            exit
+        exit
+        fabric-profile 10 aggregate-mode create
+            description "Fabric-Policy-for-10G-MDA"
+            aggregate-rate 10000000 unshaped-sap-cir 0
+        exit
+        fabric-profile 11 aggregate-mode create
+            description "Fabric-Policy-for-1G-MDA"
+            aggregate-rate 1000000 unshaped-sap-cir 0
+        exit
+    exit
+#--------------------------------------------------
+echo "QoS Policy Configuration"
+#--------------------------------------------------
+ 
+#--------------------------------------------------
+echo "Port Configuration"
+#--------------------------------------------------
+    port 1/1/1
+        ethernet
+            mode network
+            encap-type dot1q
+            mtu 9018
+            network
+                queue-policy "CEN_WAN_LINKS"
+            exit
+            hold-time up 60
+            no autonegotiate
+        exit
+    exit
+#--------------------------------------------------
+echo "LAG Configuration"
+#--------------------------------------------------
+    lag {{east_bundle_id_a}}
+        description "{{east_a_end_logical_description}}"
+        mode network
+        encap-type dot1q
+        port {{east_interface_a}} sub-group 1
+        port 1/1/6 sub-group 1
+        lacp active administrative-key 32768
+        no shutdown
+    exit
+#--------------------------------------------------
+echo "Redundancy Configuration"
+#--------------------------------------------------
+    redundancy
+        synchronize boot-env
+    exit
+#--------------------------------------------------
+echo "External Alarm Configuration"
+#--------------------------------------------------
+    external-alarms
+    exit
+#--------------------------------------------------
+echo "Network Security Configuration"
+#--------------------------------------------------
+    security
+        logging
+        exit
+        begin
+        commit
+    exit
+#--------------------------------------------------
+echo "Management Router Configuration"
+#--------------------------------------------------
+    router management
+    exit
+ 
+#--------------------------------------------------
+echo "Router (Network Side) Configuration"
+#--------------------------------------------------
+    router Base
+        interface "GE-1/3/7:0"
+            shutdown
+            description "KLWHOA0031_TO-KLKOLDHACAG02ASAR8-1/1/1"
+            ipv6
+            exit
+            qos 50
+            bfd 50 receive 50 multiplier 3 type np
+        exit
+        interface "LAG-{{east_bundle_id_a}}:{{east_a_end_vlan_details}}"
+            address {{east_ip_address_a}}/31
+            description "{{east_a_end_logical_description}}"
+            ldp-sync-timer 5
+            port lag-{{east_bundle_id_a}}:{{east_a_end_vlan_details}}
+            ipv6
+                address 2402:8100:4000::5:1:4010/127
+            exit
+            qos 50
+            bfd 200 receive 200 multiplier 3 type np
+            no shutdown
+        exit
+        interface "system"
+            address 100.127.46.19/32
+            ipv6
+                address 2402:8100:4000::5:2:28/128
+            exit
+            no shutdown
+        exit
+        autonomous-system 55410
+        ip-fast-reroute
+        router-id 100.127.46.19
+#--------------------------------------------------
+echo "SGT Mapping Configuration"
+#--------------------------------------------------
+        sgt-qos
+            application bgp dscp nc2
+            application dhcp dscp nc2
+            application dns dscp nc2
+            application ftp dscp af21
+            application icmp dscp af21
+            application igmp dscp nc2
+            application ldp dscp nc2
+            application mld dscp nc2
+            application ndis dscp nc2
+            application ntp dscp nc2
+            application ospf dscp nc2
+            application pim dscp nc2
+            application radius dscp nc2
+            application rip dscp nc2
+            application rsvp dscp nc2
+            application snmp dscp nc2
+            application snmp-notification dscp nc2
+            application ssh dscp nc2
+            application syslog dscp af21
+            application tacplus dscp nc2
+            application telnet dscp af21
+            application tftp dscp nc2
+            application traceroute dscp af21
+            application vrrp dscp nc2
+            application ptp dscp nc2
+            application arp dot1p 7
+            application isis dot1p 7
+        exit
+#--------------------------------------------------
+echo "ISIS Configuration"
+#--------------------------------------------------
+          isis {{isis_instance_id}}
+            level-capability level-2
+            area-id 49.0002
+            ignore-lsp-errors
+            lsp-lifetime 65535
+            overload-on-boot timeout 90
+            export "SYSTEM-LOOPBACK-TAG"
+            traffic-engineering
+            reference-bandwidth 1000000000
+            timers
+                spf-wait 5000 spf-initial-wait 10 spf-second-wait 50
+            exit
+            level 2
+                wide-metrics-only
+            exit
+            interface "system"
+                passive
+                no shutdown
+            exit
+            interface "TE-{{east_interface_a}}:{{east_a_end_vlan_details}}"
+                level-capability level-2
+                interface-type point-to-point
+                level 2
+                    hello-interval 20
+                    hello-multiplier 5
+                    metric {{east_metric_value}}
+                exit
+                no shutdown
+            exit           
+                no shutdown
+            exit
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "IGMP Configuration"
+#--------------------------------------------------
+        igmp
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "PIM Configuration"
+#--------------------------------------------------
+        pim
+            interface "system"
+            exit
+            interface "TE-{{east_interface_a}}:{{east_a_end_vlan_details}}"
+            exit
+            interface "LAG-{{east_bundle_id_a}}:{{east_a_end_vlan_details}}"
+                bfd-enable
+            exit
+            rp
+                static
+                exit
+                bsr-candidate
+                    shutdown
+                exit
+                rp-candidate
+                    shutdown
+                exit
+            exit
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "MPLS Configuration"
+#--------------------------------------------------
+        mpls
+            resignal-timer 30
+            interface "system"
+                no shutdown
+            exit
+            interface "TE-{{east_interface_a}}:{{east_a_end_vlan_details}}"
+                no shutdown
+            exit
+        exit
+#--------------------------------------------------
+echo "RSVP Configuration"
+#--------------------------------------------------
+        rsvp
+            shutdown
+            interface "system"
+                no shutdown
+            exit
+            interface "TE-1/2/6:0"
+                no shutdown
+            exit
+            interface "TE-1/2/5:0"
+                no shutdown
+            exit
+            interface "LAG-{{east_bundle_id_a}}:{{east_a_end_vlan_details}}"
+                bfd-enable
+                no shutdown
+            exit
+        exit
+#--------------------------------------------------
+echo "MPLS LSP Configuration"
+#--------------------------------------------------
+        mpls
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "LDP Configuration"
+#--------------------------------------------------
+        ldp
+            session-parameters
+                peer {{east_ip_address_b}}
+                exit
+                peer {{west_ip_address_b}}
+                exit
+            exit
+            tcp-session-parameters
+                peer-transport {{east_ip_address_b}}
+                    authentication-key "{{LDP_Password}}" hash2
+                exit
+                peer-transport {{west_ip_address_b}}
+                    authentication-key "{{LDP_Password}}" hash2
+                exit
+            exit
+            interface-parameters
+                interface "TE-1/2/6:0" dual-stack
+                    ipv4
+                        no shutdown
+                    exit
+                    no shutdown
+                exit
+                interface "TE-1/2/5:0" dual-stack
+                    ipv4
+                        no shutdown
+                    exit
+                    no shutdown
+                exit
+            exit
+            targeted-session
+            exit
+            no shutdown
+        exit
+    exit
+ 
+#--------------------------------------------------
+echo "Service Configuration"
+#--------------------------------------------------
+ 
+#--------------------------------------------------
+echo "CPM Filter Router and Svc-id Match Configuration"
+#--------------------------------------------------
+    system
+        security
+            cpm-filter
+                default-action drop
+                ip-filter
+                    no shutdown
+                exit
+            exit
+        exit
+    exit
+#--------------------------------------------------
+echo "Router (Service Side) Configuration"
+#--------------------------------------------------
+    router Base
+#--------------------------------------------------
+echo "ISIS Configuration"
+#--------------------------------------------------
+        isis 0
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "IGMP Configuration"
+#--------------------------------------------------
+        igmp
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "PIM Configuration"
+#--------------------------------------------------
+        pim
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "Policy Configuration"
+#--------------------------------------------------
+        policy-options
+            begin
+            commit
+        exit
+#--------------------------------------------------
+echo "BGP Configuration"
+#--------------------------------------------------
+        bgp
+            vpn-apply-import
+            vpn-apply-export
+            hold-time 120
+            min-route-advertisement 1
+            router-id {{self_loopback_ip_a}}
+            rapid-withdrawal
+            next-hop-resolution
+                label-route-transport-tunnel
+                    family vpn
+                        resolution-filter
+                            ldp
+                            rsvp
+                            sr-isis
+                        exit
+                        resolution filter
+                    exit
+                    family label-ipv4
+                        resolution-filter
+                            ldp
+                            rsvp
+                            sr-isis
+                        exit
+                        resolution filter
+                    exit
+                exit
+            exit
+            group "RR_55410"
+                description "CEN_RR"
+                family ipv6 vpn-ipv4 vpn-ipv6 route-target label-ipv4
+                hold-time 120
+                outbound-route-filtering
+                    extended-community
+                        send-orf
+                        accept-orf
+                    exit
+                exit
+                peer-as 55410
+                enable-peer-tracking
+                neighbor {{east_ip_address_b}}
+                    description "{{east_device_b}}"
+                    family vpn-ipv4 vpn-ipv6 label-ipv4
+                    authentication-key "{{BGP_Password}}" hash2
+                    export "EXPORT-LOOPBACK0"
+                exit
+                neighbor {{west_ip_address_b}}
+                    description "{{west_device_b}}"
+                    family vpn-ipv4 vpn-ipv6 label-ipv4
+                    authentication-key "{{BGP_Password}}" hash2
+                    export "EXPORT-LOOPBACK0"
+                exit
+            exit
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "Network Security Zone Configuration"
+#--------------------------------------------------
+    exit
+ 
+#--------------------------------------------------
+echo "Source IP Address Configuration"
+#--------------------------------------------------
+    system
+        security
+            source-address
+                application ntp "system"
+            exit
+        exit
+    exit
+#--------------------------------------------------
+echo "System Sync-If-Timing Configuration"
+#--------------------------------------------------
+    system
+        sync-if-timing
+            begin
+            commit
+        exit
+    exit
+#--------------------------------------------------
+echo "System Time Configuration"
+#--------------------------------------------------
+    system
+        time
+            ntp
+            exit
+        exit
+    exit
+#--------------------------------------------------
+echo "SAA Tests Configuration"
+#--------------------------------------------------
+    saa
+        test "Test_369" owner "sas:0:1:1:e"
+            description "Test_369"
+            no shutdown
+        exit
+        test "TEST_963" owner "sas:0:2:2:e"
+            description "TEST_963"
+            type
+                icmp-ping 100.127.46.20 fc "be" profile out
+            exit
+            trap-gen
+                probe-fail-enable
+                test-completion-enable
+                test-fail-enable
+            exit
+            no shutdown
+        exit
+        test "TEST_852" owner "sas:0:3:3:e"
+            description "TEST_852"
+            type
+                icmp-ping 10.164.21.77 fc "be" profile out
+            exit
+            trap-gen
+                test-completion-enable
+            exit
+            no shutdown
+        exit
+    exit
+ 
+#--------------------------------------------------
+echo "OAM Tests Configuration"
+#--------------------------------------------------
+    test-oam
+        twamp
+            server
+                prefix 123.63.159.48/29 create
+                exit
+                no shutdown
+            exit
+        exit
+    exit
+ 
+exit all

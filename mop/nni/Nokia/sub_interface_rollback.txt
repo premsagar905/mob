@@ -1,0 +1,5 @@
+configure service vprn {{VPRN_ID}}
+interface "LAG-{{Bundle_ID}}:{{VLAN_ID}}" shutdown
+sap lag-{{Bundle_ID}}:{{VLAN_ID}} shutdown
+no sap lag-{{Bundle_ID}}:{{VLAN_ID}}
+no interface "lag-{{Bundle_ID}}:{{VLAN_ID}}"

@@ -1,0 +1,2 @@
+edit prefix-set {{prefix_name}} inline add "{{new_ip}} le 32"
+yes

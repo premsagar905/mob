@@ -1,0 +1,2 @@
+undo interface Eth-Trunk{{Bundle_ID}}.{{VLAN_ID}}
+commit

@@ -1,0 +1,23 @@
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}}
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}} remote-as {{Remote_AS_No}}
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}} bfd fast-detect
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}} bfd multiplier 3
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}} bfd minimum-interval 300
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}} password clear {{BGP_Password}}
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}} address-family ipv4 unicast 
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}} address-family ipv4 unicast route-policy rp_{{Service_VRF_Name}}_IPV4_in in
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}} address-family ipv4 unicast route-policy rp_{{Service_VRF_Name}}_IPV4_out out
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}} address-family ipv4 unicast as-override
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}} address-family ipv4 unicast soft-reconfiguration inbound always
+
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}}
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}} remote-as {{Remote_AS_No}}
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}} bfd fast-detect
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}} bfd multiplier 3
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}} bfd minimum-interval 300
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}} password clear {{BGP_Password}}
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}} address-family ipv6 unicast 
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}} address-family ipv6 unicast route-policy rp_{{Service_VRF_Name}}_IPV6_in in
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}} address-family ipv6 unicast route-policy rp_{{Service_VRF_Name}}_IPV6_out out
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}} address-family ipv6 unicast as-override
+router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}} address-family ipv6 unicast soft-reconfiguration inbound always

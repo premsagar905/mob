@@ -1,0 +1,6 @@
+set interfaces {{Planned_Router_Port}} unit {{VLAN}} description {{description}}
+set interfaces {{Planned_Router_Port}} unit {{VLAN}} vlan-id {{VLAN}}
+set interfaces {{Planned_Router_Port}} unit {{VLAN}} family inet address {{IPV4_Details}}
+set interfaces {{Planned_Router_Port}} unit {{VLAN}} family inet6 address {{IPV6_Details}}
+set routing-instances {{vrfName}} interface {{Planned_Router_Port}}.{{VLAN}}
+set routing-instances {{vrfName}} forwarding-options dhcp-relay group {{group_name}} interface {{Planned_Router_Port}}.{{VLAN}}

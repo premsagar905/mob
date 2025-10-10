@@ -1,0 +1,11 @@
+set groups ISIS_DEFAULTS_instance protocols isis-instance  <*> interface "<[gexa][et]*>" ldp-synchronization  
+set groups ISIS_DEFAULTS_instance protocols isis-instance  <*> interface "<[gexa][et]*>" node-link-protection  
+set groups ISIS_DEFAULTS_instance protocols isis-instance  <*> interface "<[gexa][et]*>" point-to-point  
+set groups ISIS_DEFAULTS_instance protocols isis-instance  <*> interface "<[gexa][et]*>" level 2 hello-interval 20  
+set groups ISIS_DEFAULTS_instance protocols isis-instance  <*> interface "<[gexa][et]*>" level 2 hold-time 100  
+set groups ISIS_DEFAULTS_instance protocols isis-instance  <*> level 2 wide-metrics-only  
+set groups ISIS_DEFAULTS_instance protocols isis-instance  <*> level 1 disable  
+set groups ISIS_DEFAULTS_instance protocols isis-instance  <*> spf-options delay 50  
+set groups ISIS_DEFAULTS_instance protocols isis-instance  <*> backup-spf-options remote-backup-calculation  
+set groups ISIS_DEFAULTS_instance protocols isis-instance  <*> backup-spf-options node-link-degradation  
+set groups ISIS_DEFAULTS_instance protocols isis-instance  <*> lsp-lifetime 65535

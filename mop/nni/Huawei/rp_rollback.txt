@@ -1,0 +1,11 @@
+~undo ip ip-prefix {{Service_VRF_Name}}_ipV4_OUT index {{index_number}} permit {{Outbound_Prefixes_IPv4}}
+#
+~undo ip ipv6-prefix {{Service_VRF_Name}}_ipV6_OUT index {{index_number}} permit {{Outbound_Prefixes_IPv6}}
+#
+undo route-policy {{Service_VRF_Name}}_ipV4_IN
+#
+undo route-policy {{Service_VRF_Name}}_ipV6_IN
+#
+undo route-policy {{Service_VRF_Name}}_ipV4_OUT
+#
+undo route-policy {{Service_VRF_Name}}_ipV6_OUT

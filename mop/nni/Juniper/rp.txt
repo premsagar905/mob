@@ -1,0 +1,21 @@
+set policy-options policy-statement {{Service_VRF_Name}}_ipV4_IMPORT term a from protocol bgp
+set policy-options policy-statement {{Service_VRF_Name}}_ipV4_IMPORT term a from neighbor {{IPV4_CPE_Interface_IP/31}}
+~set policy-options policy-statement {{Service_VRF_Name}}_ipV4_IMPORT term a from route-filter {{Inbound_Prefixes_IPv4}} orlonger
+set policy-options policy-statement {{Service_VRF_Name}}_ipV4_IMPORT term a then accept
+set policy-options policy-statement {{Service_VRF_Name}}_ipV4_IMPORT term reject then reject
+
+set policy-options policy-statement {{Service_VRF_Name}}_ipV4_EXPORT term a from protocol bgp
+~set policy-options policy-statement {{Service_VRF_Name}}_ipV4_EXPORT term a from route-filter {{Outbound_Prefixes_IPv4}} orlonger
+set policy-options policy-statement {{Service_VRF_Name}}_ipV4_EXPORT term a then accept
+set policy-options policy-statement {{Service_VRF_Name}}_ipV4_EXPORT term reject then reject
+
+set policy-options policy-statement {{Service_VRF_Name}}_IPV6_IMPORT term a from protocol bgp
+set policy-options policy-statement {{Service_VRF_Name}}_IPV6_IMPORT term a from neighbor {{IPV6_CPE_Interface_IP/127}}
+~set policy-options policy-statement {{Service_VRF_Name}}_IPV6_IMPORT term a from route-filter {{Inbound_Prefixes_IPv6}} orlonger
+set policy-options policy-statement {{Service_VRF_Name}}_IPV6_IMPORT term a then accept
+set policy-options policy-statement {{Service_VRF_Name}}_IPV6_IMPORT term reject then reject
+
+set policy-options policy-statement {{Service_VRF_Name}}_IPV6_EXPORT term a from protocol bgp
+~set policy-options policy-statement {{Service_VRF_Name}}_IPV6_EXPORT term a from route-filter {{Outbound_Prefixes_IPv6}} orlonger
+set policy-options policy-statement {{Service_VRF_Name}}_IPV6_EXPORT term a then accept
+set policy-options policy-statement {{Service_VRF_Name}}_IPV6_EXPORT term reject then reject

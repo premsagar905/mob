@@ -1,0 +1,41 @@
+set policy-options community CORE-AGG members {{core_agg}}
+set policy-options community BSC-PREAGG members {{bsc_pre_agg}}
+set policy-options community NON-BSC-PREAGG members {{non_bsc_pre_agg}}
+
+set policy-options policy-statement {{uc_location_a_nw_layer}}_CLIENTS_RING_{{ring_number}} term 1 from protocol local 
+set policy-options policy-statement {{uc_location_a_nw_layer}}_CLIENTS_RING_{{ring_number}} term 1 from route-filter {{loopback_ip_a}}/32
+set policy-options policy-statement {{uc_location_a_nw_layer}}_CLIENTS_RING_{{ring_number}} term 1 then accept
+set policy-options policy-statement {{uc_location_a_nw_layer}}_CLIENTS_RING_{{ring_number}} term 1 then community set {{nokia_uplink_community}}
+set policy-options policy-statement {{uc_location_a_nw_layer}}_CLIENTS_RING_{{ring_number}} term 2 from community CORE-AGG
+set policy-options policy-statement {{uc_location_a_nw_layer}}_CLIENTS_RING_{{ring_number}} term 2 from protocol bgp
+set policy-options policy-statement {{uc_location_a_nw_layer}}_CLIENTS_RING_{{ring_number}} term 2 then accept
+set policy-options policy-statement {{uc_location_a_nw_layer}}_CLIENTS_RING_{{ring_number}} term 3 from community BSC-PREAGG
+set policy-options policy-statement {{uc_location_a_nw_layer}}_CLIENTS_RING_{{ring_number}} term 3 from protocol bgp
+set policy-options policy-statement {{uc_location_a_nw_layer}}_CLIENTS_RING_{{ring_number}} term 3 then accept
+
+~set protocols multihop-bfd source {{loopback_ip_a}} destination {{neighbour_ip}} minimum-receive-interval 100 
+~set protocols multihop-bfd source {{loopback_ip_a}} destination {{neighbour_ip}} minimum-transmit-interval 100
+~set protocols multihop-bfd source {{loopback_ip_a}} destination {{neighbour_ip}} multiplier 5
+
+set protocols bgp group Eci-Cisco-Access community-type both
+set protocols bgp group Eci-Cisco-Access export AllBgp
+set protocols bgp group Eci-Cisco-Access family inet labeled-unicast enable
+set protocols bgp group Eci-Cisco-Access family inet labeled-unicast export {{uc_location_a_nw_layer}}_CLIENTS_RING_{{ring_number}}
+set protocols bgp group Eci-Cisco-Access family inet route-target advertise-default
+set protocols bgp group Eci-Cisco-Access family inet route-target enable
+set protocols bgp group Eci-Cisco-Access family inet route-target export AllBgp
+set protocols bgp group Eci-Cisco-Access family inet route-target import AllBgp
+set protocols bgp group Eci-Cisco-Access family inet-vpn unicast enable
+set protocols bgp group Eci-Cisco-Access family inet-vpn unicast import AllBgp
+set protocols bgp group Eci-Cisco-Access family inet6-vpn unicast enable
+set protocols bgp group Eci-Cisco-Access family inet6-vpn unicast import AllBgp
+set protocols bgp group Eci-Cisco-Access hold-time 400
+~set protocols bgp group Eci-Cisco-Access neighbor {{neighbour_ip}} authentication-key {{BGP_Password}}
+~set protocols bgp group Eci-Cisco-Access neighbor {{neighbour_ip}} authentication-type md5
+~set protocols bgp group Eci-Cisco-Access neighbor {{neighbour_ip}} bfd
+~set protocols bgp group Eci-Cisco-Access neighbor {{neighbour_ip}} route-reflector-client enable
+set protocols bgp group Eci-Cisco-Access peer-as 55410
+set protocols bgp group Eci-Cisco-Access peer-type internal
+
+%set policy-options policy-statement AllBgp term 1 from protocol bgp
+%set policy-options policy-statement AllBgp term 1 then accept

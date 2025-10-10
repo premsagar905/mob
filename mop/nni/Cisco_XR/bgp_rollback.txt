@@ -1,0 +1,2 @@
+no router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV4_CPE_Interface_IP/31}}
+no router bgp 55410 vrf {{Service_VRF_Name}} neighbor {{IPV6_CPE_Interface_IP/127}}

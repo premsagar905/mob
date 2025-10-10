@@ -1,0 +1,28 @@
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 type external
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 description PEER_TO_{{Service_VRF_Name}}_IPV4
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 local-address {{IPV4_PE_Interface_IP/31}}
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 log-updown
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 import {{Service_VRF_Name}}_IPV4_IMPORT
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 export {{Service_VRF_Name}}_IPV4_EXPORT
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 peer-as {{Remote_AS_No}}
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 as-override
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 neighbor {{IPV4_CPE_Interface_IP/31}} hold-time 180
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 neighbor {{IPV4_CPE_Interface_IP/31}} minimum-hold-time 60
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 neighbor {{IPV4_CPE_Interface_IP/31}} authentication-key {{BGP_Password}}
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 neighbor {{IPV4_CPE_Interface_IP/31}} bfd-liveness-detection minimum-interval 300
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV4 neighbor {{IPV4_CPE_Interface_IP/31}} bfd-liveness-detection multiplier 3 
+
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 type external
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 description PEER_TO_{{Service_VRF_Name}}_IPV6
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 local-address {{IPV6_PE_Interface_IP/127}}
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 log-updown
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 import {{Service_VRF_Name}}_IPV6_IMPORT
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 family inet6 unicast prefix-limit maximum 1000
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 export {{Service_VRF_Name}}_IPV6_EXPORT
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 peer-as {{Remote_AS_No}}
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 as-override
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 neighbor {{IPV6_CPE_Interface_IP/127}} hold-time 180
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 neighbor {{IPV6_CPE_Interface_IP/127}} minimum-hold-time 60
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 neighbor {{IPV6_CPE_Interface_IP/127}} authentication-key {{BGP_Password}}
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 neighbor {{IPV6_CPE_Interface_IP/127}} bfd-liveness-detection minimum-interval 300
+set routing-instances  {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 neighbor {{IPV6_CPE_Interface_IP/127}} bfd-liveness-detection multiplier 3 

@@ -1,0 +1,4 @@
+configure port {{PE_Interface}}
+shutdown
+configure lag {{Bundle_ID}}
+shutdown

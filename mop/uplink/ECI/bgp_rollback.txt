@@ -1,0 +1,6 @@
+delete policy-options community CISCO-Access members {{community}}
+delete policy-options policy-statement LU-EX-ECI-AGG term 3
+delete policy-options policy-statement LU-EX-CISCO-{{location_a_nw_layer}}_Ring{{ring_number}}
+~delete protocols multihop-bfd source {{loopback_ip_a}} destination {{neighbour_ip}}
+~delete protocols bgp group Eci-Cisco-Access neighbor {{neighbour_ip}}
+~delete protocols bgp group Eci-Cisco-Access

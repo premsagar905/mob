@@ -1,0 +1,5 @@
+router bgp 55410
+no address-family ipv4 vrf {{vrf_name}}
+no address-family ipv6 vrf {{vrf_name}}
+exit
+no ip vrf {{vrf_name}}

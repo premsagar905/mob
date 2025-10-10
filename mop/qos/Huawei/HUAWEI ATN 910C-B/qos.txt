@@ -1,0 +1,172 @@
+********* interface GigabitEthernet1/x/x *********
+
+interface GigabitEthernet1/x/x
+port-queue be wfq weight 1 outbound
+port-queue af1 wfq weight 2 outbound
+port-queue af2 wfq weight 2 outbound
+port-queue af3 wfq weight 15 outbound
+port-queue af4 wfq weight 80 outbound
+port-queue ef pq shaping shaping-percentage 60 outbound
+port-queue cs6 pq shaping shaping-percentage 20 outbound
+port-queue cs7 pq shaping shaping-percentage 10 outbound
+
+
+******* diffserv domain VIL-HUAWEI ********
+
+diffserv domain VIL-HUAWEI
+8021p-inbound 0 phb be green
+8021p-inbound 1 phb af1 green
+8021p-inbound 2 phb af2 green
+8021p-inbound 3 phb af3 green
+8021p-inbound 4 phb af4 green
+8021p-inbound 5 phb ef green
+8021p-inbound 6 phb cs6 green
+8021p-inbound 7 phb cs7 green
+8021p-outbound be green map 0
+8021p-outbound be yellow map 0
+8021p-outbound be red map 0
+8021p-outbound af1 green map 1
+8021p-outbound af1 yellow map 1
+8021p-outbound af1 red map 1
+8021p-outbound af2 green map 2
+8021p-outbound af2 yellow map 2
+8021p-outbound af2 red map 2
+8021p-outbound af3 green map 3
+8021p-outbound af3 yellow map 3
+8021p-outbound af3 red map 3
+8021p-outbound af4 green map 4
+8021p-outbound af4 yellow map 4
+8021p-outbound af4 red map 4
+8021p-outbound ef green map 5
+8021p-outbound ef yellow map 5
+8021p-outbound ef red map 5
+8021p-outbound cs6 green map 6
+8021p-outbound cs6 yellow map 6
+8021p-outbound cs6 red map 6
+8021p-outbound cs7 green map 7
+8021p-outbound cs7 yellow map 7
+8021p-outbound cs7 red map 7
+ip-dscp-inbound 0 phb be green
+ip-dscp-inbound 1 phb be green
+ip-dscp-inbound 2 phb be green
+ip-dscp-inbound 3 phb be green
+ip-dscp-inbound 4 phb be green
+ip-dscp-inbound 5 phb be green
+ip-dscp-inbound 6 phb be green
+ip-dscp-inbound 7 phb be green
+ip-dscp-inbound 8 phb af1 green
+ip-dscp-inbound 9 phb af1 green
+ip-dscp-inbound 10 phb af1 green
+ip-dscp-inbound 11 phb af1 green
+ip-dscp-inbound 12 phb af1 green
+ip-dscp-inbound 13 phb af1 green
+ip-dscp-inbound 14 phb af1 green
+ip-dscp-inbound 15 phb af1 green
+ip-dscp-inbound 16 phb af2 green
+ip-dscp-inbound 17 phb af2 green
+ip-dscp-inbound 18 phb af2 green
+ip-dscp-inbound 19 phb af2 green
+ip-dscp-inbound 20 phb af2 green
+ip-dscp-inbound 21 phb af2 green
+ip-dscp-inbound 22 phb af2 green
+ip-dscp-inbound 23 phb af2 green
+ip-dscp-inbound 24 phb af3 green
+ip-dscp-inbound 25 phb af3 green
+ip-dscp-inbound 26 phb af3 green
+ip-dscp-inbound 27 phb af3 green
+ip-dscp-inbound 28 phb af3 green
+ip-dscp-inbound 29 phb af3 green
+ip-dscp-inbound 30 phb af3 green
+ip-dscp-inbound 31 phb af3 green
+ip-dscp-inbound 32 phb af4 green
+ip-dscp-inbound 33 phb af4 green
+ip-dscp-inbound 34 phb af4 green
+ip-dscp-inbound 35 phb af4 green
+ip-dscp-inbound 36 phb af4 green
+ip-dscp-inbound 37 phb af4 green
+ip-dscp-inbound 38 phb af4 green
+ip-dscp-inbound 39 phb af4 green
+ip-dscp-inbound 40 phb ef green
+ip-dscp-inbound 41 phb ef green
+ip-dscp-inbound 42 phb ef green
+ip-dscp-inbound 43 phb ef green
+ip-dscp-inbound 44 phb ef green
+ip-dscp-inbound 45 phb ef green
+ip-dscp-inbound 46 phb ef green
+ip-dscp-inbound 47 phb ef green
+ip-dscp-inbound 48 phb cs6 green
+ip-dscp-inbound 49 phb cs6 green
+ip-dscp-inbound 50 phb cs6 green
+ip-dscp-inbound 51 phb cs6 green
+ip-dscp-inbound 52 phb cs6 green
+ip-dscp-inbound 53 phb cs6 green
+ip-dscp-inbound 54 phb cs6 green
+ip-dscp-inbound 55 phb cs6 green
+ip-dscp-inbound 56 phb cs7 green
+ip-dscp-inbound 57 phb cs7 green
+ip-dscp-inbound 58 phb cs7 green
+ip-dscp-inbound 59 phb cs7 green
+ip-dscp-inbound 60 phb cs7 green
+ip-dscp-inbound 61 phb cs7 green
+ip-dscp-inbound 62 phb cs7 green
+ip-dscp-inbound 63 phb cs7 green
+ip-dscp-outbound be green map 0
+ip-dscp-outbound af1 green map 10
+ip-dscp-outbound af1 yellow map 12
+ip-dscp-outbound af1 red map 14
+ip-dscp-outbound af2 green map 18
+ip-dscp-outbound af2 yellow map 20
+ip-dscp-outbound af2 red map 22
+ip-dscp-outbound af3 green map 26
+ip-dscp-outbound af3 yellow map 28
+ip-dscp-outbound af3 red map 30
+ip-dscp-outbound af4 green map 34
+ip-dscp-outbound af4 yellow map 36
+ip-dscp-outbound af4 red map 38
+ip-dscp-outbound ef green map 46
+ip-dscp-outbound cs6 green map 48
+ip-dscp-outbound cs7 green map 56
+mpls-exp-inbound 0 phb be green
+mpls-exp-inbound 1 phb af1 green
+mpls-exp-inbound 2 phb af2 green
+mpls-exp-inbound 3 phb af3 green
+mpls-exp-inbound 4 phb af4 green
+mpls-exp-inbound 5 phb ef green
+mpls-exp-inbound 6 phb cs6 green
+mpls-exp-inbound 7 phb cs7 green
+mpls-exp-outbound be green map 0
+mpls-exp-outbound af1 green map 1
+mpls-exp-outbound af1 yellow map 1
+mpls-exp-outbound af1 red map 1
+mpls-exp-outbound af2 green map 2
+mpls-exp-outbound af2 yellow map 2
+mpls-exp-outbound af2 red map 2
+mpls-exp-outbound af3 green map 3
+mpls-exp-outbound af3 yellow map 3
+mpls-exp-outbound af3 red map 3
+mpls-exp-outbound af4 green map 4
+mpls-exp-outbound af4 yellow map 4
+mpls-exp-outbound af4 red map 4
+mpls-exp-outbound ef green map 5
+mpls-exp-outbound cs6 green map 6
+mpls-exp-outbound cs7 green map 7
+
+********ACCESS_IN Policy *********
+
+interface GigabitEthernet1/x/x.y
+ trust upstream VIL-HUAWEI
+
+******** ACCESS_OUT Policy *******
+interface GigabitEthernet1/x/x.y
+ trust upstream VIL-HUAWEI
+
+******** WAN_IN Policy *****
+
+interface GigabitEthernet1/x/x.y
+ trust upstream VIL-HUAWEI 
+ trust 8021p   //if trust Pbit
+
+******** WAN_OUT Policy  ******
+
+interface GigabitEthernet1/x/x.y
+ trust upstream VIL-HUAWEI

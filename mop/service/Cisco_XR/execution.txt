@@ -1,0 +1,11 @@
+interface {{Planned_Router_Port}}.{{VLAN}}
+ description {{description}}
+ mtu 9000
+ vrf {{vrfName}}
+ ipv4 address {{IPV4_Details}}
+ ipv4 unreachables disable
+ ipv6 address {{IPV6_Details}}
+ ipv6 enable
+ encapsulation dot1q {{VLAN}}
+!
+dhcp ipv4 interface {{Planned_Router_Port}}.{{VLAN}} relay profile {{group_name}}

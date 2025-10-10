@@ -1,0 +1,15 @@
+configure service vprn {{VPRN_ID}}
+bgp
+group "{{Service_VRF_Name}}_IPV6"
+family ipv6
+as-override
+import "{{Service_VRF_Name}}_IPV6_IN_IMPORT"
+export "{{Service_VRF_Name}}_IPV6_OUT_EXPORT"
+bfd-enable
+split-horizon
+neighbor {{IPV6_CPE_Interface_IP/127}}
+authentication-key {{BGP_Password}}
+peer-as {{Remote_AS_No}}
+bfd-enable
+exit
+exit all

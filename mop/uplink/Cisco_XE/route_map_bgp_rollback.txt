@@ -1,0 +1,2 @@
+no route-map {{nw_layer}}_BGPLU_RING{{ring_number}}_OUT
+

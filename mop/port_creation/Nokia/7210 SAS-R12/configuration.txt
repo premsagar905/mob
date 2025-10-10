@@ -1,0 +1,10 @@
+configure port {{Planned_Router_Port}}
+   Shutdown
+description  {{description}}
+    ethernet
+        mode access
+        encap-type dot1q
+        mtu 9212
+    exit
+    no shutdown
+

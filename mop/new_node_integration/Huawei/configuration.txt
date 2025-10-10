@@ -1,0 +1,133 @@
+sysname {{Hostname}}
+ntp-service server disable
+ntp-service ipv6 server disable
+ntp-service unicast-server {{unicast_server_var}} vpn-instance {{vpn_instance_var}} version {{version_var}} source-interface {{source_interface_var}}
+ntp-service unicast-server {{unicast_server_var}} version {{version_var}}source-interface {{source_interface_var}} preference
+undo telnet server enable
+undo telnet ipv6 server enable
+hwtacacs-server template {{hwtacacs_server_template_var}}
+ hwtacacs-server authentication {{hwtacacs_server_authentication_var}} vpn-instance {{vpn_instance_var}}
+ hwtacacs-server authentication {{hwtacacs_server_authentication_var}}
+ hwtacacs-server authorization {{hwtacacs_server_authentication_var}} vpn-instance {{vpn_instance_var}}
+ hwtacacs-server authorization {{hwtacacs_server_authentication_var}}  
+ hwtacacs-server accounting {{hwtacacs_server_accounting_var}} vpn-instance {{vpn_instance_var}}
+ hwtacacs-server accounting {{hwtacacs_server_accounting_var}}
+ hwtacacs-server source-ip {{hwtacacs_server_source_ip_var}}
+ hwtacacs-server shared-key cipher {{hwtacacs_server_shared_key_cipher_var}}
+ hwtacacs-server user-name original
+bfd
+ mpls-passive
+mpls lsr-id {{var}}
+
+mpls
+ mpls te
+ mpls te auto-frr
+ mpls rsvp-te
+ mpls rsvp-te hello
+ mpls te cspf
+
+mpls l2vpn
+mpls ldp
+ graceful-restart
+ 
+ ipv4-family
+aaa
+ local-user {{local_user_var}} password irreversible-cipher {{password_irreversible_cipher_var}}
+ local-user {{local_user_var}} service-type {{service_type_var}}
+ local-user {{local_user_var}} level {{level_var}}
+ local-user {{local_user_var}} state block fail-times {{state_block_fail_times_var}} interval {{interval_var}}
+  
+ authentication-scheme default0
+ 
+ authentication-scheme default1
+ 
+ authentication-scheme default
+  authentication-mode local radius
+ 
+ authentication-scheme 1
+  authentication-mode local radius
+ 
+ authentication-scheme hwtacacs
+  authentication-mode hwtacacs local
+ 
+ authorization-scheme default
+ 
+ authorization-scheme hwtacacs
+  authorization-mode hwtacacs local
+ 
+ accounting-scheme default0
+ 
+ accounting-scheme default1
+ 
+ accounting-scheme 1
+ 
+ accounting-scheme hwtacacs
+  accounting-mode hwtacacs
+ 
+ domain default0
+ 
+ domain default1
+ 
+ domain default_admin
+  authentication-scheme hwtacacs
+  authorization-scheme hwtacacs
+  accounting-scheme hwtacacs
+  hwtacacs-server ise
+isis {{var}}
+ is-level level-2
+ cost-style wide
+ timer lsp-generation {{var}} {{var}} {{var}} level-2
+ flash-flood {{var}} level-2
+ bfd all-interfaces enable
+ bfd all-interfaces min-tx-interval {{var}} min-rx-interval {{var}}
+ bandwidth-reference {{var}}
+ auto-cost enable
+ network-entity {{var}}
+ is-name {{var}}
+  timer spf {{var}} {{var}} {{var}}
+ traffic-eng level-2
+ set-overload on-startup
+interface {{interface_var}}
+ description {{description_var}}
+ ip address {{ip_address_var_1}} {{ip_address_var_2}}
+bgp {{bgp_var}}
+ router-id {{router_id_var}}
+ graceful-restart
+ graceful-restart timer wait-for-rib {{graceful_restart_timer_wait_for_rib_var}}
+ graceful-restart timer restart {{graceful_restart_timer_restart_var}}
+snmp-agent trap type base-trap
+
+snmp-agent
+snmp-agent local-engineid {{snmp_agent_local_engineid_var}}
+snmp-agent community read cipher {{snmp_agent_community_read_cipher_var}}
+snmp-agent sys-info location {{snmp_agent_sys_info_location_var}}
+snmp-agent sys-info version all
+snmp-agent community complexity-check disable
+snmp-agent group {{snmp_agent_group_var_1}} {{snmp_agent_group_var_2}} privacy read-view View_ALL notify-view View_ALL
+snmp-agent target-host trap address udp-domain {{udp_domain_var}} params securityname cipher {{securityname_cipher_var}} v2c
+
+snmp-agent mib-view included View_ALL iso
+snmp-agent usm-user {{usm_user_var_1}} {{usm_user_var_2}}
+snmp-agent usm-user {{usm_user_var_1}} {{usm_user_var_2}} group {{group_var}}
+snmp-agent usm-user {{usm_user_var_1}} {{usm_user_var_2}} authentication-mode {{authentication_mode_var}} cipher {{cipher_var}}
+snmp-agent usm-user {{usm_user_var_1}} {{usm_user_var_2}} privacy-mode {{privacy_mode_var}} cipher {{cipher_var}}
+snmp-agent usm-user {{usm_user_var_1}} {{usm_user_var_2}}
+snmp-agent usm-user {{usm_user_var_1}} {{usm_user_var_2}} group {{group_var}}
+snmp-agent usm-user {{usm_user_var_1}} {{usm_user_var_2}} authentication-mode {{authentication_mode_var}} cipher {{cipher_var}}
+snmp-agent usm-user {{usm_user_var_1}} {{usm_user_var_2}} privacy-mode {{privacy_mode_var}} cipher {{cipher_var}}
+
+snmp-agent trap source {{snmp_agent_trap_source_var}}
+
+snmp-agent trap enable
+ssh user {{ssh_user_var}}
+ssh user {{ssh_user_var}} authentication-type password
+ssh user {{ssh_user_var}} service-type all
+ssh authorization-type default aaa
+user-interface con 0
+ authentication-mode password
+ idle-timeout {{idle_timeout_var_1}} {{idle_timeout_var_2}}
+
+user-interface vty 0 4
+ authentication-mode aaa
+ idle-timeout {{idle_timeout_var_1}} {{idle_timeout_var_2}}
+ protocol inbound {{protocol_inbound_var}}

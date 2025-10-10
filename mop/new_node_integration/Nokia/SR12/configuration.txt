@@ -1,0 +1,2388 @@
+#--------------------------------------------------
+echo "System Configuration"
+#--------------------------------------------------
+    system
+        name "{{self_device_a}}"
+        location "{{nss_id}}"
+        load-balancing
+            lsr-load-balancing lbl-ip
+            system-ip-load-balancing
+        exit
+        management-interface
+            yang-modules
+                no nokia-combined-modules
+                nokia-submodules
+            exit
+        exit
+        rollback
+            rollback-location "cf3:/rollback"
+        exit
+        snmp
+            streaming
+                no shutdown
+            exit
+            packet-size 9216
+        exit
+        time
+            ntp
+                ntp-server
+                no shutdown
+            exit
+            sntp
+                shutdown
+            exit
+            zone IST 05:30
+        exit
+        thresholds
+            cflash-cap-alarm cf3-A: rising-threshold 6400000 interval 3600
+            cflash-cap-alarm cf3-B: rising-threshold 6400000 interval 3600
+            kb-memory-use-alarm rising-threshold 12800000 interval 3600
+        exit
+        lldp
+            shutdown
+        exit
+        script-control
+            script "ICC_ERROR_WITH_CPM"
+                location "cf3:\ehs\ICC_ERROR_WITH_CPM"
+                no shutdown
+            exit
+            script "ICC_ERROR_WITH_LINE_CARD"
+                location "cf3:\ehs\ICC_ERROR_WITH_LINE_CARD"
+                no shutdown
+            exit
+            script-policy "ICC_ERROR_WITH_CPM"
+                results "cf3:\ehs\result\ICC_ERROR_WITH_CPM"
+                script "ICC_ERROR_WITH_CPM"
+                no shutdown
+            exit
+            script-policy "ICC_ERROR_WITH_LINE_CARD"
+                results "cf3:\ehs\result\ICC_ERROR_WITH_LINE_CARD"
+                script "ICC_ERROR_WITH_LINE_CARD"
+                no shutdown
+            exit
+        exit
+    exit
+#--------------------------------------------------
+echo "Filter Match lists Configuration"
+#--------------------------------------------------
+#--------------------------------------------------
+echo "System Security Configuration"
+#--------------------------------------------------
+    system
+        security
+            ftp-server
+            profile "tac"
+                default-action permit-all
+                netconf
+                    base-op-authorization
+                        action
+                        cancel-commit
+                        close-session
+                        commit
+                        copy-config
+                        create-subscription
+                        delete-config
+                        discard-changes
+                        edit-config
+                        get
+                        get-config
+                        get-data
+                        get-schema
+                        validate
+                    exit
+                exit
+                entry 10
+                    match "configure system security"
+                    action permit
+                exit
+                entry 20
+                    match "show system security"
+                    action permit
+                exit
+            exit
+            profile "exit"
+                netconf
+                    base-op-authorization
+                        action
+                        cancel-commit
+                        close-session
+                        commit
+                        copy-config
+                        create-subscription
+                        delete-config
+                        discard-changes
+                        edit-config
+                        get
+                        get-config
+                        get-data
+                        get-schema
+                        validate
+                    exit
+                exit
+            exit
+            profile "prov"
+                default-action permit-all
+                netconf
+                    base-op-authorization
+                        action
+                        cancel-commit
+                        close-session
+                        commit
+                        copy-config
+                        create-subscription
+                        delete-config
+                        discard-changes
+                        edit-config
+                        get
+                        get-config
+                        get-data
+                        get-schema
+                        validate
+                    exit
+                exit
+                entry 10
+                    match "debug"
+                    action deny
+                exit
+                entry 15
+                    match "configure system security"
+                    action permit
+                exit
+                entry 20
+                    match "show system security"
+                    action permit
+                exit
+                entry 30
+                    match "tools perform security"
+                    action permit
+                exit
+                entry 100
+                    match "configure li"
+                    action deny
+                exit
+                entry 110
+                    match "show li"
+                    action deny
+                exit
+                entry 111
+                    match "clear li"
+                    action deny
+                exit
+            exit
+            profile "default"
+                netconf
+                    base-op-authorization
+                        action
+                        cancel-commit
+                        close-session
+                        commit
+                        copy-config
+                        create-subscription
+                        delete-config
+                        discard-changes
+                        edit-config
+                        get
+                        get-config
+                        get-data
+                        get-schema
+                        validate
+                    exit
+                exit
+                entry 10
+                    match "exec"
+                    action permit
+                exit
+                entry 20
+                    match "exit"
+                    action permit
+                exit
+                entry 30
+                    match "help"
+                    action permit
+                exit
+                entry 40
+                    match "logout"
+                    action permit
+                exit
+                entry 50
+                    match "password"
+                    action permit
+                exit
+                entry 60
+                    match "show config"
+                    action deny
+                exit
+                entry 65
+                    match "show li"
+                    action deny
+                exit
+                entry 66
+                    match "clear li"
+                    action deny
+                exit
+                entry 67
+                    match "tools dump li"
+                    action deny
+                exit
+                entry 68
+                    match "state li"
+                    action deny
+                exit
+                entry 70
+                    match "show"
+                    action permit
+                exit
+                entry 75
+                    match "state"
+                    action permit
+                exit
+                entry 80
+                    match "enable-admin"
+                    action permit
+                exit
+                entry 90
+                    match "enable"
+                    action permit
+                exit
+                entry 100
+                    match "configure li"
+                    action deny
+                exit
+            exit
+            profile "limited"
+                default-action deny-all
+                netconf
+                    base-op-authorization
+                        action
+                        cancel-commit
+                        close-session
+                        commit
+                        copy-config
+                        create-subscription
+                        delete-config
+                        discard-changes
+                        edit-config
+                        get
+                        get-config
+                        get-data
+                        get-schema
+                        validate
+                    exit
+                exit
+                entry 10
+                    match "show"
+                    action permit
+                exit
+                entry 20
+                    match "admin display-config"
+                    action permit
+                exit
+            exit
+            profile "SAM-User"
+                default-action deny-all
+                netconf
+                    base-op-authorization
+                        action
+                        cancel-commit
+                        close-session
+                        commit
+                        copy-config
+                        create-subscription
+                        delete-config
+                        discard-changes
+                        edit-config
+                        get
+                        get-config
+                        get-data
+                        get-schema
+                        validate
+                    exit
+                exit
+                entry 10
+                    match "admin display-config"
+                    action permit
+                exit
+                entry 20
+                    match "show"
+                    action permit
+                exit
+                entry 30
+                    match "ping"
+                    action permit
+                exit
+                entry 40
+                    match "configure"
+                    action permit
+                exit
+            exit
+            profile "read-only"
+                default-action deny-all
+                netconf
+                    base-op-authorization
+                        action
+                        cancel-commit
+                        close-session
+                        commit
+                        copy-config
+                        create-subscription
+                        delete-config
+                        discard-changes
+                        edit-config
+                        get
+                        get-config
+                        get-data
+                        get-schema
+                        validate
+                    exit
+                exit
+                entry 10
+                    match "show"
+                    action permit
+                exit
+                entry 20
+                    match "admin display-config"
+                    action permit
+                exit
+                entry 30
+                    match "ping"
+                    action permit
+                exit
+                entry 40
+                    match "traceroute"
+                    action permit
+                exit
+                entry 50
+                    match "monitor"
+                    action permit
+                exit
+                entry 60
+                    match "oam"
+                    action permit
+                exit
+                entry 70
+                    match "environment"
+                    action permit
+                exit
+            exit
+            profile "administrative"
+                netconf
+                    base-op-authorization
+                        action
+                        cancel-commit
+                        close-session
+                        commit
+                        copy-config
+                        create-subscription
+                        delete-config
+                        discard-changes
+                        edit-config
+                        get
+                        get-config
+                        get-data
+                        get-schema
+                        kill-session
+                        lock
+                        validate
+                    exit
+                exit
+                entry 10
+                    match "debug"
+                    action deny
+                exit
+                entry 15
+                    match "configure system security"
+                    action permit
+                exit
+                entry 20
+                    match "show system security"
+                    action permit
+                exit
+                entry 30
+                    match "tools perform security"
+                    action permit
+                exit
+                entry 40
+                    match "tools dump security"
+                    action permit
+                exit
+                entry 50
+                    match "admin system security"
+                    action permit
+                exit
+                entry 100
+                    match "configure li"
+                    action deny
+                exit
+                entry 110
+                    match "show li"
+                    action deny
+                exit
+                entry 111
+                    match "clear li"
+                    action deny
+                exit
+                entry 112
+                    match "tools dump li"
+                    action deny
+                exit
+            exit
+            password
+                authentication-order tacplus radius local exit-on-reject
+                health-check interval 1500
+            exit
+            tacplus
+                accounting
+                authorization use-priv-lvl
+                priv-lvl-map
+                    priv-lvl 5 "read-only"
+                    priv-lvl 10 "prov"
+                    priv-lvl 15 "tac"
+                exit
+                timeout 60
+                server 1 address 182.19.97.131 secret "idYurkInR2Txufd54T8NYYW4zTkAW6JO" hash2
+                server 2 address 182.19.97.81 secret "idYurkInR2Txufd54T8NYcn0hl9B2tiP" hash2
+            exit
+            no user "admin"
+            user "COR1038552"
+                password "$2y$10$zu4GVrexbgXt1MofPVfD2.wdqXDZXkhYnJX9Ci0g4qOCWx6Mtz4pa"
+                access console ftp
+            exit
+            user "COR1102432"
+                password "$2y$10$H8MSX/dEpGMHefOASFFs6./GEHNrCnXBML72159UzYt5Ai0aVhUY6"
+                access console
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+            exit
+            user "OSSV3"
+                password "$2y$10$PpuDy.mj.0Vmqn5nPrM4LOk4lVvtruV2LBvbVDKM/5/pvWM2Y6ATK"
+                access ftp snmp
+                snmp
+                    authentication hash2 md5 HH3aG+7Pxiz9duGhf1gciRJK8D14kDBBAkFkxglKHyc= privacy des-key HH3aG+7Pxiz9duGhf1gciVwFqimfngkK17mEcQTPfEY=
+                    group "SNMPv3"
+                exit
+            exit
+            user "SAM"
+                password "$2y$10$5Pu/fbDLQgfyr0MXkBsD4OGLGJ9OjxI5Ff/Fbl4zXGY0BWqeiVW8i"
+                access ftp snmp
+                console
+                    cannot-change-password
+                    no member "default"
+                    member "administrative"
+                exit
+            exit
+            user "SAMNFM"
+                password "$2y$10$l4lU6sOhZVoycx6.QEW3Y.SWHPHWYY8dnUeCzl8inbrhdXfzZPIo."
+                access console ftp snmp
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+                snmp
+                    group "nmsNoAuth"
+                exit
+            exit
+            user "SNMPv3-USER"
+                password "$2y$10$6EnTewu85NCWj.C0QywVtOxEGV2.LEyJNsL.sT2AenRyBqClp3nge"
+                access ftp snmp
+                snmp
+                    authentication hash2 md5 U0vaGFNqNUSwsrgqH1c+2sYVVAw6CeIIXg70sOXv/xE= privacy des-key U0vaGFNqNUSwsrgqH1c+2iKVvGd2waZtdaoPFkiD1Qc=
+                    group "SNMPv3"
+                exit
+            exit
+            user "VI"
+                password "$2y$10$X0Drv.BTMkVjUKeRjXDqw.1evECjBPkqqkoVMqWCtbROutsG29212"
+                access console
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+            exit
+            user "administrative"
+                password "$2y$10$BToCu0XEUitk8uQ0x09sI.JF23hM3BzrPB8YhxDMMCjk41ih0VdIW"
+                access console ftp
+                console
+                    member "default"
+                    member "administrative"
+                exit
+            exit
+            user "adminnokianew"
+                password "$2y$10$g5APVoivs9sjXPBSxiM6Q.jJ2Tit1ccbat/SbD.GYCLDCzf3JdtSa"
+                access console ftp snmp
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+                snmp
+                    authentication none
+                exit
+            exit
+            user "alusam"
+                password "$2y$10$AAPzRhXyWrqZhKNCHajpY.ALsOvubJ4kKqjDxbETOtHRBPMmxmo8e"
+                access console ftp snmp
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+                snmp
+                    group "nmsNoAuth"
+                exit
+            exit
+            user "emergency"
+                password "$2y$10$Le1dkwBsRyo.791oFPXVY.9V9ELiG1k2pPX44Ju8yZzOGi9DjjFaq"
+                access console ftp
+                console
+                    member "default"
+                    member "administrative"
+                exit
+            exit
+            user "limited"
+                password "$2y$10$iKMR52wn25HBgT3pmC1/..9eCdRUdEy/bb19PUYQdC8mydbtyUrli"
+                access console ftp
+            exit
+            user "nspuser"
+                password "$2y$10$9zvXnpdQQGwI62O.dwSbU.dAouqsQRIX4W.6Dgq2UYadcKB5lu4oe"
+                access console ftp
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+            exit
+            user "read-only"
+                password "$2y$10$bZNhTk5551cWUGMtQq76c.j5pcuhitTkcEtrO1zWNt7awpYH72nXO"
+                access console ftp
+                console
+                    member "default"
+                    member "read-only"
+                exit
+            exit
+            user "sagar"
+                password "$2y$10$qu6pZ7B/briYEAvm7vdz6.8ceBrEjF9fQ2mkAMUJxfjML1sqYkh5C"
+                access console ftp
+                console
+                    member "default"
+                    member "administrative"
+                exit
+            exit
+            user "sammed"
+                password "$2y$10$B/QAlSDFqxZNHzHajvJcQ.rEr9Vvb/DgE3aSNwM5xu55LSWRXPTaO"
+                access console ftp snmp
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+                snmp
+                    authentication none
+                    group "nmsNoAuth"
+                exit
+            exit
+            user "tctsnoc"
+                password "$2y$10$48.EjFINaJTSfBbEGWaZg.fNX/NY.herjf8Nw5ANzVmRWzqpv4yD2"
+                access console
+                console
+                    no member "default"
+                    member "administrative"
+                exit
+            exit
+            snmp
+                access group "SNMPv3" security-model usm security-level privacy read "iso" write "iso" notify "iso"
+                access group "SNMPv3" security-model usm security-level privacy context "vprn" prefix read "vprn-view" write "vprn-view" notify "iso"
+                access group "nmsNoAuth" security-model usm security-level no-auth-no-privacy read "iso" write "iso" notify "iso"
+                community "cV3ISTw2V5pbEWmVEA9jXgB/1EERXQA=" hash2 rw version both
+                community "M7bUu5G9lE0ulAC92ePes7Ex6v8DJ3hxKFXU" hash2 rw version both
+            exit
+            ssh
+                client-cipher-list protocol-version 2
+                    no cipher 200
+                    no cipher 205
+                    no cipher 210
+                    no cipher 215
+                    no cipher 220
+                    no cipher 225
+                    no cipher 230
+                    no cipher 235
+                    cipher 190 name aes256-ctr
+                    cipher 192 name aes192-ctr
+                    cipher 194 name aes128-ctr
+                exit
+                server-cipher-list protocol-version 2
+                    no cipher 200
+                    no cipher 205
+                    no cipher 210
+                    no cipher 215
+                    no cipher 220
+                    no cipher 225
+                    no cipher 230
+                    no cipher 235
+                    cipher 190 name aes256-ctr
+                    cipher 192 name aes192-ctr
+                    cipher 194 name aes128-ctr
+                exit
+                client-mac-list
+                    no mac 220
+                    no mac 225
+                    no mac 240
+                    mac 200 name hmac-sha2-512
+                    mac 210 name hmac-sha2-256
+                    mac 215 name hmac-sha1
+                    mac 230 name hmac-ripemd160
+                    mac 235 name hmac-ripemd160-openssh-com
+                exit
+                server-mac-list
+                    no mac 220
+                    no mac 225
+                    no mac 240
+                    mac 200 name hmac-sha2-512
+                    mac 210 name hmac-sha2-256
+                    mac 215 name hmac-sha1
+                    mac 230 name hmac-ripemd160
+                    mac 235 name hmac-ripemd160-openssh-com
+                exit
+                key-re-exchange
+                    client
+                        mbytes 2048
+                        no shutdown
+                    exit
+                    server
+                        mbytes 2048
+                        no shutdown
+                    exit
+                exit
+                preserve-key
+            exit
+            per-peer-queuing
+            cpm-queue
+                queue 100 create
+                    rate 500 cir 500
+                exit
+                queue 101 create
+                    rate 5000 cir 5000
+                exit
+                queue 102 create
+                    rate 1000 cir 1000
+                exit
+                queue 103 create
+                    rate 10000 cir 10000
+                exit
+                queue 104 create
+                    rate 3000 cir 3000
+                exit
+                queue 105 create
+                    rate max cir 4000
+                exit
+                queue 106 create
+                    rate max cir 4000
+                exit
+                queue 107 create
+                    rate max cir 4000
+                exit
+                queue 108 create
+                    rate max cir 1000
+                exit
+                queue 109 create
+                    rate max cir 1000
+                exit
+                queue 110 create
+                    rate max cir 100
+                exit
+                queue 111 create
+                    rate max cir 0
+                exit
+            exit
+            cpu-protection
+                policy 254 create
+                exit
+                policy 255 create
+                exit
+                protocol-protection
+            exit
+            dist-cpu-protection
+                policy "dist-cpu-arp" create
+                    static-policer "sp-arp" create
+                        rate packets 50 within 1
+                        exceed-action discard hold-down 30
+                    exit
+                    protocol arp create
+                        enforcement static "sp-arp"
+                    exit
+                exit
+                policy "_default-port-policy" type port create
+                exit
+                policy "_default-access-policy" create
+                exit
+                policy "_default-network-policy" create
+                exit
+            exit
+            vprn-network-exceptions
+        exit
+    exit
+#--------------------------------------------------
+echo "System Login Control Configuration"
+#--------------------------------------------------
+    system
+        login-control
+            ssh
+                inbound-max-sessions 15
+                outbound-max-sessions 15
+            exit
+            idle-timeout 5
+            pre-login-message "\n********************************************************\n\nAuthorized access only\n\nThis system is the property of Vodafone Mobile.\n\nDisconnect IMMEDIATELY if you are not an authorized user!\n\nAll connection attempts are logged and monitored. All unauthorized\n\nconnection attempts will be investigated and handed over to the\n\nproper authorities.\n\n********************************************************\n"
+            exponential-backoff
+        exit
+    exit
+#--------------------------------------------------
+echo "Log Configuration"
+#--------------------------------------------------
+    log
+        file-id 75
+            location cf3:
+            rollover 3600 retention 24
+        exit
+        filter 201 name "201"
+            default-action drop
+            entry 10 name "10"
+                action forward
+                match
+                    application eq "chassis"
+                    number eq 2001
+                    message eq pattern "Class CPM Module : failed - reason: Failed ICC transaction"
+                exit
+            exit
+        exit
+        filter 202 name "202"
+            default-action drop
+            entry 10 name "10"
+                action forward
+                match
+                    application eq "chassis"
+                    number eq 2001
+                    message eq pattern "Class IO Module : failed - reason: Failed ICC transaction"
+                exit
+            exit
+        exit
+        event-control "chassis" 2058 generate
+        event-control "chassis" 2059 generate critical
+        event-control "chassis" 2063 generate
+        event-control "chassis" 2076 generate
+        event-control "chassis" 2098 generate
+        event-control "chassis" 2099 generate
+        event-control "chassis" 2101 generate
+        event-control "chassis" 2102 generate
+        event-control "chassis" 2103 generate critical
+        event-control "chassis" 2104 generate
+        event-control "chassis" 2105 generate
+        event-control "chassis" 2110 generate
+        event-control "chassis" 2126 generate
+        event-control "chassis" 2129 generate
+        event-control "igmp" 2005 suppress
+        event-control "isis" 2029 generate critical
+        event-control "isis" 2036 generate critical
+        event-control "msdp" 2010 suppress
+        event-control "security" 2031 generate
+        event-control "video" 2009 suppress
+        event-control "video" 2010 suppress
+        event-control "vrtr" 2023 generate major throttle
+        event-control "vrtr" 2034 generate
+        syslog 1 name "1"
+            address 182.19.118.226
+        exit
+        syslog 2 name "2"
+            address 182.19.118.227
+        exit
+        snmp-trap-group 10 name "10"
+            description "INKO103001"
+        exit
+        snmp-trap-group 98 name "98"
+            description "5620sam"
+            trap-target "9457A55AE63C:main1" address 122.15.240.100 snmpv3 notify-community "SNMPv3-USER" security-level privacy
+            trap-target "9457A55AE63C:main2" address 122.15.240.97 snmpv3 notify-community "SNMPv3-USER" security-level privacy
+        exit
+        log-id 95 name "95"
+           shutdown
+            description "towards syslog 2"
+            from main security change
+            to syslog 2
+        exit
+        log-id 96 name "96"
+            shutdown
+            description "towards syslog 1"
+            from main security change
+            to syslog 1
+        exit
+        log-id 97 name "97"
+            description "towards local cf3:"
+            from main security change
+            to file 75
+            no shutdown
+        exit
+        log-id 98 name "98"
+            from main security change
+            to snmp 1024
+            no shutdown
+        exit
+        event-handling
+            handler "ICC_ERROR_WITH_CPM"
+                action-list
+                    entry 10
+                        script-policy "ICC_ERROR_WITH_CPM"
+                        no shutdown
+                    exit
+                exit
+                no shutdown
+            exit
+            handler "ICC_ERROR_WITH_LINE_CARD"
+                action-list
+                    entry 10
+                        script-policy "ICC_ERROR_WITH_LINE_CARD"
+                        no shutdown
+                    exit
+                exit
+                no shutdown
+            exit
+        exit
+        event-trigger
+            event "chassis" 2001
+                trigger-entry 10
+                    event-handler "ICC_ERROR_WITH_CPM"
+                    log-filter 201
+                    no shutdown
+                exit
+                trigger-entry 20
+                    event-handler "ICC_ERROR_WITH_LINE_CARD"
+                    log-filter 202
+                    no shutdown
+                exit
+                no shutdown
+            exit
+        exit
+    exit
+#--------------------------------------------------
+echo "Filter Log Configuration"
+#--------------------------------------------------
+    filter
+        log 114 create
+        exit
+        log 115 create
+        exit
+    exit
+#--------------------------------------------------
+echo "System Security Cpm Hw Filters, PKI, TLS and LDAP Configuration"
+#--------------------------------------------------
+    system
+        security
+            cpm-filter
+                default-action drop
+                ip-filter
+                    entry 10 create
+                        action accept
+                        description "Accept RSVP from network"
+                        match protocol rsvp
+                            src-ip ip-prefix-list "SYSTEM&WAN-IP-POOL"
+                        exit
+                    exit
+                    entry 15 create
+                        action accept
+                        description "Accept LDP sessions from network"
+                        match protocol *
+                            dst-port 646 65535
+                            src-ip ip-prefix-list "SYSTEM&WAN-IP-POOL"
+                        exit
+                    exit
+                    entry 20 create
+                        action accept
+                        description "Accept LDP sessions from network"
+                        match protocol *
+                            src-ip ip-prefix-list "SYSTEM&WAN-IP-POOL"
+                            src-port 646 65535
+                        exit
+                    exit
+                    entry 25 create
+                        action accept
+                        description "Accept link BFD (RFC5881) from network : itf@"
+                        match protocol *
+                            src-ip ip-prefix-list "WAN-IP-POOL"
+                            src-port 3784 65535
+                        exit
+                    exit
+                    entry 26 create
+                        action accept
+                        description "Accept BFD (RFC7130) from network LAG"
+                        match protocol *
+                            src-port 6784 65535
+                        exit
+                    exit
+                    entry 30 create
+                        action accept
+                        description "Accept link BFD (RFC5881) from network : itf@"
+                        match protocol *
+                            dst-port 3784 65535
+                            src-ip ip-prefix-list "WAN-IP-POOL"
+                        exit
+                    exit
+                    entry 31 create
+                        action accept
+                        description "Accept link BFD (RFC7130) from network LAG"
+                        match protocol *
+                            dst-port 6784 65535
+                        exit
+                    exit
+                    entry 32 create
+                        action accept
+                        description "Accept link BFD (RFC7130) from network LAG"
+                        match protocol *
+                            dst-port 6784 65535
+                        exit
+                    exit
+                    entry 33 create
+                        action accept
+                        description "Accept OSPF from customers"
+                        match protocol ospf-igp
+                        exit
+                    exit
+                    entry 35 create
+                        action accept
+                        description "Accept MH BFD (RFC5883) from network : system@"
+                        match protocol *
+                            src-ip ip-prefix-list "SYSTEM-IP-POOL"
+                            src-port 4784 65535
+                        exit
+                    exit
+                    entry 40 create
+                        action accept
+                        description "Accept MH BFD (RFC5883) from network : system@"
+                        match protocol *
+                            dst-port 4784 65535
+                            src-ip ip-prefix-list "SYSTEM-IP-POOL"
+                        exit
+                    exit
+                    entry 45 create
+                        action queue 104
+                        description "Accept link BFD (RFC5881) from Customers"
+                        match protocol *
+                            dst-port 3784 65535
+                        exit
+                    exit
+                    entry 50 create
+                        action accept
+                        description "Accept IBGP src-port from network : system@"
+                        match protocol tcp
+                            src-ip ip-prefix-list "SYSTEM-IP-POOL"
+                            src-port 179 65535
+                        exit
+                    exit
+                    entry 55 create
+                        action accept
+                        description "Accept IBGP dst-port from network : system@"
+                        match protocol tcp
+                            dst-port 179 65535
+                            src-ip ip-prefix-list "SYSTEM-IP-POOL"
+                        exit
+                    exit
+                    entry 60 create
+                        action queue 105
+                        description "Accept eBGP src-port from Customers"
+                        match protocol tcp
+                            src-ip ip-prefix-list "EBGP-SYSTEM-IP-POOL"
+                            src-port 179 65535
+                        exit
+                    exit
+                    entry 65 create
+                        action queue 105
+                        description "Accept eBGP dst-port from Customers"
+                        match protocol tcp
+                            dst-port 179 65535
+                            src-ip ip-prefix-list "EBGP-SYSTEM-IP-POOL"
+                        exit
+                    exit
+                    entry 68 create
+                        action accept
+                        description "Accept RSVP from network"
+                        match protocol rsvp
+                            src-ip 10.220.175.0/24
+                        exit
+                    exit
+                    entry 69 create
+                        action accept
+                        description "accept PIM from network"
+                        match protocol pim
+                            src-ip 10.220.175.0/24
+                        exit
+                    exit
+                    entry 70 create
+                        action accept
+                        description "Allow S-PMSI Port"
+                        match protocol udp
+                            dst-port 3232 65535
+                            src-ip 10.220.175.0/24
+                        exit
+                    exit
+                    entry 71 create
+                        action accept
+                        description "Accept SSH"
+                        match protocol tcp
+                            dst-ip 10.220.175.0/24
+                            dst-port 22 65535
+                            src-ip 10.220.175.0/24
+                        exit
+                    exit
+                    entry 72 create
+                        action accept
+                        description "Accept MH BFD (RFC5883) from network : system@"
+                        match protocol *
+                            dst-port 4784 65535
+                            src-ip 10.220.175.0/24
+                            src-port 4784 65535
+                        exit
+                    exit
+                    entry 75 create
+                        action accept
+                        description "Accept ISIS session from network"
+                        match protocol isis
+                            src-ip ip-prefix-list "SYSTEM&WAN-IP-POOL"
+                        exit
+                    exit
+                    entry 80 create
+                        action queue 109
+                        description "Accept RIP from Customers"
+                        match protocol udp
+                            dst-port 520 65535
+                        exit
+                    exit
+                    entry 85 create
+                        action queue 109
+                        description "Accept RIP from Customers"
+                        match protocol udp
+                            src-port 520 65535
+                        exit
+                    exit
+                    entry 90 create
+                        action accept
+                        description "accept MSDP from network"
+                        match protocol *
+                            dst-port 639 65535
+                            src-ip ip-prefix-list "SYSTEM&WAN-IP-POOL"
+                        exit
+                    exit
+                    entry 95 create
+                        action accept
+                        description "accept MSDP from network"
+                        match protocol *
+                            src-ip ip-prefix-list "SYSTEM&WAN-IP-POOL"
+                            src-port 639 65535
+                        exit
+                    exit
+                    entry 100 create
+                        action accept
+                        description "accept PIM from network"
+                        match protocol pim
+                            src-ip ip-prefix-list "SYSTEM&WAN-IP-POOL"
+                        exit
+                    exit
+                    entry 105 create
+                        action queue 107
+                        description "accept PIM from customers"
+                        match protocol pim
+                        exit
+                    exit
+                    entry 107 create
+                        action queue 107
+                        description "accept AUTO-RP from customers"
+                        match protocol udp
+                            dst-port 496 65535
+                        exit
+                    exit
+                    entry 108 create
+                        action accept
+                        description "Allow S-PMSI Port"
+                        match protocol udp
+                            dst-port 3232 65535
+                            src-ip ip-prefix-list "SYSTEM&WAN-IP-POOL"
+                        exit
+                    exit
+                    entry 110 create
+                        action queue 107
+                        description "accept IGMP from customers"
+                        match protocol igmp
+                        exit
+                    exit
+                    entry 115 create
+                        action accept
+                        description "accept VRRP from customers"
+                        match protocol vrrp
+                        exit
+                    exit
+                    entry 117 create
+                        action accept
+                        description "Accept TACACS Server"
+                        match
+                            src-ip ip-prefix-list "TACACS-SERVER"
+                        exit
+                    exit
+                    entry 120 create
+                        action accept
+                        description "Accept RADIUS Servers"
+                        match
+                            src-ip ip-prefix-list "RADIUS-SERVER"
+                        exit
+                    exit
+                    entry 125 create
+                        action accept
+                        description "Accept Syslog Server"
+                        match
+                            src-ip ip-prefix-list "SYSLOG-SERVER"
+                        exit
+                    exit
+                    entry 130 create
+                        action drop
+                        description "Accept FTP-data & control inbound"
+                        match protocol tcp
+                            src-port 20 65534
+                        exit
+                    exit
+                    entry 140 create
+                        action drop
+                        description "Accept FTP-data & control outbound"
+                        match protocol tcp
+                            dst-port 20 65534
+                        exit
+                    exit
+                    entry 152 create
+                        action accept
+                        description "NTP Server to UPE Switches"
+                        match protocol udp
+                            src-ip ip-prefix-list "SYSTEM-IP-POOL"
+                            src-port 123 65535
+                        exit
+                    exit
+                    entry 155 create
+                        action accept
+                        description "Accept SSH outbound"
+                        match protocol tcp
+                            dst-ip ip-prefix-list "SSH-ACCESS"
+                            src-port 22 65535
+                        exit
+                    exit
+                    entry 160 create
+                        action accept
+                        description "accept SSH inbound"
+                        match protocol tcp
+                            dst-port 22 65535
+                            src-ip ip-prefix-list "SSH-ACCESS"
+                        exit
+                    exit
+                    entry 165 create
+                        action accept
+                        description "Allow 5620 SAM access - Primary & Secondary"
+                        match
+                            src-ip ip-prefix-list "SAM-SERVER"
+                        exit
+                    exit
+                    entry 170 create
+                        action accept
+                        description "Allow 5620 SAM access - Primary & Secondary"
+                        match
+                            dst-ip ip-prefix-list "SAM-SERVER"
+                        exit
+                    exit
+                    entry 175 create
+                        action queue 110
+                        description "accept SNMP/SNMP-TRAP trusted traffic"
+                        match protocol *
+                            dst-port range 161 162
+                            src-ip ip-prefix-list "SNMP-ACCESS"
+                        exit
+                    exit
+                    entry 180 create
+                        action queue 101
+                        description "Rate limit ICMP Echo Request"
+                        match protocol icmp
+                            icmp-type echo-request
+                        exit
+                    exit
+                    entry 185 create
+                        action queue 101
+                        description "Rate limit ICMP Echo Reply"
+                        match protocol icmp
+                            icmp-type echo-reply
+                        exit
+                    exit
+                    entry 190 create
+                        action drop
+                        description "Rate limit ICMP Dest Unreachable"
+                        match protocol icmp
+                            icmp-type dest-unreachable
+                        exit
+                    exit
+                    entry 195 create
+                        action drop
+                        description "Rate limit ICMP Redirect Message"
+                        match protocol icmp
+                            icmp-type redirect
+                        exit
+                    exit
+                    entry 200 create
+                        action drop
+                        description "Rate limit ICMP Time Exceeded"
+                        match protocol icmp
+                            icmp-type time-exceeded
+                        exit
+                    exit
+                    entry 205 create
+                        action drop
+                        description "Rate limit ICMP parameter problem"
+                        match protocol icmp
+                            icmp-type parameter-problem
+                        exit
+                    exit
+                    entry 210 create
+                        action drop
+                        description "Rate limit ICMP Source-quench"
+                        match protocol icmp
+                            icmp-type source-quench
+                        exit
+                    exit
+                    entry 215 create
+                        action drop
+                        description "Rate limit ICMP timestamp request"
+                        match protocol icmp
+                            icmp-type timestamp-request
+                        exit
+                    exit
+                    entry 220 create
+                        action drop
+                        description "Rate limit ICMP timestamp reply"
+                        match protocol icmp
+                            icmp-type timestamp-reply
+                        exit
+                    exit
+                    entry 225 create
+                        action queue 103
+                        description "Accept OAM Traceroute"
+                        match protocol udp
+                            dst-port 33435 65535
+                        exit
+                    exit
+                    entry 230 create
+                        action queue 103
+                        description "Accept lsp-ping-trace dst-port"
+                        match protocol udp
+                            dst-port 3503 65535
+                        exit
+                    exit
+                    entry 235 create
+                        action queue 103
+                        description "Accept lsp-ping-trace src-port"
+                        match protocol udp
+                            src-port 3503 65535
+                        exit
+                    exit
+                    entry 241 create
+                        action accept
+                        description "Twamp Protocol"
+                        match protocol *
+                            src-ip ip-prefix-list "TWAMP-PROTOCOL-ACCIDIAN"
+                            src-port 862 65535
+                        exit
+                    exit
+                    entry 242 create
+                        action accept
+                        description "Twamp Protocol_01"
+                        match protocol *
+                            dst-port 862 65535
+                            src-ip ip-prefix-list "TWAMP-PROTOCOL-ACCIDIAN"
+                        exit
+                    exit
+                    entry 2047 create
+                        action accept
+                        description "DHCPv4_Relay"
+                        match protocol udp
+                            dst-port 67 68
+                            src-port 67 68
+                        exit
+                    exit
+                    entry 2048 create
+                        action drop
+                        description "Drop all"
+                        log 101
+                        match
+                            src-ip ip-prefix-list "MATCH-ALL-IPV4"
+                        exit
+                    exit
+                    no shutdown
+                exit
+            exit
+            radius
+                authorization
+                accounting
+                server 1 address 182.19.118.44 secret "idYurkInR2Txufd54T8NYQQmewzPCzPp" hash2
+                server 2 address 182.19.118.45 secret "idYurkInR2Txufd54T8NYS0gJ7Ex9R+B" hash2
+            exit
+        exit
+    exit
+#--------------------------------------------------
+echo "QoS Policy Configuration"
+#--------------------------------------------------
+    qos
+        slope-policy "CEN-WAN" create
+            description "CEN-WAN slope policy."
+            highplus-slope
+                shutdown
+            exit
+            high-slope
+                no shutdown
+            exit
+            low-slope
+                no shutdown
+            exit
+            exceed-slope
+                shutdown
+            exit
+        exit
+        slope-policy "CEN_WAN" create
+            description "CEN WAN LINKS."
+            highplus-slope
+                shutdown
+            exit
+            high-slope
+                no shutdown
+            exit
+            low-slope
+                no shutdown
+            exit
+            exceed-slope
+                shutdown
+            exit
+        exit
+        network-queue "WAN_OUT" create
+            description "WAN_PORT_OUT_Policy"
+            queue 1 create
+                port-parent weight 2 cir-level 5 cir-weight 2
+                rate 100 cir 1
+                mbs 50
+            exit
+            queue 2 create
+                port-parent weight 5 cir-level 5 cir-weight 5
+                rate 100 cir 2
+            exit
+            queue 3 create
+                port-parent weight 5 cir-level 5 cir-weight 5
+                rate 100 cir 2
+            exit
+            queue 4 create
+                port-parent weight 13 cir-level 5 cir-weight 13
+                rate 100 cir 5
+            exit
+            queue 5 create
+                port-parent weight 75 cir-level 5 cir-weight 75
+                rate 100 cir 30
+            exit
+            queue 6 expedite create
+                port-parent level 6 cir-level 6
+                rate 60 cir 30
+            exit
+            queue 7 expedite create
+                port-parent level 7 cir-level 7
+                rate 60 cir 20
+            exit
+            queue 8 expedite create
+                port-parent level 8 cir-level 8
+                rate 60 cir 10
+            exit
+            queue 9 multipoint create
+                mbs 50
+            exit
+            fc af create
+                multicast-queue 9
+                queue 3
+            exit
+            fc be create
+                multicast-queue 9
+                queue 1
+            exit
+            fc ef create
+                multicast-queue 9
+                queue 6
+            exit
+            fc h1 create
+                multicast-queue 9
+                queue 7
+            exit
+            fc h2 create
+                multicast-queue 9
+                queue 5
+            exit
+            fc l1 create
+                multicast-queue 9
+                queue 4
+            exit
+            fc l2 create
+                multicast-queue 9
+                queue 2
+            exit
+            fc nc create
+                multicast-queue 9
+                queue 8
+            exit
+        exit
+        network-queue "100G_CEN_WAN_LINKS" create
+            description "100G_CEN_WAN_LINKS"
+            queue 1 create
+                rate 100 cir 4
+                mbs 50
+                drop-tail
+                    low
+                        percent-reduction-from-mbs 10
+                    exit
+                exit
+            exit
+            queue 3 create
+                rate 100 cir 4
+            exit
+            queue 4 create
+                rate 100 cir 10
+            exit
+            queue 5 create
+                rate 100 cir 10
+            exit
+            queue 6 create
+                rate 100 cir 11
+            exit
+            queue 7 create
+                rate 60 cir 60
+            exit
+            queue 8 create
+                rate 100 cir 1
+            exit
+            queue 9 multipoint create
+                mbs 50
+                drop-tail
+                    low
+                        percent-reduction-from-mbs 10
+                    exit
+                exit
+            exit
+            fc af create
+                multicast-queue 9
+                queue 3
+            exit
+            fc be create
+                multicast-queue 9
+                queue 1
+            exit
+            fc ef create
+                multicast-queue 9
+                queue 6
+            exit
+            fc h1 create
+                multicast-queue 9
+                queue 7
+            exit
+            fc h2 create
+                multicast-queue 9
+                queue 5
+            exit
+            fc l1 create
+                multicast-queue 9
+                queue 4
+            exit
+            fc nc create
+                multicast-queue 9
+                queue 8
+            exit
+        exit
+        port-scheduler-policy "100G_CEN_WAN_LINKS" create
+            description "For 100G WAN LINK"
+            max-rate 100000000
+            level 6 rate 100000000 cir 40000000
+            level 7 rate 60000000 cir 60000000
+            orphan-override cir-level 2
+        exit
+        port-scheduler-policy "6.5G_CEN_WAN_LINKS" create
+            description "For 6.5G WAN LINK"
+            max-rate 6500000
+            level 6 rate 6500000 cir 2600000
+            level 7 rate 3900000 cir 3900000
+            orphan-override cir-level 2
+        exit
+        port-scheduler-policy "WAN_PORT_SCHEDULER" create
+            description "WAN_PORT_SCHEDULER"
+            max-rate percent 100.00
+            level 5 percent-rate 100.00 percent-cir 40.00
+            level 6 percent-rate 60.00 percent-cir 30.00
+            level 7 percent-rate 60.00 percent-cir 20.00
+            level 8 percent-rate 60.00 percent-cir 10.00
+        exit
+        queue-group-templates
+            ingress
+                queue-group "ACCESS_IN" create
+                    queue 1 best-effort create
+                    exit
+                    queue 2 best-effort create
+                    exit
+                    queue 3 best-effort create
+                    exit
+                    queue 4 best-effort create
+                    exit
+                    queue 5 best-effort create
+                    exit
+                    queue 6 expedite create
+                    exit
+                    queue 7 expedite create
+                    exit
+                    queue 8 expedite create
+                    exit
+                exit
+            exit
+            egress
+                queue-group "ACCESS_OUT" create
+                    description "ACCESS_OUT"
+                    queue 1 best-effort create
+                        port-parent weight 2 cir-level 5 cir-weight 2
+                        percent-rate 100.00 cir 1.00
+                    exit
+                    queue 2 best-effort create
+                        port-parent weight 5 cir-level 5 cir-weight 5
+                        percent-rate 100.00 cir 2.00
+                    exit
+                    queue 3 best-effort create
+                        port-parent weight 5 cir-level 5 cir-weight 5
+                        percent-rate 100.00 cir 2.00
+                    exit
+                    queue 4 best-effort create
+                        port-parent weight 13 cir-level 5 cir-weight 13
+                        percent-rate 100.00 cir 5.00
+                    exit
+                    queue 5 best-effort create
+                        port-parent weight 75 cir-level 5 cir-weight 75
+                        percent-rate 100.00 cir 30.00
+                    exit
+                    queue 6 expedite create
+                        port-parent level 6 cir-level 6
+                        percent-rate 60.00 cir 30.00
+                    exit
+                    queue 7 expedite create
+                        port-parent level 7 cir-level 7
+                        percent-rate 60.00 cir 20.00
+                    exit
+                    queue 8 expedite create
+                        port-parent level 8 cir-level 8
+                        percent-rate 60.00 cir 10.00
+                    exit
+                    fc af create
+                        queue 3
+                    exit
+                    fc be create
+                        queue 1
+                    exit
+                    fc ef create
+                        queue 6
+                    exit
+                    fc h1 create
+                        queue 7
+                    exit
+                    fc h2 create
+                        queue 5
+                    exit
+                    fc l1 create
+                        queue 4
+                    exit
+                    fc l2 create
+                        queue 2
+                    exit
+                    fc nc create
+                        queue 8
+                    exit
+                exit
+            exit
+        exit
+    exit
+#--------------------------------------------------
+echo "Switch Fabric Configuration"
+#--------------------------------------------------
+    sfm 1
+        sfm-type m-sfm5-12
+        no shutdown
+    exit
+    sfm 2
+        sfm-type m-sfm5-12
+        no shutdown
+    exit
+#--------------------------------------------------
+echo "Card Configuration"
+#--------------------------------------------------
+    card 1
+        card-type iom3-xp-c
+        mda 1
+            mda-type m12-1gb+2-10gb-xp
+            no shutdown
+        exit
+        mda 2
+            mda-type m4-10gb-xp-xfp
+            no shutdown
+        exit
+        fp 1
+            ingress
+                network
+                    pool "default"
+                        slope-policy "CEN_WAN"
+                    exit
+                    queue-policy "WAN_OUT"
+                exit
+            exit
+        exit
+        no shutdown
+    exit   
+#--------------------------------------------------
+echo "Port Configuration"
+#--------------------------------------------------
+    port 1/1/1
+        shutdown
+        description "KLWTLC0054_To_KLKOLKANCAG01ASRa4_1/1/1"
+        network
+            egress
+                pool
+                    slope-policy "CEN_WAN"
+                exit
+            exit
+        exit
+        ethernet
+            no autonegotiate
+            encap-type dot1q
+            mtu 9018
+            egress-scheduler-policy "WAN_PORT_SCHEDULER"
+            crc-monitor
+                sd-threshold 2 multiplier 2
+                window-size 5
+            exit
+            network
+                queue-policy "WAN_OUT"
+            exit
+            hold-time up 30 down 1
+        exit
+    exit
+#--------------------------------------------------
+echo "System Sync-If-Timing Configuration"
+#--------------------------------------------------
+    system
+        sync-if-timing
+            begin
+            commit
+        exit
+    exit
+#--------------------------------------------------
+echo "LAG Configuration"
+#--------------------------------------------------
+    lag 1
+        description "KLWBBA0235_TO_KLKOLKNRCCR02ASR12_LAG-1_Port4/1/1"
+        encap-type dot1q
+        port 4/1/1
+        no shutdown
+    exit
+#--------------------------------------------------
+echo "Redundancy Configuration"
+#--------------------------------------------------
+    redundancy
+        synchronize boot-env
+    exit
+#--------------------------------------------------
+echo "Vrrp Configuration"
+#--------------------------------------------------
+    vrrp
+        policy 1004 context 1004
+            priority-event
+                port-down 10/1/1
+                    priority 50 delta
+                exit
+            exit
+        exit      
+    exit
+#--------------------------------------------------
+echo "Management Router Configuration"
+#--------------------------------------------------
+    router management
+    exit
+ 
+#--------------------------------------------------
+echo "Router (Network Side) Configuration"
+#--------------------------------------------------
+    router Base
+        interface "GE-1/1/1:0"
+            shutdown
+        exit
+        interface "LAG-1"
+            no shutdown
+        exit
+        interface "LAG-{{east_bundle_id_a}}:{{east_a_end_vlan_details}}"
+            address {{east_ip_address_a}}/31
+            description "{{east_a_end_logical_description}}"
+            ldp-sync-timer 5
+            port lag-{{east_bundle_id_a}}:{{east_a_end_vlan_details}}
+            qos 50
+            bfd 50 receive 50 multiplier 3 type cpm-np
+            no shutdown
+        exit
+        autonomous-system 55410
+        ecmp 8
+        ip-fast-reroute
+        router-id 100.127.46.11
+#--------------------------------------------------
+echo "SGT Mapping Configuration"
+#--------------------------------------------------
+        sgt-qos
+            application bgp dscp nc2
+            application cflowd dscp nc2
+            application dhcp dscp nc2
+            application dns dscp nc2
+            application ftp dscp af21
+            application icmp dscp af21
+            application igmp dscp nc2
+            application l2tp dscp nc2
+            application ldp dscp nc2
+            application mld dscp nc2
+            application msdp dscp nc2
+            application ndis dscp nc2
+            application ntp dscp nc2
+            application ospf dscp nc2
+            application pim dscp nc2
+            application radius dscp nc2
+            application rip dscp nc2
+            application rsvp dscp nc2
+            application snmp dscp nc2
+            application snmp-notification dscp nc2
+            application srrp dscp nc2
+            application ssh dscp nc2
+            application syslog dscp af21
+            application tacplus dscp nc2
+            application telnet dscp af21
+            application tftp dscp nc2
+            application traceroute dscp af21
+            application vrrp dscp nc2
+            application ptp dscp nc2
+            application igmp-reporter dscp nc2
+            application gtp dscp nc2
+            application arp dot1p 7
+            application isis dot1p 7
+            application pppoe dot1p 7
+        exit
+#--------------------------------------------------
+echo "MPLS Label Range Configuration"
+#--------------------------------------------------
+        mpls-labels
+            sr-labels start 30000 end 39999
+        exit
+#--------------------------------------------------
+echo "OSPFv2 Configuration"
+#--------------------------------------------------
+        ospf 0
+            shutdown
+        exit
+#--------------------------------------------------
+echo "ISIS Configuration"
+#--------------------------------------------------
+        isis 0
+            level-capability level-2
+            area-id 49.0002
+            ignore-lsp-errors
+            lsp-lifetime 65535
+            lsp-refresh-interval 58981 half-lifetime disable
+            overload-on-boot timeout 90
+            traffic-engineering
+            reference-bandwidth 1000000000
+            loopfree-alternates
+            exit
+            ipv6-routing mt
+            no ipv6-multicast-routing
+            multi-topology
+                ipv6-unicast
+            exit
+            timers
+                spf-wait 5000 spf-initial-wait 10 spf-second-wait 50
+            exit
+            level 2
+                wide-metrics-only
+            exit
+            interface "system"
+                tag 10
+                passive
+                no shutdown
+            exit
+            interface "TE-2/1/1:0"
+                level-capability level-2
+                interface-type point-to-point
+                bfd-enable ipv4
+                level 2
+                    hello-interval 20
+                    hello-multiplier 5
+                    metric 5
+                exit
+                no shutdown
+            exit
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "ISIS (Inst: 9) Configuration"
+#--------------------------------------------------
+        isis 9
+            level-capability level-2
+            area-id 49.0002
+            ignore-lsp-errors
+            lsp-lifetime 65535
+            lsp-refresh-interval 58981 half-lifetime disable
+            overload-on-boot timeout 90
+            traffic-engineering
+            reference-bandwidth 1000000000
+            advertise-router-capability area
+            loopfree-alternates
+                remote-lfa
+                exit
+            exit
+            ipv6-routing mt
+            no ipv6-multicast-routing
+            multi-topology
+                ipv6-unicast
+            exit
+            timers
+                spf-wait 5000 spf-initial-wait 10 spf-second-wait 50
+            exit
+            level 2
+                wide-metrics-only
+            exit
+            segment-routing
+                export-tunnel-table ldp
+                prefix-sid-range global
+                tunnel-table-pref 8
+                no shutdown
+            exit
+            interface "system"
+                level-capability level-2
+                tag 10
+                ipv4-node-sid index 18
+                passive
+                no shutdown
+            exit
+            interface "LAG-4:0"
+                level-capability level-2
+                interface-type point-to-point
+                bfd-enable ipv4
+                level 2
+                    hello-authentication-key "Oqw9mM9vB4ZLexUvPfAzsdahCLCYedfyzue1ov/Rts4=" hash2
+                    hello-authentication-type message-digest
+                    hello-interval 20
+                    hello-multiplier 5
+                    metric 50
+                exit
+                no shutdown
+            exit          
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "ISIS (Inst: 13) Configuration"
+#--------------------------------------------------
+        isis 13
+            level-capability level-2
+            area-id 49.0002
+            ignore-lsp-errors
+            lsp-lifetime 65535
+            lsp-refresh-interval 58981 half-lifetime disable
+            overload-on-boot timeout 90
+            traffic-engineering
+            reference-bandwidth 1000000000
+            advertise-router-capability area
+            ipv6-routing mt
+            no ipv6-multicast-routing
+            multi-topology
+                ipv6-unicast
+            exit
+            timers
+                spf-wait 5000 spf-initial-wait 10 spf-second-wait 50
+            exit
+            level 2
+                wide-metrics-only
+            exit
+            interface "system"
+                level-capability level-2
+                tag 10
+                passive
+                no shutdown
+            exit
+            interface "LAG-1:13"
+                level-capability level-2
+                interface-type point-to-point
+                bfd-enable ipv4
+                level 2
+                    hello-authentication-key "Oqw9mM9vB4ZLexUvPfAzsY4OciazbwZXhfaYJlqWgv0=" hash2
+                    hello-authentication-type message-digest
+                    hello-interval 20
+                    hello-multiplier 5
+                    metric 50
+                exit
+                no shutdown
+            exit
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "ISIS (Inst: 14) Configuration"
+#--------------------------------------------------
+        isis 14
+            level-capability level-2
+            area-id 49.0002
+            ignore-lsp-errors
+            lsp-lifetime 65535
+            lsp-refresh-interval 58981 half-lifetime disable
+            overload-on-boot timeout 90
+            traffic-engineering
+            reference-bandwidth 1000000000
+            advertise-router-capability area
+            loopfree-alternates
+                ti-lfa
+                    node-protect
+                exit
+            exit
+            ipv6-routing mt
+            no ipv6-multicast-routing
+            multi-topology
+                ipv6-unicast
+            exit
+            timers
+                spf-wait 5000 spf-initial-wait 10 spf-second-wait 50
+            exit
+            level 2
+                wide-metrics-only
+            exit
+            segment-routing
+                prefix-sid-range global
+                tunnel-table-pref 8
+                no shutdown
+            exit
+            interface "system"
+                tag 10
+                ipv4-node-sid index 76
+                passive
+                no shutdown
+            exit
+            interface "LAG-1:14"
+                level-capability level-2
+                interface-type point-to-point
+                bfd-enable ipv4
+                level 2
+                    hello-authentication-key "Oqw9mM9vB4ZLexUvPfAzsdVokolVspRSHUx/BueaUWk=" hash2
+                    hello-authentication-type message-digest
+                    hello-interval 20
+                    hello-multiplier 5
+                    metric 100
+                exit
+                no shutdown
+            exit           
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "ISIS (Inst: 16) Configuration"
+#--------------------------------------------------
+        isis 16
+            level-capability level-2
+            area-id 49.0002
+            ignore-lsp-errors
+            lsp-lifetime 65535
+            lsp-refresh-interval 58981 half-lifetime disable
+            overload-on-boot timeout 90
+            traffic-engineering
+            reference-bandwidth 1000000000
+            advertise-router-capability area
+            loopfree-alternates
+                remote-lfa
+                exit
+                ti-lfa
+                    node-protect
+                exit
+            exit
+            ipv6-routing mt
+            no ipv6-multicast-routing
+            multi-topology
+                ipv6-unicast
+            exit
+            timers
+                spf-wait 5000 spf-initial-wait 10 spf-second-wait 50
+            exit
+            level 2
+                wide-metrics-only
+            exit
+            segment-routing
+                export-tunnel-table ldp
+                prefix-sid-range global
+                tunnel-table-pref 8
+                no shutdown
+            exit
+            interface "system"
+                level-capability level-2
+                tag 10
+                ipv4-node-sid index 32
+                passive
+                no shutdown
+            exit          
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "PIM Configuration"
+#--------------------------------------------------
+        pim
+            interface "system"
+            exit
+            interface "TE-1/1/14:0"
+            exit          
+            rp
+                static
+                exit
+                bsr-candidate
+                    shutdown
+                exit
+                rp-candidate
+                    shutdown
+                exit
+            exit
+            ssm-groups
+                group-range 239.132.0.0/16
+                group-range 239.192.0.0/16
+            exit
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "MPLS Configuration"
+#--------------------------------------------------
+        mpls
+            resignal-timer 30
+            interface "system"
+                no shutdown
+            exit
+            interface "TE-2/1/1:0"
+                no shutdown
+            exit
+        exit
+#--------------------------------------------------
+echo "RSVP Configuration"
+#--------------------------------------------------
+        rsvp
+            interface "system"
+                no shutdown
+            exit
+            interface "TE-2/1/1:0"
+                bfd-enable
+                no shutdown
+            exit
+            interface "LAG-{{east_bundle_id_a}}:{{east_a_end_vlan_details}}"
+                no shutdown
+            exit         
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "MPLS LSP Configuration"
+#--------------------------------------------------
+        mpls
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "LDP Configuration"
+#--------------------------------------------------
+        ldp
+            fast-reroute
+            import-pmsi-routes
+            exit
+            session-parameters
+                peer {{east_ip_address_b}}
+                exit
+            exit
+            tcp-session-parameters
+                peer-transport {{east_ip_address_b}}
+                    authentication-key "{{LDP_password}}" hash2
+                exit
+            exit
+            interface-parameters
+                interface "TE-1/1/14:0" dual-stack
+                    ipv4
+                        no shutdown
+                    exit
+                    no shutdown
+                exit              
+            exit
+            targeted-session
+            exit
+            no shutdown
+        exit
+    exit
+ 
+#--------------------------------------------------
+echo "Service Configuration"
+#--------------------------------------------------
+#--------------------------------------------------
+echo "CPM Filter Router and Svc-id Match Configuration"
+#--------------------------------------------------
+    system
+        security
+            cpm-filter
+                default-action drop
+                ip-filter
+                    no shutdown
+                exit
+            exit
+        exit
+    exit
+#--------------------------------------------------
+echo "Filter Match lists Configuration"
+#--------------------------------------------------
+    filter
+        match-list
+            ip-prefix-list "EBGP-SYSTEM-IP-POOL" create
+            exit
+            ip-prefix-list "FTP-SERVER" create
+            exit
+            ip-prefix-list "MANAGED-CPE-CLIENTS" create
+            exit
+            ip-prefix-list "MATCH-ALL-IPV4" create
+            exit
+            ip-prefix-list "RADIUS-SERVER" create
+            exit
+            ip-prefix-list "SAM-SERVER" create
+            exit
+            ip-prefix-list "SNMP-ACCESS" create
+            exit
+            ip-prefix-list "SSH-ACCESS" create
+            exit
+            ip-prefix-list "SYSLOG-SERVER" create
+            exit
+            ip-prefix-list "SYSTEM&WAN-IP-POOL" create
+            exit
+            ip-prefix-list "SYSTEM-IP-POOL" create
+            exit
+            ip-prefix-list "TACACS-SERVER" create
+            exit
+            ip-prefix-list "TFTP-SERVER" create
+            exit
+            ip-prefix-list "TWAMP-PROTOCOL-ACCIDIAN" create
+            exit
+            ip-prefix-list "WAN-IP-POOL" create
+            exit
+        exit
+    exit
+#--------------------------------------------------
+echo "Router (Service Side) Configuration"
+#--------------------------------------------------
+    router Base
+#--------------------------------------------------
+echo "OSPFv2 Configuration"
+#--------------------------------------------------
+        ospf 0
+            shutdown
+        exit
+#--------------------------------------------------
+echo "ISIS Configuration"
+#--------------------------------------------------
+        isis 0
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "ISIS (Inst: 9) Configuration"
+#--------------------------------------------------
+        isis 9
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "ISIS (Inst: 13) Configuration"
+#--------------------------------------------------
+        isis 13
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "ISIS (Inst: 14) Configuration"
+#--------------------------------------------------
+        isis 14
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "ISIS (Inst: 16) Configuration"
+#--------------------------------------------------
+        isis 16
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "PIM Configuration"
+#--------------------------------------------------
+        pim
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "Policy Configuration"
+#--------------------------------------------------
+        policy-options
+            begin
+            commit
+#--------------------------------------------------
+echo "BGP Configuration"
+#--------------------------------------------------
+        bgp
+            vpn-apply-import
+            vpn-apply-export
+            hold-time 120
+            min-route-advertisement 1
+            path-mtu-discovery
+            router-id {{self_loopback_ip_a}}
+            rapid-withdrawal
+            next-hop-resolution
+                shortcut-tunnel
+                    family ipv4
+                        resolution-filter
+                            ldp
+                            sr-isis
+                            rsvp
+                        exit
+                        resolution filter
+                    exit
+                exit
+                labeled-routes
+                    transport-tunnel
+                        family vpn
+                            resolution-filter
+                                ldp
+                                rsvp
+                                sr-isis
+                                bgp
+                            exit
+                            resolution filter
+                        exit
+                        family label-ipv4
+                            resolution-filter
+                                ldp
+                                rsvp
+                                sr-isis
+                            exit
+                            resolution filter
+                        exit
+                    exit
+                exit
+            exit
+            enable-rr-vpn-forwarding
+            group "RR_55410"
+                description "CEN_RR"
+                family ipv6 vpn-ipv4 vpn-ipv6 l2-vpn mvpn-ipv4 mdt-safi route-target label-ipv4
+                hold-time 120
+                type internal
+                local-as 55410
+                peer-as 55410
+                advertise-inactive
+                enable-peer-tracking
+                neighbor  {{t1_loopback_ip}}
+                    description "{{t1_hostname}}"
+                    authentication-key "{{BGP_Password}}" hash2
+                    export "EXPORT-LOOPBACK0"
+                exit
+                neighbor {{t2_loopback_ip}}
+                    description "{{t2_hostname}}"
+                    authentication-key "{{BGP_Password}}" hash2
+                    export "EXPORT-LOOPBACK0"
+                exit
+            exit
+            group "PRE-AGG_RR"
+                shutdown
+                description "PRE-AGG_RR"
+                family ipv6 vpn-ipv4 vpn-ipv6 l2-vpn mvpn-ipv4 mdt-safi route-target label-ipv4
+                hold-time 120
+                type internal
+                cluster 100.127.46.11
+                export "ADVERTISE_PRE-AGG"
+                local-as 55410
+                peer-as 55410
+                enable-peer-tracking
+                neighbor 100.127.46.113
+                    description "KLKOLBOICAG01ASRA4"
+                    authentication-key "nfEsVAOOg8gkjxIIaZzW8/sNeXU1H6yYhT+nHPQr3rk=" hash2
+                exit
+            exit
+            group "PAR-1B-CLIENTS_KOL_Pre-Agg_5"
+                description "PAR-1B-CLIENTS_KOL_Pre-Agg_5"
+                family ipv6 vpn-ipv4 vpn-ipv6 l2-vpn mdt-safi route-target label-ipv4
+                hold-time 120
+                type internal
+                cluster 100.127.46.11
+                export "BGP_LU_TO_PreAGG"
+                peer-as 55410
+                advertise-inactive
+                enable-peer-tracking
+                default-route-target
+                neighbor 100.127.46.178
+                    description "KLKOLPHBPAR01NIXR6"
+                    authentication-key "nfEsVAOOg8gkjxIIaZzW88Df0joas+VssgQ+3GEaego=" hash2
+                exit
+                neighbor 100.127.46.179
+                    description "KLKOLBGTPAR01NIXR6"
+                    authentication-key "nfEsVAOOg8gkjxIIaZzW8zT4LywA++iTdcMOa90y1v4=" hash2
+                exit
+                neighbor 100.127.46.180
+                    description "KLKOLPGDPAR01NIXR6"
+                    authentication-key "nfEsVAOOg8gkjxIIaZzW80A11d1Q5xaPFhjvzLlMb+M=" hash2
+                exit
+                neighbor 100.127.46.181
+                    description "KLKOLEBGPAR01NIXR6"
+                    authentication-key "nfEsVAOOg8gkjxIIaZzW85L7o7YRU0LByPemzmMgrk4=" hash2
+                exit
+            exit
+            no shutdown
+        exit
+    exit
+ 
+#--------------------------------------------------
+echo "Log all events for service vprn, log syslog tls-client-profile Configuration"
+#--------------------------------------------------
+    log
+        syslog 1 name "1"
+        exit
+        syslog 2 name "2"
+        exit
+        log-id 95 name "95"
+            no shutdown
+        exit
+        log-id 96 name "96"
+            no shutdown
+        exit
+    exit
+#--------------------------------------------------
+echo "System Time NTP Configuration"
+#--------------------------------------------------
+    system
+        time
+            ntp
+                server {{t1_loopback_ip}} prefer
+                server {{t2_loopback_ip}}
+            exit
+        exit
+    exit
+#--------------------------------------------------
+echo "SAA Tests Configuration"
+#--------------------------------------------------
+    saa
+ 
+        test "test" owner "sas:0:2:2:e"
+            description "test"
+            type
+                icmp-ping 100.127.46.12 fc "be"
+            exit
+            trap-gen
+                test-completion-enable
+            exit
+            no shutdown
+        exit
+    exit
+ 
+#--------------------------------------------------
+echo "OAM Tests Configuration"
+#--------------------------------------------------
+    test-oam
+        twamp
+            server
+                prefix 123.63.159.48/29 create
+                exit
+                no shutdown
+            exit
+        exit
+    exit
+ 
+exit all
+ 

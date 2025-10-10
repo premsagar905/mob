@@ -1,0 +1,67 @@
+New Configs
+qos enable
+qos statistics
+hardware-profile filter qos-ext enable
+hardware-profile service-queue profile2
+
+policy-map type queuing default default-out-policy
+ class type queuing default q0
+  wfq-queue weight 1
+  exit
+ class type queuing default q1
+  wfq-queue weight 2
+  exit
+ class type queuing default q2
+  wfq-queue weight 2
+  exit
+ class type queuing default q3
+  wfq-queue weight 20
+  exit
+ class type queuing default q4
+  wfq-queue weight 63
+  exit
+ class type queuing default q5
+  priority level 1
+shape percent 60
+  exit
+ class type queuing default q6
+  priority level 2
+shape percent 20
+  exit
+ class type queuing default q7
+shape percent 10
+  priority level 3
+  exit
+!
+policy-map type queuing default subif-default-out-policy
+ class type queuing default q0
+  wfq-queue weight 1
+  exit
+ class type queuing default q1
+  wfq-queue weight 2
+  exit
+ class type queuing default q2
+  wfq-queue weight 2
+  exit
+ class type queuing default q3
+  wfq-queue weight 20
+  exit
+ class type queuing default q4
+  wfq-queue weight 63
+  queue-limit 50 ms
+  exit
+ class type queuing default q5
+shape percent 60
+  priority level 1
+  exit
+ class type queuing default q6
+shape percent 20
+  priority level 2
+  exit
+ class type queuing default q7
+shape percent 10
+  priority level 3
+  exit
+!
+
+

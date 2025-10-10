@@ -1,0 +1,33 @@
+configure router isis {{isis}}
+ interface {{lag_Interface}}
+ level-capability level-2
+ interface-type point-to-point
+ bfd-enable {{Bfd_Enable}}
+ level 2
+ hello-authentication-key {{Auth_key}}
+ hello-authentication-type {{Auth_Type}}
+ hello-interval {{Hello_Interval}}
+ hello-multiplier {{Hello_Multiplier}}
+ metric {{Metric}}
+ exit
+ no shutdown
+configure router pim
+ interface {{lag_Interface}}
+ bfd-enable
+configure router mpls
+ interface {{lag_Interface}}
+ no shutdown
+configure router rsvp
+ interface {{lag_Interface}}
+ bfd-enable
+ no shutdown
+configure router ldp
+ interface-parameters
+ interface {{lag_Interface}} dual-stack
+ bfd-enable {{Bfd_value}}
+ ipv4
+ no shutdown
+ exit
+ no shutdown
+#
+return

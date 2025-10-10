@@ -1,0 +1,5 @@
+ipv6-family vpn-instance  {{Service_VRF_Name}}
+undo peer {{IPV6_CPE_Interface_IP/127}}
+y
+commit
+#

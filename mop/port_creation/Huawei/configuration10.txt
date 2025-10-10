@@ -1,0 +1,16 @@
+interface {{Planned_Router_Port}}
+description {{description}}
+mtu 9212
+undo shutdown
+trust upstream VIL-HUAWEI
+undo dcn
+trust 8021p outbound
+port-queue be wfq weight 1 outbound
+port-queue af1 wfq weight 2 outbound
+port-queue af2 wfq weight 2 outbound
+port-queue af3 wfq weight 14 outbound
+port-queue af4 wfq weight 81 outbound
+port-queue ef pq shaping shaping-percentage 60 outbound
+port-queue cs6 pq shaping shaping-percentage 20 outbound
+port-queue cs7 pq shaping shaping-percentage 10 outbound
+qos phb dscp disable

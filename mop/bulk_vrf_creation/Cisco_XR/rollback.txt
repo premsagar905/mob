@@ -1,0 +1,14 @@
+vrf {{vrf_name}}
+ address-family ipv4 unicast
+  no import route-target
+   {{import_rt}}
+  no export route-target
+   {{export_rt}}
+ !
+ address-family ipv6 unicast
+  no import route-target
+   {{import_rt}}
+  no export route-target
+   {{export_rt}}
+ !
+!

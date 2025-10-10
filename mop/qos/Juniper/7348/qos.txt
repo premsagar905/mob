@@ -1,0 +1,331 @@
+---------------------------------
+//********* QOS WAN ********/
+----------------------------------
+
+*************Forwarding class***************
+
+set class-of-service forwarding-classes class ES_BE queue-num 0
+set class-of-service forwarding-classes class ES_BRONZE queue-num 1
+set class-of-service forwarding-classes class ES_SILVER queue-num 2
+set class-of-service forwarding-classes class ES_NC queue-num 3
+set class-of-service forwarding-classes class ES_GOLD queue-num 4
+set class-of-service forwarding-classes class ES_PLATINUM queue-num 5
+set class-of-service forwarding-classes class ES_PLATINUM_PLUS queue-num 6
+set class-of-service forwarding-classes class ES_PLATINUM_CS7 queue-num 7
+
+********************Classifers*************
+
+set class-of-service classifiers exp ES_WAN_IN_EXP_CLASSFIERS forwarding-class ES_BE loss-priority low code-points 000
+set class-of-service classifiers exp ES_WAN_IN_EXP_CLASSFIERS forwarding-class ES_BRONZE loss-priority low code-points 001
+set class-of-service classifiers exp ES_WAN_IN_EXP_CLASSFIERS forwarding-class ES_SILVER loss-priority low code-points 010
+set class-of-service classifiers exp ES_WAN_IN_EXP_CLASSFIERS forwarding-class ES_NC loss-priority low code-points 110
+set class-of-service classifiers exp ES_WAN_IN_EXP_CLASSFIERS forwarding-class ES_GOLD loss-priority low code-points 011
+set class-of-service classifiers exp ES_WAN_IN_EXP_CLASSFIERS forwarding-class ES_PLATINUM loss-priority low code-points 101
+set class-of-service classifiers exp ES_WAN_IN_EXP_CLASSFIERS forwarding-class ES_PLATINUM_PLUS loss-priority low code-points 100
+set class-of-service classifiers exp ES_WAN_IN_EXP_CLASSFIERS forwarding-class ES_PLATINUM_CS7 loss-priority low code-points 111
+
+******************drop profiles************
+
+set class-of-service drop-profiles ES_BE_DROP_PROFILES fill-level 15 drop-probability 30
+set class-of-service drop-profiles ES_BE_DROP_PROFILES fill-level 75 drop-probability 95
+set class-of-service drop-profiles ES_BRONZE_DROP_PROFILES fill-level 20 drop-probability 25
+set class-of-service drop-profiles ES_BRONZE_DROP_PROFILES fill-level 75 drop-probability 80
+set class-of-service drop-profiles ES_SILVER_DROP_PROFILES fill-level 85 drop-probability 85
+set class-of-service drop-profiles ES_GOLD_DROP_PROFILES fill-level 30 drop-probability 25
+set class-of-service drop-profiles ES_GOLD_DROP_PROFILES fill-level 90 drop-probability 90
+set class-of-service drop-profiles ES_PLATINUM_PLUS_DROP_PROFILES fill-level 40 drop-probability 30
+set class-of-service drop-profiles ES_PLATINUM_PLUS_DROP_PROFILES fill-level 100 drop-probability 100
+
+******************Common WAN schedulers*********************
+
+set class-of-service schedulers ES_PLATINUM_CS7_SCHED  transmit-rate percent 10
+set class-of-service schedulers ES_PLATINUM_CS7_SCHED  transmit-rate rate-limit
+set class-of-service schedulers ES_PLATINUM_CS7_SCHED  priority strict-high
+set class-of-service schedulers ES_NC_SCHED  transmit-rate percent 20
+set class-of-service schedulers ES_NC_SCHED  transmit-rate rate-limit
+set class-of-service schedulers ES_NC_SCHED  priority high
+set class-of-service schedulers ES_PLATINUM_SCHED  transmit-rate percent 30
+set class-of-service schedulers ES_PLATINUM_SCHED  transmit-rate rate-limit
+set class-of-service schedulers ES_PLATINUM_SCHED  priority high
+set class-of-service schedulers ES_PLATINUM_PLUS_SCHED  transmit-rate percent 30
+set class-of-service schedulers ES_PLATINUM_PLUS_SCHED  excess-rate percent 75
+set class-of-service schedulers ES_PLATINUM_PLUS_SCHED  buffer-size percent 25
+set class-of-service schedulers ES_PLATINUM_PLUS_SCHED  priority medium-high
+set class-of-service schedulers ES_PLATINUM_PLUS_SCHED  excess-priority high
+set class-of-service schedulers ES_GOLD_SCHED  transmit-rate percent 5
+set class-of-service schedulers ES_GOLD_SCHED  excess-rate percent 20
+set class-of-service schedulers ES_GOLD_SCHED  buffer-size percent 10
+set class-of-service schedulers ES_GOLD_SCHED  priority medium-low
+set class-of-service schedulers ES_GOLD_SCHED  excess-priority low
+set class-of-service schedulers ES_GOLD_SCHED  drop-profile-map loss-priority any protocol any drop-profile ES_GOLD_DROP_PROFILES
+set class-of-service schedulers ES_SILVER_SCHED  transmit-rate percent 2
+set class-of-service schedulers ES_SILVER_SCHED  excess-rate percent 2
+set class-of-service schedulers ES_SILVER_SCHED  buffer-size percent 2
+set class-of-service schedulers ES_SILVER_SCHED  priority medium-low
+set class-of-service schedulers ES_SILVER_SCHED  excess-priority low
+set class-of-service schedulers ES_SILVER_SCHED  drop-profile-map loss-priority any protocol any drop-profile ES_SILVER_DROP_PROFILES
+set class-of-service schedulers ES_BRONZE_SCHED  transmit-rate percent 2
+set class-of-service schedulers ES_BRONZE_SCHED  excess-rate percent 2
+set class-of-service schedulers ES_BRONZE_SCHED  buffer-size percent 2
+set class-of-service schedulers ES_BRONZE_SCHED  priority low
+set class-of-service schedulers ES_BRONZE_SCHED  excess-priority low
+set class-of-service schedulers ES_BRONZE_SCHED  drop-profile-map loss-priority any protocol any drop-profile ES_BRONZE_DROP_PROFILES
+set class-of-service schedulers ES_BE_SCHED  transmit-rate percent 1
+set class-of-service schedulers ES_BE_SCHED  excess-rate percent 1
+set class-of-service schedulers ES_BE_SCHED  buffer-size percent 1
+set class-of-service schedulers ES_BE_SCHED  priority low
+set class-of-service schedulers ES_BE_SCHED  excess-priority low
+set class-of-service schedulers ES_BE_SCHED  drop-profile-map loss-priority any protocol any drop-profile ES_BE_DROP_PROFILES
+
+***********************************Scheduler-map************
+
+set class-of-service scheduler-maps ES_WAN_OUT_SCHEDULER forwarding-class ES_BE scheduler ES_BE_SCHED 
+set class-of-service scheduler-maps ES_WAN_OUT_SCHEDULER forwarding-class ES_BRONZE scheduler ES_BRONZE_SCHED 
+set class-of-service scheduler-maps ES_WAN_OUT_SCHEDULER forwarding-class ES_SILVER scheduler ES_SILVER_SCHED 
+set class-of-service scheduler-maps ES_WAN_OUT_SCHEDULER forwarding-class ES_NC scheduler ES_NC_SCHED 
+set class-of-service scheduler-maps ES_WAN_OUT_SCHEDULER forwarding-class ES_GOLD scheduler ES_GOLD_SCHED 
+set class-of-service scheduler-maps ES_WAN_OUT_SCHEDULER forwarding-class ES_PLATINUM scheduler ES_PLATINUM_SCHED 
+set class-of-service scheduler-maps ES_WAN_OUT_SCHEDULER forwarding-class ES_PLATINUM_PLUS scheduler ES_PLATINUM_PLUS_SCHED 
+set class-of-service scheduler-maps ES_WAN_OUT_SCHEDULER forwarding-class ES_PLATINUM_CS7 scheduler ES_PLATINUM_CS7_SCHED 
+
+*******************************Rewrite Rules (FC to EXP)*******************
+
+set class-of-service rewrite-rules exp ES_WAN_OUT_EXP_REWRITE forwarding-class ES_BE loss-priority low code-point 000
+set class-of-service rewrite-rules exp ES_WAN_OUT_EXP_REWRITE forwarding-class ES_BRONZE loss-priority low code-point 001
+set class-of-service rewrite-rules exp ES_WAN_OUT_EXP_REWRITE forwarding-class ES_SILVER loss-priority low code-point 010
+set class-of-service rewrite-rules exp ES_WAN_OUT_EXP_REWRITE forwarding-class ES_NC loss-priority low code-point 110
+set class-of-service rewrite-rules exp ES_WAN_OUT_EXP_REWRITE forwarding-class ES_GOLD loss-priority low code-point 011
+set class-of-service rewrite-rules exp ES_WAN_OUT_EXP_REWRITE forwarding-class ES_PLATINUM loss-priority low code-point 101
+set class-of-service rewrite-rules exp ES_WAN_OUT_EXP_REWRITE forwarding-class ES_PLATINUM_PLUS loss-priority low code-point 100
+set class-of-service rewrite-rules exp ES_WAN_OUT_EXP_REWRITE forwarding-class ES_PLATINUM_CS7 loss-priority low code-point 111
+
+
+---------------------------------
+//********* QOS ACCESS********/
+----------------------------------
+
+
+**************Forwarding class*************
+
+set class-of-service forwarding-classes class ES_BE queue-num 0
+set class-of-service forwarding-classes class ES_BRONZE queue-num 1
+set class-of-service forwarding-classes class ES_SILVER queue-num 2
+set class-of-service forwarding-classes class ES_NC queue-num 3
+set class-of-service forwarding-classes class ES_GOLD queue-num 4
+set class-of-service forwarding-classes class ES_PLATINUM queue-num 5
+set class-of-service forwarding-classes class ES_PLATINUM_PLUS queue-num 6
+set class-of-service forwarding-classes class ES_PLATINUM_CS7 queue-num 7
+
+***********Classifers*********************
+
+DSCP Classifiers for IPv4  
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BE loss-priority  low code-points  be
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BE loss-priority  low code-points  000001
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BE loss-priority  low code-points  000010
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BE loss-priority  low code-points  000011
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BE loss-priority  low code-points  000100
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BE loss-priority  low code-points  000101
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BE loss-priority  low code-points  000110
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BE loss-priority  low code-points  000111
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BRONZE loss-priority  low code-points  cs1
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BRONZE loss-priority  low code-points  001001
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BRONZE loss-priority  low code-points  af11
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BRONZE loss-priority  low code-points  001011
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BRONZE loss-priority  high code-points  af12
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BRONZE loss-priority  low code-points  001101
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BRONZE loss-priority  high code-points  af13
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_BRONZE loss-priority  low code-points  001111
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_SILVER loss-priority  low code-points  cs2
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_SILVER loss-priority  low code-points  010001
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_SILVER loss-priority  low code-points  af21
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_SILVER loss-priority  low code-points  010011
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_SILVER loss-priority  low code-points  af22
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_SILVER loss-priority  low code-points  010101
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_SILVER loss-priority  low code-points  af23
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_SILVER loss-priority  low code-points  010111
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_GOLD loss-priority  low code-points  cs3
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_GOLD loss-priority  low code-points  011001
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_GOLD loss-priority  low code-points  af31
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_GOLD loss-priority  low code-points  011011
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_GOLD loss-priority  low code-points  af32
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_GOLD loss-priority  low code-points  011101
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_GOLD loss-priority  low code-points  af33
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_GOLD loss-priority  low code-points  011111
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  cs4
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  100001
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  af41
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  100011
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  af42
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  100101
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  af43
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  100111
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM  loss-priority  low code-points  cs5
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM  loss-priority  low code-points  101001
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM  loss-priority  low code-points  101010
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM  loss-priority  low code-points  101011
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM  loss-priority  low code-points  101100
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM  loss-priority  low code-points  101101
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM  loss-priority  low code-points  ef
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM  loss-priority  low code-points  101111
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_NC loss-priority  low code-points  cs6
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_NC loss-priority  low code-points  110001
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_NC loss-priority  low code-points  110010
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_NC loss-priority  low code-points  110011
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_NC loss-priority  low code-points  110100
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_NC loss-priority  low code-points  110101
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_NC loss-priority  low code-points  110110
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_NC loss-priority  low code-points  110111
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  cs7
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111001
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111010
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111011
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111100
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111101
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111110
+set class-of-service classifiers dscp ES_ACCESS_IN_CLASSIFIER forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111111
+
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BE loss-priority  low code-points  be
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BE loss-priority  low code-points  000001
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BE loss-priority  low code-points  000010
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BE loss-priority  low code-points  000011
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BE loss-priority  low code-points  000100
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BE loss-priority  low code-points  000101
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BE loss-priority  low code-points  000110
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BE loss-priority  low code-points  000111
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BRONZE loss-priority  low code-points  cs1
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BRONZE loss-priority  low code-points  001001
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BRONZE loss-priority  low code-points  af11
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BRONZE loss-priority  low code-points  001011
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BRONZE loss-priority  high code-points  af12
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BRONZE loss-priority  low code-points  001101
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BRONZE loss-priority  high code-points  af13
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_BRONZE loss-priority  low code-points  001111
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_SILVER loss-priority  low code-points  cs2
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_SILVER loss-priority  low code-points  010001
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_SILVER loss-priority  low code-points  af21
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_SILVER loss-priority  low code-points  010011
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_SILVER loss-priority  low code-points  af22
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_SILVER loss-priority  low code-points  010101
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_SILVER loss-priority  low code-points  af23
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_SILVER loss-priority  low code-points  010111
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_GOLD loss-priority  low code-points  cs3
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_GOLD loss-priority  low code-points  011001
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_GOLD loss-priority  low code-points  af31
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_GOLD loss-priority  low code-points  011011
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_GOLD loss-priority  low code-points  af32
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_GOLD loss-priority  low code-points  011101
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_GOLD loss-priority  low code-points  af33
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_GOLD loss-priority  low code-points  011111
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  cs4
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  100001
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  af41
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  100011
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  af42
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  100101
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  af43
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_PLUS loss-priority  low code-points  100111
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM  loss-priority  low code-points  cs5
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM  loss-priority  low code-points  101001
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM  loss-priority  low code-points  101010
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM  loss-priority  low code-points  101011
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM  loss-priority  low code-points  101100
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM  loss-priority  low code-points  101101
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM  loss-priority  low code-points  ef
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM  loss-priority  low code-points  101111
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_NC loss-priority  low code-points  cs6
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_NC loss-priority  low code-points  110001
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_NC loss-priority  low code-points  110010
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_NC loss-priority  low code-points  110011
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_NC loss-priority  low code-points  110100
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_NC loss-priority  low code-points  110101
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_NC loss-priority  low code-points  110110
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_NC loss-priority  low code-points  110111
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  cs7
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111001
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111010
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111011
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111100
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111101
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111110
+set class-of-service classifiers dscp-ipv6 ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 forwarding-class ES_PLATINUM_CS7 loss-priority  low code-points  111111
+
+****************drop profiles***************
+
+set class-of-service drop-profiles ES_BE_DROP_PROFILES fill-level 15 drop-probability 30
+set class-of-service drop-profiles ES_BE_DROP_PROFILES fill-level 75 drop-probability 95
+set class-of-service drop-profiles ES_BRONZE_DROP_PROFILES fill-level 20 drop-probability 25
+set class-of-service drop-profiles ES_BRONZE_DROP_PROFILES fill-level 75 drop-probability 80
+set class-of-service drop-profiles ES_SILVER_DROP_PROFILES fill-level 85 drop-probability 85
+set class-of-service drop-profiles ES_GOLD_DROP_PROFILES fill-level 30 drop-probability 25
+set class-of-service drop-profiles ES_GOLD_DROP_PROFILES fill-level 90 drop-probability 90
+set class-of-service drop-profiles ES_PLATINUM_PLUS_DROP_PROFILES fill-level 40 drop-probability 30
+set class-of-service drop-profiles ES_PLATINUM_PLUS_DROP_PROFILES fill-level 100 drop-probability 100
+
+**************Common WAN schedulers****************
+
+set class-of-service schedulers ES_ACCESS_OUT_PLATINUM_CS7_SCHED transmit-rate percent 10
+set class-of-service schedulers ES_ACCESS_OUT_PLATINUM_CS7_SCHED transmit-rate rate-limit
+set class-of-service schedulers ES_ACCESS_OUT_PLATINUM_CS7_SCHED priority strict-high
+set class-of-service schedulers ES_ACCESS_OUT_NC_SCHED transmit-rate percent 20
+set class-of-service schedulers ES_ACCESS_OUT_NC_SCHED transmit-rate rate-limit
+set class-of-service schedulers ES_ACCESS_OUT_NC_SCHED priority high
+set class-of-service schedulers ES_ACCESS_OUT_PLATINUM_SCHED transmit-rate percent 30
+set class-of-service schedulers ES_ACCESS_OUT_PLATINUM_SCHED transmit-rate rate-limit
+set class-of-service schedulers ES_ACCESS_OUT_PLATINUM_SCHED priority high
+set class-of-service schedulers ES_ACCESS_OUT_PLATINUM_PLUS_SCHED transmit-rate percent 30
+set class-of-service schedulers ES_ACCESS_OUT_PLATINUM_PLUS_SCHED excess-rate percent 75
+set class-of-service schedulers ES_ACCESS_OUT_PLATINUM_PLUS_SCHED buffer-size percent 30
+set class-of-service schedulers ES_ACCESS_OUT_PLATINUM_PLUS_SCHED priority medium-high
+set class-of-service schedulers ES_ACCESS_OUT_PLATINUM_PLUS_SCHED excess-priority high
+set class-of-service schedulers ES_ACCESS_OUT_GOLD_SCHED transmit-rate percent 5
+set class-of-service schedulers ES_ACCESS_OUT_GOLD_SCHED excess-rate percent 20
+set class-of-service schedulers ES_ACCESS_OUT_GOLD_SCHED buffer-size percent 5
+set class-of-service schedulers ES_ACCESS_OUT_GOLD_SCHED priority medium-low
+set class-of-service schedulers ES_ACCESS_OUT_GOLD_SCHED excess-priority low
+set class-of-service schedulers ES_ACCESS_OUT_SILVER_SCHED transmit-rate percent 2
+set class-of-service schedulers ES_ACCESS_OUT_SILVER_SCHED excess-rate percent 2
+set class-of-service schedulers ES_ACCESS_OUT_SILVER_SCHED buffer-size percent 2
+set class-of-service schedulers ES_ACCESS_OUT_SILVER_SCHED priority medium-low
+set class-of-service schedulers ES_ACCESS_OUT_SILVER_SCHED excess-priority low
+set class-of-service schedulers ES_ACCESS_OUT_BRONZE_SCHED transmit-rate percent 2
+set class-of-service schedulers ES_ACCESS_OUT_BRONZE_SCHED excess-rate percent 2
+set class-of-service schedulers ES_ACCESS_OUT_BRONZE_SCHED buffer-size percent 2
+set class-of-service schedulers ES_ACCESS_OUT_BRONZE_SCHED priority low
+set class-of-service schedulers ES_ACCESS_OUT_BRONZE_SCHED excess-priority low
+set class-of-service schedulers ES_ACCESS_OUT_BE_SCHED transmit-rate percent 1
+set class-of-service schedulers ES_ACCESS_OUT_BE_SCHED excess-rate percent 1
+set class-of-service schedulers ES_ACCESS_OUT_BE_SCHED buffer-size percent 1
+set class-of-service schedulers ES_ACCESS_OUT_BE_SCHED priority low
+set class-of-service schedulers ES_ACCESS_OUT_BE_SCHED excess-priority low
+
+********************Scheduler-map*************************
+
+set class-of-service scheduler-maps ES_ACCESS_OUT_SCHEDULER_MAP forwarding-class ES_BE scheduler ES_ACCESS_OUT_BE_SCHED
+set class-of-service scheduler-maps ES_ACCESS_OUT_SCHEDULER_MAP forwarding-class ES_BRONZE scheduler ES_ACCESS_OUT_BRONZE_SCHED
+set class-of-service scheduler-maps ES_ACCESS_OUT_SCHEDULER_MAP forwarding-class ES_SILVER scheduler ES_ACCESS_OUT_SILVER_SCHED
+set class-of-service scheduler-maps ES_ACCESS_OUT_SCHEDULER_MAP forwarding-class ES_NC scheduler ES_ACCESS_OUT_NC_SCHED
+set class-of-service scheduler-maps ES_ACCESS_OUT_SCHEDULER_MAP forwarding-class ES_GOLD scheduler ES_ACCESS_OUT_GOLD_SCHED
+set class-of-service scheduler-maps ES_ACCESS_OUT_SCHEDULER_MAP forwarding-class ES_PLATINUM scheduler ES_ACCESS_OUT_PLATINUM_SCHED
+set class-of-service scheduler-maps ES_ACCESS_OUT_SCHEDULER_MAP forwarding-class ES_PLATINUM_PLUS scheduler ES_ACCESS_OUT_PLATINUM_PLUS_SCHED
+set class-of-service scheduler-maps ES_ACCESS_OUT_SCHEDULER_MAP forwarding-class ES_PLATINUM_CS7 scheduler ES_ACCESS_OUT_PLATINUM_CS7_SCHED
+
+*************************Rewrite Rules*********************
+
+set class-of-service rewrite-rules ieee-802.1 ES_ACCESS_OUT_P-bit_REWRITE forwarding-class ES_BE loss-priority low code-point 000
+set class-of-service rewrite-rules ieee-802.1 ES_ACCESS_OUT_P-bit_REWRITE forwarding-class ES_BRONZE loss-priority low code-point 001
+set class-of-service rewrite-rules ieee-802.1 ES_ACCESS_OUT_P-bit_REWRITE forwarding-class ES_SILVER loss-priority low code-point 010
+set class-of-service rewrite-rules ieee-802.1 ES_ACCESS_OUT_P-bit_REWRITE forwarding-class ES_NC loss-priority low code-point 110
+set class-of-service rewrite-rules ieee-802.1 ES_ACCESS_OUT_P-bit_REWRITE forwarding-class ES_GOLD loss-priority low code-point 011
+set class-of-service rewrite-rules ieee-802.1 ES_ACCESS_OUT_P-bit_REWRITE forwarding-class ES_PLATINUM loss-priority low code-point 101
+set class-of-service rewrite-rules ieee-802.1 ES_ACCESS_OUT_P-bit_REWRITE forwarding-class ES_PLATINUM_PLUS loss-priority low code-point 100
+set class-of-service rewrite-rules ieee-802.1 ES_ACCESS_OUT_P-bit_REWRITE forwarding-class ES_PLATINUM_CS7 loss-priority low code-point 111
+
+Below Group Config to be applied before activity on routers : 
+set groups ES_ACCESS_PORT_BASED class-of-service interfaces "<[xg]e-*>"  scheduler-map ES_ACCESS_OUT_SCHEDULER_MAP
+set groups ES_ACCESS_PORT_BASED class-of-service interfaces "<[xg]e-*>" unit * classifiers dscp ES_ACCESS_IN_CLASSIFIER
+set groups ES_ACCESS_PORT_BASED class-of-service interfaces "<[xg]e-*>" unit * classifiers dscp-ipv6  ES_ACCESS_IN_CLASSIFIER_dscp-ipv6 
+set groups ES_ACCESS_PORT_BASED class-of-service interfaces "<[xg]e-*>" unit * rewrite-rules ieee-802.1  ES_ACCESS_OUT_P-bit_REWRITE
+
+P-bit marking for Host Outbound traffic / Network Control
+Below Config to be applied before activity on routers : 
+set class-of-service host-outbound-traffic ieee-802.1 default 110

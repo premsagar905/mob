@@ -1,0 +1,16 @@
+set interfaces xe-xsb/1 diffserv-block cos 0 cir 40Mbps
+set interfaces xe-xsb/1 diffserv-block cos 0 eir NRL
+set interfaces xe-xsb/1 diffserv-block cos 1 cir 80Mbps
+set interfaces xe-xsb/1 diffserv-block cos 1 eir NRL
+set interfaces xe-xsb/1 diffserv-block cos 2 cir 80Mbps
+set interfaces xe-xsb/1 diffserv-block cos 2 eir NRL
+set interfaces xe-xsb/1 diffserv-block cos 3 cir 600Mbps
+set interfaces xe-xsb/1 diffserv-block cos 3 eir NRL
+set interfaces xe-xsb/1 diffserv-block cos 4 cir 3200Mbps
+set interfaces xe-xsb/1 diffserv-block cos 4 eir NRL
+set interfaces xe-xsb/1 diffserv-block cos 5 cir 3000Mbps
+set interfaces xe-xsb/1 diffserv-block cos 5 eir 6000Mbps
+set interfaces xe-xsb/1 diffserv-block cos 6 cir 2000Mbps
+set interfaces xe-xsb/1 diffserv-block cos 6 eir 6000Mbps
+set interfaces xe-xsb/1 diffserv-block cos 7 cir 1000Mbps
+set interfaces xe-xsb/1 diffserv-block cos 7 eir 6000Mbps

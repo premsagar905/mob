@@ -1,0 +1,45 @@
+/configure router
+        interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}} "
+            address {{ip_address_a}} /31
+            description {{a_end_logical_description}}
+            ldp-sync-timer 25
+            port lag-{{bundle_id_a}}:{{a_end_vlan_details}}
+            icmp
+                no mask-reply
+                no redirects
+            exit
+            qos {{link_bw_gbps_number}}
+            bfd 50 receive 50 multiplier 3 type cpm-np
+            no shutdown
+#--------------------------------------------------
+       /configure router isis {{isis_instance_id}}
+        interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}} "
+                level-capability level-2
+                interface-type point-to-point
+                bfd-enable ipv4
+                level 2
+                    hello-authentication-key {{ISIS_password}}
+                    hello-authentication-type message-digest
+                    hello-interval 20
+                    hello-multiplier 5
+                    metric {{metric_value}}
+                exit
+                no shutdown
+#--------------------------------------------------
+       /configure router mpls
+        interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}} "
+                no shutdown
+#--------------------------------------------------
+       /configure router rsvp
+        interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}} "
+                bfd-enable
+                no shutdown
+#--------------------------------------------------
+       /configure router ldp
+            interface-parameters
+                interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}} " dual-stack
+                    bfd-enable ipv4
+                    ipv4
+                        no shutdown
+                    exit
+                    no shutdown

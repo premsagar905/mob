@@ -1,0 +1,162 @@
+hostname {{hostname}}
+interface loopback1
+  ip {{ip_var_1}} {{ip_var_2}}
+enable secret level {{enable_secret_level_var_1}} {{enable_secret_level_var_2}} {{enable_secret_level_var_3}}
+system-user
+  authorization-template {{authorization_template_var}}
+    bind aaa-authorization-template {{aaa_authorization_template_var}}
+    local-privilege-level {{local_privilege_level_var}}
+    login-sametime-max {{login_sametime_max_var}}
+!
+user-name {{username}}
+    bind authentication-template {{bind_authentication_template_var}}
+    bind authorization-template {{bind_authorization_template_var}}
+    password irreversible encrypted {{password_irreversible_encrypted_var}}
+ntp enable
+ntp server {{ntp_server_var}} priority {{priority_var}}
+ntp source ipv4 {{ntp_source_ipv4_var}}
+tacacs enable
+tacacs-client {{tacacs_client}}
+aaa-accounting-template {{aaa_accounting_template_var}}
+  aaa-accounting-type tacacs
+  accounting-tacacs-group B
+
+aaa-authentication-template {{aaa_authentication_template_var}}
+  aaa-authentication-type {{aaa_authentication_type_var}}
+  authentication-radius-group {{authentication_radius_group_var}}
+ssh server access-class ipv4 vty-access
+mpls ldp instance {{mpls_ldp_instance_var}}
+igp sync delay {{igp_sync_delay_var}}
+ router-id {{router_id}}
+syslog level errors
+syslog-server facility syslog
+syslog-server host vrf {{syslog_server_host_vrf_var_1}} {{syslog_server_host_vrf_var_2}} alarmlog cmdlog debugmsg servicelog braslog natlog urllog nat-translationlog nat-portrangelog
+syslog-server source ipv4 {{syslog_server_source_ipv4_var}}
+snmp-server community encrypted {{snmp_server_community_encrypted_var}} view lldpview {{lldpview_var}}
+snmp-server enable inform snmp
+snmp-server enable inform bgp
+snmp-server enable inform mac
+snmp-server enable inform ospf
+snmp-server enable inform stp
+snmp-server enable inform ppp
+snmp-server enable inform arp
+snmp-server enable inform rmon
+snmp-server enable inform udld
+snmp-server enable inform cfm
+snmp-server enable inform efm
+snmp-server enable inform lacp
+snmp-server enable inform mc-elam
+snmp-server enable inform tcp
+snmp-server enable inform sctp
+snmp-server enable inform stalarm
+snmp-server enable inform cps
+snmp-server enable inform interface
+snmp-server enable inform acl
+snmp-server enable inform fib
+snmp-server enable inform pim
+snmp-server enable inform isis
+snmp-server enable inform rip
+snmp-server enable inform msdp
+snmp-server enable inform aps
+snmp-server enable inform config
+snmp-server enable inform am
+snmp-server enable inform um
+snmp-server enable inform system
+snmp-server enable inform ldp
+snmp-server enable inform pwe3
+snmp-server enable inform vpn
+snmp-server enable inform mpls-oam
+snmp-server enable inform ptp
+snmp-server enable inform tunnel-te
+snmp-server enable inform radius
+snmp-server enable inform dhcp
+snmp-server enable inform bfd
+snmp-server enable inform ippool
+snmp-server enable inform ntp
+snmp-server enable inform ssm
+snmp-server enable inform sqa
+snmp-server enable inform ipsec
+snmp-server enable inform cgn
+snmp-server enable inform vrrp
+snmp-server enable inform ftp_tftp
+snmp-server enable inform ping-trace
+snmp-server enable inform gm
+snmp-server enable trap snmp
+snmp-server enable trap bgp
+snmp-server enable trap mac
+snmp-server enable trap ospf
+snmp-server enable trap stp
+snmp-server enable trap ppp
+snmp-server enable trap arp
+snmp-server enable trap rmon
+snmp-server enable trap udld
+snmp-server enable trap cfm
+snmp-server enable trap efm
+snmp-server enable trap lacp
+snmp-server enable trap mc-elam
+snmp-server enable trap tcp
+snmp-server enable trap sctp
+snmp-server enable trap stalarm
+snmp-server enable trap cps
+snmp-server enable trap interface
+snmp-server enable trap acl
+snmp-server enable trap fib
+snmp-server enable trap pim
+snmp-server enable trap isis
+snmp-server enable trap rip
+snmp-server enable trap msdp
+snmp-server enable trap aps
+snmp-server enable trap config
+snmp-server enable trap am
+snmp-server enable trap um
+snmp-server enable trap system
+snmp-server enable trap ldp
+snmp-server enable trap pwe3
+snmp-server enable trap vpn
+snmp-server enable trap mpls-oam
+snmp-server enable trap ptp
+snmp-server enable trap tunnel-te
+snmp-server enable trap radius
+snmp-server enable trap dhcp
+snmp-server enable trap bfd
+snmp-server enable trap ippool
+snmp-server enable trap ntp
+snmp-server enable trap ssm
+snmp-server enable trap sqa
+snmp-server enable trap ipsec
+snmp-server enable trap cgn
+snmp-server enable trap vrrp
+snmp-server enable trap ftp_tftp
+snmp-server enable trap ping-trace
+snmp-server enable trap gm
+snmp-server engine-id {{engine_id_var}}
+snmp-server group {{snmp_server_group_var_1}} {{snmp_server_group_var_2}} priv {{priv_var_1}} {{priv_var_2}}
+snmp-server group {{snmp_server_group_var_1}} {{snmp_server_group_var_2}} priv context {{priv_context_var}} match-prefix {{match_prefix_var_1}} {{match_prefix_var_2}}
+snmp-server packetsize {{packetsize_var}}
+snmp-server trap-source {{trap_source_var}}
+snmp-server user {{snmp_server_user_1}} {{snmp_server_user_2}} {{snmp_server_user_3}}encrypted auth {{encrypted_auth_var_1}} {{encrypted_auth_var_2}}
+snmp-server view {{snmp_server_view_var_1}} {{snmp_server_view_var_2}} included
+snmp-server version {{snmp_server_version_var}} enable
+line console idle-timeout {{line_console_idle_timeout_var}}
+line telnet server disable
+line telnet absolute-timeout {{line_telnet_absolute_timeout_var}}
+line telnet idle-timeout {{line_telnet_idle_timeout_var}}
+line telnet max-link {{line_telnet_max_link_var}}
+router bgp {{router_bgp_var}}
+  synchronization disable
+  bgp router-id {{bgp_router_id_var}}
+  address-family link-state
+  bgp route-scan-time interval-wait {{interval_wait_var}} initial {{initial_var}} max-wait {{max_wait_var}}
+router isis {{router_isis_var}}
+  area {{area_var}}
+  system-id {{system_id_var}}
+  router-id {{router_id_var}}
+  is-type level-2-only
+  metric-style wide
+  metric-auto enable
+  metric-auto reference-bandwidth {{reference_bandwidth_var}}
+  lsp-gen-interval {{lsp_gen_interval_var_1}} {{lsp_gen_interval_var_2}} {{lsp_gen_interval_var_3}}
+  spf-interval {{spf_interval_var_1}} {{spf_interval_var_2}} {{spf_interval_var_3}} 
+  microloop-prevention frr delay-time {{delay_time_var}}
+  mpls ldp sync level-2
+  mpls traffic-eng level-2

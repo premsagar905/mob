@@ -1,0 +1,4 @@
+~delete policy-options community {{spoke_community_name}} members target:{{import_rt}}
+!
+~delete {{import_policy}}
+~delete {{export_policy}}

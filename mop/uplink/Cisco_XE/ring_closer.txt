@@ -1,0 +1,26 @@
+interface {{a_end_logical_interface}}
+ service instance {{a_end_vlan_details}} ethernet
+  encapsulation dot1q {{a_end_vlan_details}}
+  rewrite ingress tag pop 1 symmetric
+  bridge-domain {{a_end_vlan_details}}
+ !
+interface BDI{{a_end_vlan_details}}
+ description {{a_end_interface_description}}
+ ip address {{ip_address_a}} {{subnet_a}}
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ip mtu 9000
+ ip router isis {{nw_layer}}_Ring{{ring_number}}
+ mpls ip
+ mpls mtu 9000
+ mpls ldp igp sync delay 25
+ no bfd echo
+ isis circuit-type level-2-only
+ isis network point-to-point 
+ isis hello-multiplier 5
+ isis hello-interval 20
+ isis lsp-interval 100
+ isis bfd
+no shut
+!

@@ -1,0 +1,60 @@
+@ip community-filter basic IPV4-TO-{{uc_location_a_nw_layer}}-ES index 10 permit {{core_agg}}
+@ip community-filter basic IPV4-TO-{{uc_location_a_nw_layer}}-ES index 20 permit {{bsc_pre_agg}}
+#
+@ip ip-prefix loopback index 10 permit {{loopback_0}} 32
+#
+route-policy rp-{{city_code}}_{{uc_location_a_nw_layer}}-CLIENTS_RING_{{ring_number}} permit node 10
+ if-match ip-prefix loopback
+ apply community {{uplink_community_id}}
+ apply mpls-label
+#
+route-policy rp-{{city_code}}_{{uc_location_a_nw_layer}}-CLIENTS_RING_{{ring_number}} permit node 20
+ if-match community-filter IPV4-TO-{{uc_location_a_nw_layer}}-ES
+ apply ip-address next-hop peer-address
+ apply mpls-label
+#               
+
+bgp 55410 
+peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} internal 
+ peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} timer keepalive 30 hold 90
+ peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} connect-interface LoopBack0 
+ peer {{loopback_ip_b}} as-number 55410
+ peer {{loopback_ip_b}} group {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}}
+
+ipv4-family unicast
+peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} enable
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} route-policy rp-{{city_code}}_{{uc_location_a_nw_layer}}-CLIENTS_RING_{{ring_number}} export
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} reflect-client
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} label-route-capability 
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} advertise-community
+  peer {{loopback_ip_b}} enable 
+ y
+  peer {{loopback_ip_b}} group {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}}
+
+ipv4-family vpnv4
+peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} enable
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} reflect-client
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} advertise-community
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} preferred-value 10
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} route-update-interval 0
+  peer {{loopback_ip_b}} enable
+y
+  peer {{loopback_ip_b}} group {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}}
+
+ipv6-family vpnv6
+peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} enable
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} reflect-client
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} advertise-community
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} preferred-value 10
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} route-update-interval 0
+  peer {{loopback_ip_b}} enable
+y
+  peer {{loopback_ip_b}} group {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}}
+
+ipv4-family vpn-target
+peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} enable
+  peer {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}} reflect-client
+  peer {{loopback_ip_b}} enable
+y
+  peer {{loopback_ip_b}} group {{city_code}}_iBGP_{{uc_location_a_nw_layer}}_RING-{{ring_number}}
+#

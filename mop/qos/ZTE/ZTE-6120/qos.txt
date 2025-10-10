@@ -1,0 +1,453 @@
+****** Router Protocol control-protocol priority : ********
+config t
+control-protocol arp exp 6 8021p 6
+control-protocol tftp exp 6 8021p 6
+control-protocol isis exp 6 8021p 6
+control-protocol ntp exp 7 8021p 7
+control-protocol ping exp 6 8021p 6
+control-protocol snmp exp 6 8021p 6
+control-protocol trace exp 6 8021p 6
+control-protocol syslog exp 6 8021p 6
+control-protocol ptp exp 7 8021p 7
+control-protocol bgp exp 6 8021p 6
+control-protocol ospf exp 6 8021p 6
+control-protocol ldp exp 6 8021p 6
+control-protocol rsvp exp 6 8021p 6
+control-protocol ftp exp 6 8021p 6
+control-protocol ssh exp 6 8021p 6
+control-protocol radius exp 6 8021p 6
+control-protocol telnet exp 6 8021p 6
+control-protocol vrrp exp 6 8021p 6
+control-protocol dhcp exp 6 8021p 6
+control-protocol http exp 6 8021p 6
+control-protocol rip exp 6 8021p 6
+control-protocol dns exp 6 8021p 6
+control-protocol igmp exp 6 8021p 6
+control-protocol netflow exp 6 8021p 6
+control-protocol openflow exp 6 8021p 6
+control-protocol pim exp 6 8021p 6
+control-protocol tacacs+ exp 6 8021p 6
+control-protocol MLD exp 6 8021p 6
+control-protocol MSDP exp 6 8021p 6
+
+*********ACCESS QoS IN Policy:***********
+
+config t
+no diffserv domain DS_OAM
+diffserv domain ES_ACCESS_IN
+  ipv4-dscp 56-63 mapped to phb CS7 green
+  ipv4-dscp 48-55 mapped to phb CS6 green
+  ipv4-dscp 40-47 mapped to phb EF green
+  ipv4-dscp 32-39 mapped to phb AF4 green
+  ipv4-dscp 24-31 mapped to phb AF3 green
+  ipv4-dscp 16-23 mapped to phb AF2 green
+  ipv4-dscp 8-15 mapped to phb AF1 green
+  ipv4-dscp 0-7 mapped to phb BE green
+  ipv6-dscp 56-63 mapped to phb CS7 green
+  ipv6-dscp 48-55 mapped to phb CS6 green
+  ipv6-dscp 40-47 mapped to phb EF green
+  ipv6-dscp 32-39 mapped to phb AF4 green
+  ipv6-dscp 24-31 mapped to phb AF3 green
+  ipv6-dscp 16-23 mapped to phb AF2 green
+  ipv6-dscp 8-15 mapped to phb AF1 green
+  ipv6-dscp 0-7 mapped to phb BE green
+ $
+
+***********ACCESS QoS OUT Policy: *******
+config t
+class-map CS7 match-any
+  match service-class CS7
+$
+class-map CS6 match-any
+  match service-class CS6
+$
+class-map EF match-any
+  match service-class EF
+$
+class-map AF4 match-any
+  match service-class AF4
+$
+class-map AF3 match-any
+  match service-class AF3
+$
+class-map AF2 match-any
+  match service-class AF2
+$
+class-map AF1 match-any
+  match service-class AF1
+$
+class-map BE match-any
+  match service-class BE
+$
+
+config t
+policy-map ES_ACCESS_OUT_1G
+ class CS7
+   priority-level 1
+    police cir 100000 cbs 1000 pir 600000 pbs 1000
+   set 8021p 7
+ $
+ class CS6
+   priority-level 2
+    police cir 200000 cbs 1000 pir 600000 pbs 1000
+   set 8021p 6
+ $
+ class EF
+   priority-level 3
+    police cir 300000 cbs 1000 pir 600000 pbs 1000
+   set 8021p 5
+ $
+ class AF4
+   bandwidth-remaining percent 75
+   random-detect enable
+   set 8021p 4
+ $
+ class AF3
+   bandwidth-remaining percent 20
+   random-detect enable
+   set 8021p 3
+ $
+ class AF2
+   bandwidth-remaining percent 2
+   random-detect enable
+   set 8021p 2
+ $
+ class AF1
+   bandwidth-remaining percent 2
+   random-detect enable
+   set 8021p 1
+ $
+ class BE
+   bandwidth-remaining percent 1
+   random-detect enable
+   set 8021p 0
+ $
+$
+
+config t
+policy-map ES_ACCESS_OUT_10G
+ class CS7
+   priority-level 1
+    police cir 1000000 cbs 1000 pir 6000000 pbs 10000
+   set 8021p 7
+ $
+ class CS6
+   priority-level 2
+    police cir 2000000 cbs 1000 pir 6000000 pbs 10000
+   set 8021p 6
+ $
+ class EF
+   priority-level 3
+    police cir 3000000 cbs 1000 pir 6000000 pbs 10000
+   set 8021p 5
+ $
+ class AF4
+   bandwidth-remaining percent 75
+   random-detect enable
+   set 8021p 4
+ $
+ class AF3
+   bandwidth-remaining percent 20
+   random-detect enable
+   set 8021p 3
+ $
+ class AF2
+   bandwidth-remaining percent 2
+   random-detect enable
+   set 8021p 2
+ $
+ class AF1
+   bandwidth-remaining percent 2
+   random-detect enable
+   set 8021p 1
+ $
+ class BE
+   bandwidth-remaining percent 1
+   random-detect enable
+   set 8021p 0
+ $
+$
+
+************* Router Protocol control-protocol priority : ***********
+config t
+control-protocol arp exp 6 8021p 6
+control-protocol tftp exp 6 8021p 6
+control-protocol isis exp 6 8021p 6
+control-protocol ntp exp 7 8021p 7
+control-protocol ping exp 6 8021p 6
+control-protocol snmp exp 6 8021p 6
+control-protocol trace exp 6 8021p 6
+control-protocol syslog exp 6 8021p 6
+control-protocol ptp exp 7 8021p 7
+control-protocol bgp exp 6 8021p 6
+control-protocol ospf exp 6 8021p 6
+control-protocol ldp exp 6 8021p 6
+control-protocol rsvp exp 6 8021p 6
+control-protocol ftp exp 6 8021p 6
+control-protocol ssh exp 6 8021p 6
+control-protocol radius exp 6 8021p 6
+control-protocol telnet exp 6 8021p 6
+control-protocol vrrp exp 6 8021p 6
+control-protocol dhcp exp 6 8021p 6
+control-protocol http exp 6 8021p 6
+control-protocol rip exp 6 8021p 6
+control-protocol dns exp 6 8021p 6
+control-protocol igmp exp 6 8021p 6
+control-protocol netflow exp 6 8021p 6
+control-protocol openflow exp 6 8021p 6
+control-protocol pim exp 6 8021p 6
+control-protocol tacacs+ exp 6 8021p 6
+control-protocol MLD exp 6 8021p 6
+control-protocol MSDP exp 6 8021p 6
+
+********** WAN QoS IN Policy: ***********
+config t
+no diffserv domain DS_OAM
+diffserv domain ES_WAN_IN
+  mpls-exp 7 mapped to phb CS7 green
+  mpls-exp 6 mapped to phb CS6 green
+  mpls-exp 5 mapped to phb EF green
+  mpls-exp 4 mapped to phb AF4 green
+  mpls-exp 3 mapped to phb AF3 green
+  mpls-exp 2 mapped to phb AF2 green
+  mpls-exp 1 mapped to phb AF1 green
+  mpls-exp 0 mapped to phb BE green
+ $
+
+******** WAN QoS OUT Policy: ********
+
+config t
+class-map CS7 match-any
+  match service-class CS7
+$
+class-map CS6 match-any
+  match service-class CS6
+$
+class-map EF match-any
+  match service-class EF
+$
+class-map AF4 match-any
+  match service-class AF4
+$
+class-map AF3 match-any
+  match service-class AF3
+$
+class-map AF2 match-any
+  match service-class AF2
+$
+class-map AF1 match-any
+  match service-class AF1
+$
+class-map BE match-any
+  match service-class BE
+$
+######## 1G WAN Interface ###########
+config t
+policy-map ES_WAN_OUT_1G
+  class CS7
+    priority-level 1
+    police cir 100000 cbs 10000 pir 600000 pbs 1000
+    set mpls-exp 7
+    set 8021p 7
+  $
+  class CS6
+    priority-level 2
+    police cir 200000 cbs 10000 pir 600000 pbs 1000
+    set mpls-exp 6
+    set 8021p 6
+  $
+  class EF
+    priority-level 3
+    police cir 300000 cbs 10000 pir 600000 pbs 1000
+    set mpls-exp 5
+    set 8021p 5
+   $
+  class AF4
+    bandwidth-remaining percent 75
+    random-detect enable
+    set mpls-exp 4
+    set 8021p 4
+  $
+  class AF3
+    bandwidth-remaining percent 20
+    random-detect enable
+    set mpls-exp 3
+    set 8021p 3
+  $
+  class AF2
+    bandwidth-remaining percent 2
+    random-detect enable
+    set mpls-exp 2
+    set 8021p 2
+   $
+  class AF1
+    bandwidth-remaining percent 2
+    random-detect enable
+    set mpls-exp 1
+    set 8021p 1
+  $
+  class BE
+    bandwidth-remaining percent 1
+    random-detect enable
+    set mpls-exp 0
+    set 8021p 0
+  $
+$
+######## 10G WAN Interface ###########
+config t
+policy-map ES_WAN_OUT_10G
+  class CS7
+    priority-level 1
+    police cir 1000000 cbs 10000 pir 6000000 pbs 10000
+    set mpls-exp 7
+    set 8021p 7
+  $
+  class CS6
+    priority-level 2
+    police cir 2000000 cbs 10000 pir 6000000 pbs 10000
+    set mpls-exp 6
+    set 8021p 6
+  $
+  class EF
+    priority-level 3
+    police cir 3000000 cbs 10000 pir 6000000 pbs 10000
+    set mpls-exp 5
+    set 8021p 5
+   $
+  class AF4
+    bandwidth-remaining percent 75
+    random-detect enable
+    set mpls-exp 4
+    set 8021p 4
+  $
+  class AF3
+    bandwidth-remaining percent 20
+    random-detect enable
+    set mpls-exp 3
+    set 8021p 3
+  $
+  class AF2
+    bandwidth-remaining percent 2
+    random-detect enable
+    set mpls-exp 2
+    set 8021p 2
+   $
+  class AF1
+    bandwidth-remaining percent 2
+    random-detect enable
+    set mpls-exp 1
+    set 8021p 1
+  $
+  class BE
+    bandwidth-remaining percent 1
+    random-detect enable
+    set mpls-exp 0
+    set 8021p 0
+  $
+$
+######## 20G WAN Interface ###########
+config t
+policy-map ES_WAN_OUT_20G
+  class CS7
+    priority-level 1
+    police cir 2000000 cbs 20000 pir 12000000 pbs 20000
+    set mpls-exp 7
+    set 8021p 7
+  $
+  class CS6
+    priority-level 2
+    police cir 4000000 cbs 20000 pir 12000000 pbs 20000
+    set mpls-exp 6
+    set 8021p 6
+  $
+  class EF
+    priority-level 3
+    police cir 6000000 cbs 20000 pir 12000000 pbs 20000
+    set mpls-exp 5
+    set 8021p 5
+   $
+  class AF4
+    bandwidth-remaining percent 75
+    random-detect enable
+    set mpls-exp 4
+    set 8021p 4
+  $
+  class AF3
+    bandwidth-remaining percent 20
+    random-detect enable
+    set mpls-exp 3
+    set 8021p 3
+  $
+  class AF2
+    bandwidth-remaining percent 2
+    random-detect enable
+    set mpls-exp 2
+    set 8021p 2
+   $
+  class AF1
+    bandwidth-remaining percent 2
+    random-detect enable
+    set mpls-exp 1
+    set 8021p 1
+  $
+  class BE
+    bandwidth-remaining percent 1
+    random-detect enable
+    set mpls-exp 0
+    set 8021p 0
+  $
+$
+######## 40G WAN Interface ###########
+config t
+policy-map ES_WAN_OUT_40G
+  class CS7
+    priority-level 1
+    police cir 4000000 cbs 40000 pir 24000000 pbs 40000
+    set mpls-exp 7
+    set 8021p 7
+  $
+  class CS6
+    priority-level 2
+    police cir 8000000 cbs 40000 pir 24000000 pbs 40000
+    set mpls-exp 6
+    set 8021p 6
+  $
+  class EF
+    priority-level 3
+    police cir 12000000 cbs 40000 pir 24000000 pbs 40000
+    set mpls-exp 5
+    set 8021p 5
+   $
+  class AF4
+    bandwidth-remaining percent 75
+    random-detect enable
+    set mpls-exp 4
+    set 8021p 4
+  $
+  class AF3
+    bandwidth-remaining percent 20
+    random-detect enable
+    set mpls-exp 3
+    set 8021p 3
+  $
+  class AF2
+    bandwidth-remaining percent 2
+    random-detect enable
+    set mpls-exp 2
+    set 8021p 2
+   $
+  class AF1
+    bandwidth-remaining percent 2
+    random-detect enable
+    set mpls-exp 1
+    set 8021p 1
+  $
+  class BE
+    bandwidth-remaining percent 1
+    random-detect enable
+    set mpls-exp 0
+    set 8021p 0
+  $
+$
+
+

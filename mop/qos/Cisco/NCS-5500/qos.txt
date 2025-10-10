@@ -1,0 +1,419 @@
+! -- Access IN Class Maps --------
+
+class-map match-any ACCESS_IN_SYNCH_SIGNALING
+ match dscp cs7  57  58  59  60  61  62  63
+ match dscp cs6  49  50  51  52  53  54  55
+ end-class-map
+!
+class-map match-any ACCESS_IN_PLATINUM
+ match dscp cs5  41  42  43  44  45  ef  47
+ end-class-map
+!
+class-map match-any ACCESS_IN_GOLD_PLUS
+ match dscp cs4  33  af41  35  af42  37  af43  39
+ end-class-map
+!
+class-map match-any ACCESS_IN_GOLD
+ match dscp cs3  25  27  af32  29  af33  31  cs7
+ end-class-map
+!
+class-map match-any ACCESS_IN_SILVER
+ match dscp cs2  17  af21  19  af22  21  af23  23
+ end-class-map
+!
+class-map match-any ACCESS_IN_BRONZE
+ match dscp cs1  9  af11  11  af12  13  af13  15
+ end-class-map
+!
+class-map match-any ACCESS_IN_DEFAULT
+ match dscp default  1  2  3  4  5  6  7
+ end-class-map
+!
+
+! -- Access IN Policy --------
+
+policy-map ACCESS_IN
+  class ACCESS_IN_SYNCH_SIGNALING
+    set qos-group 6
+    set traffic-class 6
+   !
+  class ACCESS_IN_PLATINUM
+    set qos-group 5
+    set traffic-class 5
+   !
+  class ACCESS_IN_GOLD_PLUS
+    set qos-group 4
+    set traffic-class 4
+   !
+  class ACCESS_IN_GOLD
+    set qos-group 3
+    set traffic-class 3
+   !
+  class ACCESS_IN_SILVER
+    set qos-group 2
+    set traffic-class 2
+   !
+  class ACCESS_IN_BRONZE
+    set qos-group 1
+    set traffic-class 1
+   !
+  class ACCESS_IN_DEFAULT
+    set qos-group 0
+    set traffic-class 0
+   !
+  end-policy-map
+ !
+!
+
+! -- Access Out Marking Class Maps --------
+
+class-map match-any ACCESS_OUT_SYNCH_SIGNALING
+  match qos-group 6
+ end-class-map
+!
+class-map match-any ACCESS_OUT_PLATINUM
+  match qos-group 5
+ end-class-map
+!
+class-map match-any ACCESS_OUT_GOLD_PLUS
+  match qos-group 4
+ end-class-map
+!
+class-map match-any ACCESS_OUT_GOLD
+  match qos-group 3
+ end-class-map
+!
+class-map match-any ACCESS_OUT_SILVER
+  match qos-group 2
+ end-class-map
+!
+class-map match-any ACCESS_OUT_BRONZE
+  match qos-group 1
+ end-class-map
+!
+class-map match-any ACCESS_OUT_DEFAULT
+  match qos-group 0
+ end-class-map
+!
+
+! -- Access Out Marking Policy Maps --------
+
+policy-map ACCESS_OUT-M
+  class ACCESS_OUT_SYNCH_SIGNALING
+    set cos 6
+   !
+  class ACCESS_OUT_PLATINUM
+    set cos 5
+   !
+  class ACCESS_OUT_GOLD_PLUS
+    set cos 4
+   !
+  class ACCESS_OUT_GOLD
+    set cos 3
+   !
+  class ACCESS_OUT_SILVER
+    set cos 2
+   !
+  class ACCESS_OUT_BRONZE
+    set cos 1
+   !
+  class class-default
+    set cos 0
+   !
+  end-policy-map
+ !
+!
+
+! -- Access Out queuing Class Maps --------
+
+class-map match-any ACCESS_out_SYNCH_SIGNALING
+  match traffic-class 6
+ end-class-map
+!
+class-map match-any ACCESS_out_PLATINUM
+  match traffic-class 5
+ end-class-map
+!
+class-map match-any ACCESS_out_GOLD_PLUS
+  match traffic-class 4
+ end-class-map
+!
+class-map match-any ACCESS_out_GOLD
+  match traffic-class 3
+ end-class-map
+!
+class-map match-any ACCESS_out_SILVER
+  match traffic-class 2
+ end-class-map
+!
+class-map match-any ACCESS_out_BRONZE
+  match traffic-class 1
+ end-class-map
+!
+class-map match-any ACCESS_out_DEFAULT
+  match traffic-class 0
+ end-class-map
+!
+
+! -- Access Out queuing Policy Maps --------
+
+policy-map ACCESS_OUT-Q
+  class ACCESS_out_SYNCH_SIGNALING
+    priority level 1
+    shape average percent 30
+   !
+  class ACCESS_out_PLATINUM
+    priority level 2
+    shape average percent 30
+   !
+  class ACCESS_out_GOLD_PLUS
+    bandwidth remaining percent 80
+    queue-limit 1250000 bytes
+   !
+  class ACCESS_out_GOLD
+    bandwidth remaining percent 15
+    queue-limit 1250000 bytes
+   !
+  class ACCESS_out_SILVER
+    bandwidth remaining percent 2
+    queue-limit 1250000 bytes
+   !
+  class ACCESS_out_BRONZE
+    bandwidth remaining percent 2
+    queue-limit 1250000 bytes
+   !
+  class class-default
+    bandwidth remaining percent 1
+   !
+  end-policy-map
+ !
+!
+policy-map ACCESS_OUT_1G-Q
+  class class-default
+    shape average percent 100
+    service-policy ACCESS_OUT-Q
+   !
+  end-policy-map
+ !
+!
+
+! -- WAN IN Class Maps --------
+
+class-map match-any WAN_IN_BRONZE 
+  match mpls experimental topmost 1
+ end-class-map
+!
+class-map match-any WAN_IN_DEFAULT 
+  match mpls experimental topmost 0
+ end-class-map
+!
+class-map match-any WAN_IN_GOLD 
+  match mpls experimental topmost 3
+ end-class-map
+!
+class-map match-any WAN_IN_GOLD_PLUS 
+  match mpls experimental topmost 4
+ end-class-map
+!
+class-map match-any WAN_IN_PLATINUM 
+  match mpls experimental topmost 5
+ end-class-map
+!
+class-map match-any WAN_IN_SILVER 
+  match mpls experimental topmost 2
+ end-class-map
+!
+class-map match-any WAN_IN_SYNCH_SIGNALING 
+  match mpls experimental topmost 6 7
+ end-class-map
+!
+
+! -- WAN IN Policy --------
+
+policy-map WAN_IN 
+  class WAN_IN_BRONZE
+    set qos-group 1 
+    set traffic-class 1 
+   ! 
+  class WAN_IN_DEFAULT
+    set qos-group 0 
+    set traffic-class 0 
+   ! 
+  class WAN_IN_GOLD
+    set qos-group 3 
+    set traffic-class 3 
+   ! 
+  class WAN_IN_GOLD_PLUS
+    set qos-group 4 
+    set traffic-class 4 
+   ! 
+  class WAN_IN_PLATINUM
+    set qos-group 5 
+    set traffic-class 5 
+   ! 
+  class WAN_IN_SILVER
+    set qos-group 2 
+    set traffic-class 2 
+   ! 
+  class WAN_IN_SYNCH_SIGNALING
+    set qos-group 6 
+    set traffic-class 6 
+   ! 
+  end-policy-map
+ !
+!
+
+! -- WAN Out Marking Class Maps --------
+
+class-map match-any WAN_OUT_BRONZE 
+  match qos-group 1
+ end-class-map
+!
+class-map match-any WAN_OUT_DEFAULT 
+  match qos-group 0
+ end-class-map
+!
+class-map match-any WAN_OUT_GOLD 
+  match qos-group 3
+ end-class-map
+!
+class-map match-any WAN_OUT_GOLD_PLUS 
+  match qos-group 4
+ end-class-map
+!
+class-map match-any WAN_OUT_PLATINUM 
+  match qos-group 5
+ end-class-map
+!
+class-map match-any WAN_OUT_SILVER 
+  match qos-group 2
+ end-class-map
+!
+class-map match-any WAN_OUT_SYNCH_SIGNALING 
+  match qos-group 6
+ end-class-map
+!
+
+! -- WAN Out Marking Policy Maps --------
+
+policy-map WAN_OUT-M
+  class WAN_OUT_BRONZE
+    set mpls experimental imposition 1
+    set cos 1
+  class class-default
+    set mpls experimental imposition 0
+    set cos 0
+  class WAN_OUT_GOLD
+    set mpls experimental imposition 3
+    set cos 3
+  class WAN_OUT_GOLD_PLUS
+    set mpls experimental imposition 4
+    set cos 4
+  class WAN_OUT_PLATINUM
+    set mpls experimental imposition 5
+    set cos 5
+  class WAN_OUT_SILVER
+    set mpls experimental imposition 2
+    set cos 2
+  class WAN_OUT_SYNCH_SIGNALING
+    set mpls experimental imposition 6
+    set cos 6
+  end-policy-map
+ !
+!
+
+! -- WAN Out queuing Class Maps --------
+
+class-map match-any WAN_out_BRONZE 
+  match traffic-class 1
+ end-class-map
+!
+class-map match-any WAN_out_DEFAULT 
+  match traffic-class 0
+ end-class-map
+!
+class-map match-any WAN_out_GOLD 
+  match traffic-class 3
+ end-class-map
+!
+class-map match-any WAN_out_GOLD_PLUS 
+  match traffic-class 4
+ end-class-map
+!
+class-map match-any WAN_out_PLATINUM 
+  match traffic-class 5
+ end-class-map
+!
+class-map match-any WAN_out_SILVER 
+  match traffic-class 2
+ end-class-map
+!
+class-map match-any WAN_out_SYNCH_SIGNALING 
+  match traffic-class 6
+ end-class-map
+!
+
+! -- WAN Out queuing Policy Maps --------
+
+policy-map WAN_OUT-Q
+  class WAN_out_BRONZE
+    bandwidth remaining percent 2
+  queue-limit 1250000 bytes
+   ! 
+  class class-default
+    bandwidth remaining percent 1
+   ! 
+  class WAN_out_GOLD
+    bandwidth remaining percent 15
+  queue-limit 1250000 bytes
+   ! 
+  class WAN_out_GOLD_PLUS
+    bandwidth remaining percent 80
+   ! 
+  class WAN_out_PLATINUM
+    priority level 2
+    shape average percent 30
+   ! 
+  class WAN_out_SILVER
+    bandwidth remaining percent 2
+  queue-limit 1250000 bytes
+   ! 
+  class WAN_out_SYNCH_SIGNALING
+    priority level 1
+    shape average percent 30
+   ! 
+  end-policy-map
+ !
+!
+policy-map WAN_OUT_1G-Q
+  class class-default
+    shape average percent 100 
+    service-policy WAN_OUT-Q
+   ! 
+  end-policy-map
+ !
+!
+policy-map WAN_OUT_10G-Q
+  class class-default
+    shape average percent 100 
+    service-policy WAN_OUT-Q
+   ! 
+  end-policy-map
+ !
+!
+policy-map WAN_OUT_100G-Q
+  class class-default
+    shape average percent 100 
+    service-policy WAN_OUT-Q
+   ! 
+  end-policy-map
+ !
+!
+policy-map WAN_OUT_20G-Q
+  class class-default
+    shape average percent 100 
+    service-policy WAN_OUT-Q
+   ! 
+  end-policy-map
+ !
+!

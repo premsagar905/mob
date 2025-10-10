@@ -1,0 +1,7 @@
+configure port {{configure_port}}
+ shutdown
+configure router
+interface {{lag_Interface}} shutdown
+no interface {{lag_Interface}}
+ #
+return
