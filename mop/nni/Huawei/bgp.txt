@@ -1,1 +1,0 @@
-bgp {{Local_AS_No}}

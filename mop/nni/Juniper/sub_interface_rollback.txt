@@ -1,5 +1,0 @@
-delete interfaces ae{{Bundle_ID}} unit {{VLAN_ID}}
-delete routing-instances {{Service_VRF_Name}} interface ae{{Bundle_ID}}.{{VLAN_ID}}
-delete class-of-service interfaces ae{{Bundle_ID}} unit {{VLAN_ID}}
-delete policy-options prefix-list PE_CE_BGP_PEERS {{IPV4_CPE_Interface_IP/31}}/32
-delete policy-options prefix-list INFRASTRUCTURE_PREFIX {{IPV4_CPE_Interface_IP/31}}/32

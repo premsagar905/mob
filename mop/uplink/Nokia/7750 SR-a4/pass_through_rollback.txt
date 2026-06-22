@@ -1,3 +1,0 @@
-/configure router 
-        interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}} " shutdown
-       no interface "LAG-{{bundle_id_a}}:{{a_end_vlan_details}} "

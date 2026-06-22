@@ -1,5 +1,0 @@
-no interface Port-channel{{bundle_id_a}}
-interface {{interface_a}}
-!
-no interface BDI{{a_end_vlan_details}}
-!

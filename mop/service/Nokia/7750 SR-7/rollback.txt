@@ -1,6 +1,0 @@
-configure service vprn {{vprn_number}}
-interface "{{NSS_ID}}-{{Planned_Router_Port}}:{{VLAN}}" shutdown
-interface "{{NSS_ID}}-{{Planned_Router_Port}}:{{VLAN}}" sap {{Planned_Router_Port}}:{{VLAN}} shutdown
-interface "{{NSS_ID}}-{{Planned_Router_Port}}:{{VLAN}}" no sap {{Planned_Router_Port}}:{{VLAN}}
-no interface "{{NSS_ID}}-{{Planned_Router_Port}}:{{VLAN}}"
-exit

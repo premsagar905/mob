@@ -1,6 +1,0 @@
-configure service vprn {{VPRN_ID}}
-bgp
-group "{{Service_VRF_Name}}_IPV6"
-neighbor {{IPV6_CPE_Interface_IP/127}}
-shutdown
-exit all

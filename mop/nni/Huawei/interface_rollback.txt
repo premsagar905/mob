@@ -1,3 +1,0 @@
-undo interface {{PE_Interface}}
-undo interface Eth-Trunk{{Bundle_ID}}
-commit

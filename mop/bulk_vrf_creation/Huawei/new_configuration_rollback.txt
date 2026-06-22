@@ -1,4 +1,0 @@
-undo ip vpn-instance {{vrf_name}}
-bgp 55410
-undo ip vpn-instance {{vrf_name}}
-exit

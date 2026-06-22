@@ -1,4 +1,0 @@
-set interfaces {{universal_interface}} unit {{vlan_id}} disable
-deactivate protocols bgp group PreAgg_Ring neighbor {{set_protocols_bgp_neighbour_ip_address1}}
-deactivate protocols bgp group PreAgg_Ring neighbor {{set_protocols_bgp_neighbour_ip_address1}}
-deactivate protocols bgp group PreAgg_Ring neighbor {{set_protocols_bgp_neighbour_ip_address1}}

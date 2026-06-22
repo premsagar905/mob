@@ -1,2 +1,0 @@
-edit prefix-set {{prefix_name}} inline remove "{{new_ip}} le 32"
-yes

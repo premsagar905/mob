@@ -1,2 +1,0 @@
-set policy-options policy-statement {{policy_statment}} term a from route-filter {{new_ip}} orlonger
-set policy-options prefix-list {{prefix_name}} {{new_ip}}

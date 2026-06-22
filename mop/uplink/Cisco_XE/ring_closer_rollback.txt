@@ -1,4 +1,0 @@
-interface {{a_end_logical_interface}}
-no service instance {{a_end_vlan_details}} ethernet
- !
-no interface BDI{{a_end_vlan_details}}

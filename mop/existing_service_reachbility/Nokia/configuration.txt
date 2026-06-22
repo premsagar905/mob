@@ -1,6 +1,0 @@
-configure router policy-options begin 
-prefix-list {{prefix_name}}
-prefix {{new_ip}} longer
-exit
-commit
-exit all

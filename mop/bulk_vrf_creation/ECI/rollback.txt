@@ -1,4 +1,0 @@
-~~delete policy-options policy-statement redistribute_connected term 1
-~~delete policy-options policy-statement redistribute_connected term 2
-
-delete routing-instances vrf {{vrf_name}}

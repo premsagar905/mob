@@ -1,9 +1,0 @@
-ipv4-family vpn-instance {{Service_VRF_Name}}
-import-route direct
-import-route static
-peer {{IPV4_CPE_Interface_IP/31}}  as-number {{Remote_AS_No}}
-peer {{IPV4_CPE_Interface_IP/31}} password {{BGP_Password}}
-peer {{IPV4_CPE_Interface_IP/31}} bfd min-tx-interval 300 min-rx-interval 300
-peer {{IPV4_CPE_Interface_IP/31}} bfd enable
-peer {{IPV4_CPE_Interface_IP/31}} route-policy {{Service_VRF_Name}}_IPV4_IN import
-peer {{IPV4_CPE_Interface_IP/31}} route-policy {{Service_VRF_Name}}_IPV4_OUT export

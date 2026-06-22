@@ -1,2 +1,0 @@
-no prefix-set pxl_{{Service_VRF_Name}}_ipV4_in
-no route-policy rpl_{{Service_VRF_Name}}_in

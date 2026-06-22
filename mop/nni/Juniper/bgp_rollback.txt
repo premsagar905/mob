@@ -1,2 +1,0 @@
-delete routing-instances {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}
-delete routing-instances {{Service_VRF_Name}} protocols bgp group TO_{{Service_VRF_Name}}_IPV6 

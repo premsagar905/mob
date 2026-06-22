@@ -1,4 +1,0 @@
-route-policy Permit_All_OUT
-  pass
-end-policy
-!

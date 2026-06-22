@@ -1,1 +1,0 @@
-no interface {{Planned_Router_Port}}.{{VLAN}}

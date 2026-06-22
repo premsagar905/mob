@@ -1,2 +1,0 @@
-delete interfaces ae{{Bundle_ID}}
-delete interfaces {{PE_Interface}}

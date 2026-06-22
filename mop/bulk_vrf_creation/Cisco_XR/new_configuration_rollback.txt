@@ -1,4 +1,0 @@
-no vrf {{vrf_name}}
-router bgp 55410
-no vrf {{vrf_name}}
-exit

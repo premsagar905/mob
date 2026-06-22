@@ -1,1 +1,0 @@
-no interface Bundle-Ether{{Bundle_ID}}.{{VLAN_ID}}

@@ -1,1 +1,0 @@
-no router isis {{nw_layer}}_Ring{{ring_number}}

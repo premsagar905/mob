@@ -1,4 +1,0 @@
-delete policy-options policy-statement {{Service_VRF_Name}}_ipV4_IMPORT
-delete policy-options policy-statement {{Service_VRF_Name}}_ipV4_EXPORT
-delete policy-options policy-statement {{Service_VRF_Name}}_IPV6_IMPORT
-delete policy-options policy-statement {{Service_VRF_Name}}_IPV6_EXPORT

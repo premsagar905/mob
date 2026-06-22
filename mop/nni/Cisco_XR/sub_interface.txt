@@ -1,7 +1,0 @@
-interface Bundle-Ether{{Bundle_ID}}.{{VLAN_ID}}
-interface Bundle-Ether{{Bundle_ID}}.{{VLAN_ID}} description {{Bundle_ID_VLAN_ID_Description}}
-interface Bundle-Ether{{Bundle_ID}}.{{VLAN_ID}} service-policy input ACCESS_IN
-interface Bundle-Ether{{Bundle_ID}}.{{VLAN_ID}} vrf {{Service_VRF_Name}}
-interface Bundle-Ether{{Bundle_ID}}.{{VLAN_ID}} ipv4 address {{IPV4_PE_Interface_IP/31}} 255.255.255.254
-interface Bundle-Ether{{Bundle_ID}}.{{VLAN_ID}} ipv6 address {{IPV6_PE_Interface_IP/127}}/127
-interface Bundle-Ether{{Bundle_ID}}.{{VLAN_ID}} encapsulation dot1q {{VLAN_ID}}

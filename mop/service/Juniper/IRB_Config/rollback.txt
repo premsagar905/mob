@@ -1,4 +1,0 @@
-delete interfaces {{Planned_Router_Port}} unit {{VLAN}}
-delete routing-instances {{vrfName}} interface irb.{{VLAN}}
-delete routing-instances {{vrfName}} forwarding-options dhcp-relay group {{group_name}} interface irb.{{VLAN}}
-delete bridge-domains {{vrfName}}_{{VLAN}}

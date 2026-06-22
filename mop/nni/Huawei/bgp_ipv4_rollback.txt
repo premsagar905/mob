@@ -1,4 +1,0 @@
-ipv4-family vpn-instance {{Service_VRF_Name}}
-undo peer {{IPV4_CPE_Interface_IP/31}}
-y
-commit

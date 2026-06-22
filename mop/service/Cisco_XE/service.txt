@@ -1,7 +1,0 @@
-interface {{Planned_Router_Port}}
-service instance {{VLAN}} ethernet
-description {{description}}
-encapsulation dot1q {{VLAN}}
-rewrite ingress tag pop 1 symmetric
-bridge-domain {{VLAN}} split-horizon
-!

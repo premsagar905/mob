@@ -1,8 +1,0 @@
-delete policy-options community {{Service_VRF_Name}}_SP members target:{{RT-Export}}
-delete policy-options community {{Service_VRF_Name}}_HB members target:{{RT-Import}}
-
-delete policy-options policy-statement {{Service_VRF_Name}}_EXPORT
-
-delete policy-options policy-statement {{Service_VRF_Name}}_IMPORT
-
-delete routing-instances {{Service_VRF_Name}}

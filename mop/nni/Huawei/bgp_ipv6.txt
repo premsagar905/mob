@@ -1,9 +1,0 @@
-ipv6-family vpn-instance {{Service_VRF_Name}}
-import-route direct
-import-route static
-peer {{IPV6_CPE_Interface_IP/127}} as-number {{Remote_AS_No}}
-peer {{IPV6_CPE_Interface_IP/127}} password {{BGP_Password}}
-peer {{IPV6_CPE_Interface_IP/127}} bfd min-tx-interval 300 min-rx-interval 300
-peer {{IPV6_CPE_Interface_IP/127}} bfd enable
-peer {{IPV6_CPE_Interface_IP/127}} route-policy {{Service_VRF_Name}}_IPV6_IN import
-peer {{IPV6_CPE_Interface_IP/127}} route-policy  {{Service_VRF_Name}}_IPV6_OUT export

@@ -1,6 +1,0 @@
-delete interfaces {{interface_a}} unit  {{a_end_vlan_details}}
-delete protocols bfd interface {{interface_a}}. {{a_end_vlan_details}}
-delete protocols isis protocol-instance {{isis_instance_id}}
-delete protocols isis protocol-instance {{isis_instance_id}} interface {{interface_a}}.{{a_end_vlan_details}}
-delete protocols ldp interface {{interface_a}}. {{a_end_vlan_details}}
-delete protocols ldp peer-security peer-address  {{loopback_ip_b}}

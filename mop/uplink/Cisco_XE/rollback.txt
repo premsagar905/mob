@@ -1,7 +1,0 @@
-interface {{logical_interface}}
-shutdown
-interface {{bundle_interface_name}}
-shutdown
-no interface {{loopback}}
-router bgp {{router_bgp_value}}
- neighbor {{neighbor_ipaddress}} shutdown

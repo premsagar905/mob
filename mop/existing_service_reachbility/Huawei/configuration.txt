@@ -1,1 +1,0 @@
-ip ip-prefix {{prefix_name}} index {{index_number}} permit {{new_ip}} {{new_subnetmask}} greater-equal {{new_subnetmask}} less-equal 32
